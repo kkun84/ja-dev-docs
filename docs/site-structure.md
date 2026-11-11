@@ -213,7 +213,7 @@ translated: 2026-11-11
 ### VS Code docs
 
 - **トピックメタデータ。** `ContentId`、`DateApproved`、`MetaSocialImage`、`FeatureStatus`は原文のまま。`MetaDescription`、`MetaTags`、`Keywords`は訳してよい。ページタイトルは先頭のH1から取る。
-- **`{% data variables.product.* %}` / `{% data variables.copilot.* %}`。** GitHub Docsと同様、参照は残し、定義は`data/variables/`で訳す（製品名を英語のままにするかは[未決事項](#未決事項)）。調査時点では`docs/`だけでも`{% data variables.product.prodname_vscode_shortname %}`が4,000回を超える。
+- **`{% data variables.product.* %}` / `{% data variables.copilot.* %}`。** GitHub Docsと同様、参照は残し、定義は`data/variables/`で訳す（製品名は英語のまま残す。詳しくは[訳し方の指針と用語集（案）](translation-guidelines.md)）。調査時点では`docs/`だけでも`{% data variables.product.prodname_vscode_shortname %}`が4,000回を超える。
 - **タブやカード。** `{% tab label="..." %}`、`{% /tab %}`、`{% /tabs %}`、`{% /action-card %}`、`card-grid`などのHTML寄せマークアップ。`label`の表示文字列は訳してよいが、タグ自体は壊さない。
 - **フィーチャーマーカー。** `feature(agent-artifacts)`のようなライフサイクルマクロ、および`FeatureStatus`。公式ビルドがH1の横に状態を出すため、見出しへ「（プレビュー）」などを手で足さない。
 - **リンクと画像。** `/docs/terminal/basics.md`のようなルート相対リンク、相対画像パス。拡張子やアンカーを勝手に変えない。
@@ -441,7 +441,7 @@ GitHub Docsのページでは、「Microsoft」を「GitHub, Inc.」に、ライ
 5. **VS Codeの過去リリースノートとブログをどこまで載せるか。** 本文量も画像量も大きく、週次で増える。初版は最新安定版（1.146）のみ。その後は直近N本+過去分は公式リンク、という切り方もできる。既存の有志サイト（リリースノートのみ）との役割分担も検討余地がある。
 6. ~~**画像の配信方法。**~~ 決定: 初版は複製せず、公式URLを参照する。公式側のパス変更で切れるリスクは、同期時のリンク確認で拾う。
 7. **公開ドメインと、1サイトか2プロジェクトか。** 例: `docs.example.jp/github/`と`/vscode/`の一体型か、サブドメインで分割か。初版は1サイトで足りる。
-8. **製品名やUI文言の扱い。** 「VS Code」「GitHub Copilot」「Agents window」などを日本語にするか、原文の製品名を残すか。`data/variables`の訳し方に直結する。
+8. ~~**製品名やUI文言の扱い。**~~ 決定: 製品名とUIの文言は英語のまま残す。概念としてのpull requestとissueも英語のままにする。UIの文言は原文の書式のままにする（原文が太字なら太字、そうでなければ足さない）。文体や用語の詳細は[訳し方の指針と用語集（案）](translation-guidelines.md)を参照する。`data/variables`の製品名も英語のまま残す。
 9. **検索、目次、バージョン切替、更新日の出し方。** 初版の20ページでは簡易な目次で足りる。全文検索やバージョンピッカーは、第2フェーズ以降の判断にする。
 10. **翻訳文のライセンスと、誤訳の免責文面。**
 

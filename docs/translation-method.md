@@ -17,6 +17,7 @@ GitHub DocsとVS Code docsの英語原文を、安く、大量に、正確に日
 - [DeepLと強いモデルを使わない案（検討中）](#deeplと強いモデルを使わない案検討中)
 - [リントで検出する項目（案）](#リントで検出する項目案)
 - [モデル選定の進め方](#モデル選定の進め方)
+- [学習へのデータ提供と引き換えに安く使える仕組み（検討中）](#学習へのデータ提供と引き換えに安く使える仕組み検討中)
 - [未決事項](#未決事項)
 - [出典](#出典)
 
@@ -360,6 +361,20 @@ PLaMo 3 TranslateをレンタルGPUで動かす場合は、[選択肢3](#選択�
 
 候補は安価なモデルとPLaMoに限り、レビューはリントと人の抜き取りを基本とする。手順は[DeepLと強いモデルを使わない案（検討中）](#deeplと強いモデルを使わない案検討中)の「初版20ページでの試し訳」に書いた。
 
+## 学習へのデータ提供と引き換えに安く使える仕組み（検討中）
+
+入出力を学習に使わせる代わりに、無料のトークンや割引を得る仕組みがある。採否は未決である。詳細と出典は、[翻訳モデルの選び方（案）](model-evaluation.md#学習へのデータ提供と引き換えに安く使える仕組み検討中)に書いた。2026-11-11（JST）に公式で確認できた範囲の要約は、次のとおりである。
+
+- **OpenAI。** 対象の組織がAPIの入出力共有にオプトインすると、共有したトラフィックに日ごとの無料トークンが当たることがある。LaunchとGrowは、モデルのグループごとに1日あたり最大100万トークンと1,000万トークン。Buildは最大25万と250万。gpt-6.1-sol、gpt-6-astra、gpt-6-lunaなどは前者のグループに入る。対象かどうかは、設定ページに案内が出るかで決まる。Batch APIが含まれるかは、公式には書かれていない。
+- **Gemini APIの無料枠。** Gemini 3.8 FlashやGemini 3.5 Flash-Liteなどの入力と出力は、無料枠では料金がかからない。その代わり、未払い枠の内容は製品や機械学習の改善に使われる。Gemini 4 Argonは無料枠では使えない。レート制限の実数は、料金ページには出ていない。
+- **PLaMo APIのFreeプラン。** PLaMo 3.1 Primeの入出力は0円で、学習に使われる。利用量とレートリミットに制限がある。1日あたりのトークン上限の数字は、公式には載っていない。Standardは学習に使わない。
+- **OpenRouterの`:free`。** 無料のモデル枠があり、上流が学習するかどうかを設定で分けられる。1日のリクエスト数に上限がある。
+- **Anthropic、いまのxAI、MistralのAPI、DeepSeek**については、翻訳API向けに、学習提供と引き換えの無料枠を公式では確認できなかった。xAIには以前その種の制度があったという二次情報があるが、2026-11-11時点の公式FAQには見当たらない。MistralのFree modeはAPIアクセスを含まない。
+
+原文は公開のCC BY文書であり、機密性の問題は小さい。使う場合でも、各社の規約（学習への権限の確認、訳文の公表、個人情報を送らないことなど）は、その時点で読み直す必要がある。
+
+初版の20ページは、上記のうち使える枠があれば、ほぼ無料で試し訳できる見込みである。全文を同じ仕組みだけで賄えるかは、日次上限や、公式に数字の出ていないレート制限次第である。有料のバッチでも、安価なモデルなら全文は数十ドル以内に収まる見積もりである。この仕組みを採るかは、対象になれるかと、規約を受け入れられるかを見てから決める。
+
 ## 未決事項
 
 1. **モデルの方針。** 品質の高いモデルを使う案と、DeepLと強いモデルを使わない案の、どちらを採るかは未決である。
@@ -368,7 +383,7 @@ PLaMo 3 TranslateをレンタルGPUで動かす場合は、[選択肢3](#選択�
 4. ~~**用語集の初期版。**~~ 決定の範囲: 製品名とUIの文言は英語のまま残す。概念としてのpull requestとissueも英語のままにする。機能名・固有名詞は英語のまま残し、同じ語が一般の意味で使われている箇所は訳す。初期の用語集は[訳し方の指針と用語集（案）](translation-guidelines.md)に置いた。同文書の用語集で、まだ案のまま残している個別の語はある。
 5. ~~**文体。**~~ 決定: 敬体（です・ます調）で統一する。手順の文末は「〜します」を基本とし、注意や必須の操作だけ「〜してください」とする。カタカナの長音はMicrosoftの日本語スタイルガイドに倣う。UIの文言は原文の書式のままにする（原文が太字なら太字、そうでなければ足さない）。日本語と英数字のあいだに空白を入れない。読者の製品UIが日本語表示でも、英語のUI名に日本語を補わない。数字と単位は詰めて書く（10GB）。カタカナの複合語は空白で区切らない（アクセストークン）。詳細は[訳し方の指針と用語集（案）](translation-guidelines.md)を参照する。
 6. **人のレビューの範囲。** 全ページを人が読むのか、リント不合格とレビュー指摘の箇所だけにするのか。DeepLと強いモデルを使わない案を採る場合は、リントで意味の誤りを検出できないため、抜き取りの範囲がより重要になる。
-7. **原文を送ることの扱い。** 原文は公開文書なので機密性の問題は小さい。ただし無料枠（PLaMo API Freeなど）は入出力が学習に使われるので、使うかどうかを決める。
+7. **原文を送ることの扱い、および学習へのデータ提供と引き換えの無料枠を使うか。** 原文は公開文書なので機密性の問題は小さい。無料枠（OpenAIのcomplimentary tokens、Gemini APIの未払い枠、PLaMo API Freeなど）は入出力が学習に使われる。使うかどうかは未決である。詳細は[学習へのデータ提供と引き換えに安く使える仕組み（検討中）](#学習へのデータ提供と引き換えに安く使える仕組み検討中)と、[翻訳モデルの選び方（案）](model-evaluation.md#学習へのデータ提供と引き換えに安く使える仕組み検討中)を参照する。
 8. **料金の再確認。** Gemini 3.8 Flashは2027-01-01に、Gemini 4 Argonは2026-12-01に値上がりする。DeepLの単価は公式ページで確認していない。全文を流す直前に再確認する。
 
 ## 出典
@@ -381,7 +396,8 @@ PLaMo 3 TranslateをレンタルGPUで動かす場合は、[選択肢3](#選択�
 - DeepSeek: [Models & Pricing](https://api-docs.deepseek.com/quick_start/pricing)
 - DeepL: [API plans](https://support.deepl.com/hc/en-us/articles/360021200939-DeepL-API-plans)、[Usage count and billing](https://support.deepl.com/hc/en-us/articles/360020685720-Usage-count-and-billing-in-DeepL-API)、[Usage and limits](https://developers.deepl.com/docs/resources/usage-limits)、単価は[notcheapai（2026-10-25確認値）](https://notcheapai.com/guides/deepl-api-vs-google-cloud-translation-vs-openai-ai-translation-cost-per-1-million-characters-2026/)
 - Microsoft: [Azure Translator pricing](https://azure.microsoft.com/en-us/pricing/details/translator/)、[Azure Retail Prices API](https://prices.azure.com/api/retail/prices)、[Translator 2026-06-06](https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation/2026-06-06/overview)
-- PFN: [PLaMo API](https://plamo.preferredai.jp/api)、[PLaMo翻訳](https://translate.preferredai.jp/)、[PLaMo 3 Translate 31B（Hugging Face）](https://huggingface.co/pfnet/plamo-3-translate-31b)、[PLaMoコミュニティライセンス](https://plamo.preferredai.jp/info/plamo-community-license-ja)、[TRAILの料金まとめ](https://thetrail.jp/tools/plamo/pricing/)
+- PFN: [PLaMo API](https://plamo.preferredai.jp/api)、[料金とデータの取り扱い](https://docs.plamo.preferredai.jp/ja/pricing)、[PLaMo翻訳](https://translate.preferredai.jp/)、[PLaMo 3 Translate 31B（Hugging Face）](https://huggingface.co/pfnet/plamo-3-translate-31b)、[PLaMoコミュニティライセンス](https://plamo.preferredai.jp/info/plamo-community-license-ja)、[TRAILの料金まとめ](https://thetrail.jp/tools/plamo/pricing/)
+- 学習提供と引き換えの無料枠（2026-11-11確認）: OpenAI [data sharingとcomplimentary tokens](https://help.openai.com/en/articles/10306912-sharing-feedback-evaluation-and-fine-tuning-data-and-api-inputs-and-outputs-with-openai)、Google [Gemini API pricing](https://ai.google.dev/gemini-api/docs/pricing)と[Additional Terms](https://ai.google.dev/gemini-api/terms)、OpenRouter [Free Variant](https://openrouter.ai/docs/guides/routing/model-variants/free)と[Limits](https://openrouter.ai/docs/api_reference/limits)。詳細は[翻訳モデルの選び方（案）](model-evaluation.md#学習へのデータ提供と引き換えに安く使える仕組み検討中)
 - RunPod: [GPU Cloud Pricing](https://www.runpod.io/pricing)
 
 分量の測定:

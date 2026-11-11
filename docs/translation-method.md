@@ -1,0 +1,315 @@
+# 翻訳方法の比較と推奨
+
+GitHub DocsとVS Code docsの英語原文を、安く、大量に、正確に日本語へ訳す方法の比較です。料金と仕様は2026-11-11（JST）に各社の公式ページで確認しました。公式で確認できなかった値は、出典の種類を明記しています。翻訳本文の作成とパイプラインの実装は、この文書の対象外です。
+
+## 目次
+
+- [結論](#結論)
+- [前提と分量の実測](#前提と分量の実測)
+- [選択肢1: LLMのAPI（バッチ割引あり）](#選択肢1-llmのapiバッチ割引あり)
+- [選択肢2: PLaMo](#選択肢2-plamo)
+- [選択肢3: オープンウェイトモデルを自前またはレンタルGPUで動かす](#選択肢3-オープンウェイトモデルを自前またはレンタルgpuで動かす)
+- [選択肢4: 機械翻訳API](#選択肢4-機械翻訳api)
+- [選択肢5: 組み合わせ（ハイブリッド）](#選択肢5-組み合わせハイブリッド)
+- [費用の見積もり](#費用の見積もり)
+- [Xで見つけた実例と評判](#xで見つけた実例と評判)
+- [推奨するパイプライン](#推奨するパイプライン)
+- [リントで検出する項目（案）](#リントで検出する項目案)
+- [モデル選定の進め方](#モデル選定の進め方)
+- [未決事項](#未決事項)
+- [出典](#出典)
+
+## 結論
+
+1. **費用はほぼ問題にならない。** 全文（約790万入力トークン、出力は約1,120万トークン）を、品質の高い部類のモデル（GPT-6.1 SolやClaude Sonnet 5.5）のバッチAPIで訳しても、約$70〜90で済む。最安クラス（GPT-6 Luna、Claude Haiku 5.5）なら$5未満である。初版の20ページは、最上位のGPT-6 Astraでも約$3、高品質モデルなら$1未満である。機械翻訳API（DeepL、Google、Azure）は文字課金で、むしろLLMより高い（全文で約$350〜970）。
+2. **だから、最安ではなく「品質の高いモデル＋決定論的なリント」を基本にする。** 差がつくのは費用ではなく、書式を壊さないこと、訳語がぶれないこと、訳抜けがないことである。ここはプロンプトの工夫ではなく、プログラムで検出する。
+3. **推奨構成は次のとおり。**
+   - 原文をMarkdownとLiquidのパーサで分解し、Liquidタグ、インラインコード、URL、HTMLなどを短いプレースホルダに退避する。コードブロックは翻訳対象から外す。
+   - 退避済みの文章を、ファイル単位の文脈つきで、品質の高いモデルのバッチAPIに渡す（第一候補はGPT-6.1 SolかClaude Sonnet 5.5。初版の20ページで比較して決める）。
+   - 復元後にリントを通す。不合格の箇所だけ、エラー内容を添えて同じモデルでやり直し、それでも通らなければ上位モデル（Claude Opus 5.5、GPT-6 Astraなど）へ回す。
+   - 合格した訳も、別モデル（例: Claude Opus 5.5）による訳文レビューを抜き取りで行い、人が最終確認する。
+4. **PLaMoは比較候補に入れる。** 2026-11-05に公開された翻訳特化モデル「PLaMo 3 Translate」（0.8B/2B/8B/31B）は、PFNの自社評価でGPT-6.1 Sol並みの品質を、はるかに安い計算量で出すとされる。ただし文単位の対訳で学習しており、Markdownや退避タグの扱いと長い文脈の理解は自分たちで確かめる必要がある。ローカルで動かすため、出力の費用はGPU代だけになる。
+5. **初版の20ページで「ベイクオフ」（候補モデルの訳し比べ）をする。** 全候補を20ページで回しても、レビュー込みで費用は$5前後の見込み。リントの合格率、レビューでの指摘数、読みやすさで決める。
+
+## 前提と分量の実測
+
+### 対象範囲
+
+[サイト構成案](site-structure.md)の段階に合わせて、3つの範囲で見積もる。原文は`github/docs@7c3387d`と`microsoft/vscode-docs@0cc882e`である。
+
+| 範囲 | 中身 | ファイル数 |
+| --- | --- | ---: |
+| (a)初版 | 初版スコープの20ページと、そこから参照される`data/reusables`25ファイル | 45 |
+| (b)第2フェーズ | GitHub Docsのうちフロントマターの`versions`に`fpt`を含む2,529ファイル、そこから参照される`data/reusables`2,464ファイル、`data/`のその他（`ui.yml`、`glossaries`、`tables`、`variables`など。GHESリリースノートを除く）、VS Codeの`docs/`、`api/`、`learn/`、直近12本のリリースノート（`v1_136`〜`v1_147`） | 約5,500 |
+| (c)全文 | GitHub Docsの`content/`と`data/`（`features`を除く）、VS Codeの全Markdown | 約8,200 |
+
+### トークン数の測り方
+
+`tiktoken`の`o200k_base`（OpenAIの現行モデル系のトークナイザ）で、各ファイルからコードブロック（```` ``` ````と`~~~`のフェンス）を除いた残りを数えた。フロントマター、Liquidタグ、インラインコード、リンクURLは含めたままなので、退避すると入力はさらに減る。参考までに、GitHub Docsの`content/`には、Liquidタグが72,710個、その文字数が約309万字（`content/`の約15%）ある。
+
+| 範囲 | 英語の文字数（コードブロック除く） | 入力トークン（o200k_base） |
+| --- | ---: | ---: |
+| (a)初版 | 約32万字 | 約7.0万 |
+| (b)第2フェーズ | 約1,987万字 | 約441万 |
+| (c)全文 | 約3,544万字 | 約791万 |
+
+[サイト構成案](site-structure.md)の「約2,815万字」は、インラインコードやLiquidタグも除いた本文の概数である。ここでの数字はそれより大きい。退避後に実際に送る量は、この2つの間に入る。
+
+### 日本語の出力は何トークンになるか
+
+有志のVS Codeリリースノート訳[vscode-docs-ja](https://github.com/mtkn1/vscode-docs-ja)の14本（`v1_94`〜`v1_107`）と、対応する英語原文を、同じ条件（コードブロックと画像を除く）で比べた。翻訳は一切していない。
+
+| 指標 | 値 |
+| --- | ---: |
+| 日本語のトークン数 ÷ 英語のトークン数（o200k_base） | **1.41**（ファイルごとに1.24〜1.54） |
+| 日本語の文字数 ÷ 英語の文字数 | 0.73 |
+| 1トークンあたりの文字数 | 英語4.33字、日本語2.26字 |
+
+以降の見積もりでは、出力トークンを「入力の本文トークン×1.41」とする。トークナイザはモデルごとに違う。Anthropicは、Claude 4.7以降のトークナイザが同じ文章で約30%多くトークンを数えると説明しているので、Claudeは1.3倍して計算した。PFNはPLaMoのトークナイザが日本語で効率がよいと説明しているが、ここでは安全側にo200k_baseの値をそのまま使った。
+
+### 見積もりの仮定
+
+- 1リクエストあたり、指示文と用語集とプレースホルダの凡例で1,500トークンを足す。リクエスト数は「本文トークン÷3,000×1.3」とした（短い再利用片はまとめて送る前提）。プロンプトキャッシュの割引は計算に入れていない。
+- 推論（thinking）トークンは出力として課金されるので、翻訳では推論をオフまたは最小にする前提。
+- 円換算が必要なものは1ドル=155円とした。
+
+## 選択肢1: LLMのAPI（バッチ割引あり）
+
+いずれも100万トークンあたりの米ドルで、バッチは非同期でまとめて処理する代わりに安くなる料金である。
+
+| 区分 | モデル | 通常（入力/出力） | バッチ（入力/出力） | 備考 |
+| --- | --- | --- | --- | --- |
+| 安価 | GPT-6 Luna | $0.10/$0.50 | $0.05/$0.25 | OpenAIの最安クラス |
+| 安価 | Claude Haiku 5.5 | $0.10/$0.50 | $0.05/$0.25 | プロンプトが10万トークン以下の場合。超えると5倍 |
+| 安価 | Gemini 3.5 Flash-Lite | $0.30/$2.50 | $0.15/$1.25 | Googleが「翻訳向け」と説明している低価格モデル |
+| 安価 | DeepSeek Flash（V4.1-Flash） | ピーク$0.30/$1.20 | バッチ無し。オフピークは半額の$0.15/$0.60 | ピークはUTCの平日01:00〜04:00と06:00〜10:00（JSTの10:00〜13:00と15:00〜19:00） |
+| 中位 | Gemini 3.8 Flash | $0.75/$3.75 | $0.375/$1.875 | 2026-12-31までの価格。2027-01-01から倍になる |
+| 中位 | GPT-6.1 Terra | $1.00/$5.00 | $0.50/$2.50 | |
+| 高品質 | GPT-6.1 Sol | $2.00/$10.00 | $1.00/$5.00 | |
+| 高品質 | Claude Sonnet 5.5 | $2.00/$10.00 | $1.00/$5.00 | キャッシュ読み込みは入力の5% |
+| 高品質 | Gemini 4 Argon | $2.00/$10.00 | $1.00/$5.00 | 2026-11-30までの価格。12-01からは通常$4/$20、バッチ$2/$10 |
+| 最上位 | Claude Opus 5.5 | $4.00/$20.00 | $2.00/$10.00 | |
+| 最上位 | GPT-6 Astra | $10.00/$50.00 | $5.00/$25.00 | |
+
+出典: [OpenAI Pricing](https://platform.openai.com/docs/pricing)、[Anthropic Pricing](https://docs.anthropic.com/en/docs/about-claude/pricing)、[Gemini Developer API pricing](https://ai.google.dev/gemini-api/docs/pricing)、[DeepSeek Models & Pricing](https://api-docs.deepseek.com/quick_start/pricing)。
+
+補足:
+
+- **割引の重ね掛け。** OpenAIとAnthropicはバッチとプロンプトキャッシュを併用できる。毎回送る指示文と用語集をキャッシュに載せれば、その部分の入力はさらに1/10〜1/20になる。
+- **翻訳品質の公開評価。** RWSのTrainAIチームの翻訳評価「M-GATE」では、29言語の総合でGPT-6.1 Solが5点満点の4.38で首位、GPT-6 SolとGPT-6 Astraが4.37と報じられている（[X上の紹介](https://x.com/nobu_nuvo/status/2110189835663364162)。一次資料は未確認）。日本語の技術文書だけを対象にした中立な評価は見つからなかった。
+- **向き不向き。** LLMは指示に従えるので、「プレースホルダを変えない」「用語集に従う」「です・ます調」「日本語と英数字の間に空白を入れない」などを指示でき、違反はリントで検出して差し戻せる。一方、長い入力では訳抜けや要約（勝手な短縮）が起きうるので、分割とリントが前提になる。
+
+## 選択肢2: PLaMo
+
+Preferred Networks（PFN）の国産LLMである。翻訳では3つの入り口がある。
+
+### PLaMo 3 Translate（オープンウェイト）
+
+- 2026-11-05に重みが公開された翻訳特化モデル。0.8B、2B、8B、31Bの4サイズで、BF16、FP8、4bit、GGUF、MLXなどの形式がある（[Hugging Face](https://huggingface.co/pfnet/plamo-3-translate-31b)）。
+- 53言語に対応する。**用語集（glossary）**、周辺の**文脈（context）**、**直前の訳文の履歴**、**常体/敬体の指定**を、プロンプトの専用欄で渡せる。用語集を指示文に埋め込む汎用LLMより、扱いがはっきりしている。
+- 学習時の最大長は入出力の合計32,768トークン。長い文書は分割が必要。
+- vLLMやllama.cppで動く。31BはW4A16形式で約17GB、8BはW4A16で約5.7GBである。量子化（Q2_Kを除く）による精度低下は小さいと、PFNが表で示している。
+- PFNの評価（日英3ベンチマークとFLORES+の平均）では、PLaMo 3 Translate 31Bが0.616で、GPT-6.1 Solの0.615、GPT-6 Astraの0.613、DeepLの0.593、Google翻訳（LLM）の0.592と並ぶか上回る。Claude Fable 5.1は0.632で上である。PFNはコストを「10万文字あたり14.2円」（GPT-6.1 Solは283円、DeepLは250円）と試算している（[PLaMo翻訳](https://translate.preferredai.jp/)）。いずれもPFN自身の評価である。
+- **ライセンス**は[PLaMoコミュニティライセンス](https://plamo.preferredai.jp/info/plamo-community-license-ja)（2026-11-09改定）。個人・非商用は無償で登録不要。商用は、売上10億円以下なら事前登録で無償。訳文（生成物）は公表できるが、**書籍や論文に類する独立した長文の公表物の全部または実質的な部分として公表する場合は、奥付や末尾などに「PLaMoを翻訳その他の変換に利用した」旨を書く**必要がある（第5条第2項）。本サイトに当てはまるかは解釈の余地があるので、採用するならフッターに明記するのが安全である。
+
+### PLaMo API（PLaMo 3.1 Prime）
+
+- 汎用LLMのAPI。Standardプランは100万トークンあたり**入力60円、出力250円**（12.8万トークンまで。それ以上も記念期間中は同額）。入出力を学習に使わない。無料のFreeプランもあるが、入出力が学習に使われる（[PLaMo API](https://plamo.preferredai.jp/api)）。
+- バッチ割引の記載は無い。
+- 1ドル=155円で換算すると約$0.39/$1.61で、表の中位モデルより安い。
+
+### PLaMo翻訳（サービス）
+
+- Webアプリ、ブラウザ拡張、ファイル翻訳のサービス。Proは月5,000,000文字のテキスト翻訳で月額2,980円（税別）など（[TRAILの料金まとめ](https://thetrail.jp/tools/plamo/pricing/)、2026-11-01確認値）。
+- **APIは公開されていない**（PFN自身が「PLaMo翻訳はAPIを公開していない」と書いている）。一括処理には使えないので、比較対象から外す。
+
+## 選択肢3: オープンウェイトモデルを自前またはレンタルGPUで動かす
+
+候補はPLaMo 3 Translate、Gemma 4、Qwenなど。手元のGPUで動けば電気代だけ、レンタルならGPUの時間課金である。
+
+| GPU（RunPod、オンデマンド） | 1時間あたり | 想定するモデル |
+| --- | ---: | --- |
+| L40S 48GB | $0.79（Community）〜$1.09（Secure） | PLaMo 3 Translate 8B（FP8）、31B（4bit） |
+| H100 SXM 80GB | $2.69〜$3.99 | PLaMo 3 Translate 31B（FP8） |
+| RTX 4090 24GB | $0.34〜$0.89 | 8B、2B |
+
+出典: [RunPod Pricing](https://www.runpod.io/pricing)（2026-11-09更新）。
+
+スループットの公開ベンチマークは見つからなかった。X上には「31BのW4A16をJetson AGX Orinで6.9トークン/秒」「2BをCore i5のCPUだけで18トークン/秒」という個人の報告がある程度である（[akit37](https://x.com/akit37/status/2118638042126897194)、[nekogang](https://x.com/nekogang/status/2118401190421725275)）。
+
+**以下は未実測の仮定である。** vLLMで多数のリクエストを並列に流し、8BをL40S 1枚で毎秒500〜2,000出力トークン出せるとすると、全文の出力約1,120万トークンは約1.5〜6時間、GPU代は約$1〜7になる。31BをH100 1枚で毎秒300〜1,000トークンなら約3〜10時間、約$8〜41である。仮に10倍遅くても、APIの高品質モデルと同程度の費用に収まる。費用より、環境構築と運用の手間が主なコストになる。
+
+## 選択肢4: 機械翻訳API
+
+文字数課金で、Markdownの構文保護は「HTML/XMLタグとして渡せば保護される」方式が中心である。
+
+| サービス | 料金 | 用語集 | マークアップの扱い |
+| --- | --- | --- | --- |
+| DeepL API | Growthプランは月$32.50で毎月100万文字込み、超過は100万文字あたり$27.50。月5,000万文字が上限。Developerプランは累計100万文字まで無料 | あり | `tag_handling`にxmlかhtmlを指定すると、タグを保護し、タグの文字は課金しない。`.md`ファイルの文書翻訳もある |
+| Google Cloud Translation（NMT） | 100万文字あたり$20。毎月50万文字まで無料（$10のクレジット） | あり（Advanced） | HTMLとして送ればタグを保護 |
+| Google Translation LLM | 入力100万文字あたり$10＋出力100万文字あたり$10 | 要確認 | 要確認 |
+| Google Adaptive Translation | 入力＋出力で各$25 | 参考訳で調整 | 要確認 |
+| Azure Translator（S1） | 100万文字あたり$10。毎月200万文字まで無料（F0） | 動的辞書とカスタム翻訳 | `textType=html`でタグを保護。2026-06-06版APIはGPT-5.1などのLLMも選べ、その場合はAzure OpenAIのトークン課金 |
+
+出典: [DeepL Help Center（API plans）](https://support.deepl.com/hc/en-us/articles/360021200939-DeepL-API-plans)、[DeepL Help Center（Usage count and billing）](https://support.deepl.com/hc/en-us/articles/360020685720-Usage-count-and-billing-in-DeepL-API)、[DeepL Usage and limits](https://developers.deepl.com/docs/resources/usage-limits)、[Cloud Translation pricing](https://cloud.google.com/translate/pricing)、[Azure Retail Prices API](https://prices.azure.com/api/retail/prices)（`Translator Text`のS1 Characters）、[Azure Translator 2026-06-06](https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation/2026-06-06/overview)。
+
+DeepLの単価は、公式の料金ページが地域ごとの動的表示で取得できなかったため、[第三者の2026-10-25確認値](https://notcheapai.com/guides/deepl-api-vs-google-cloud-translation-vs-openai-ai-translation-cost-per-1-million-characters-2026/)を使った。契約前に公式で確認する。
+
+機械翻訳APIの弱点は、指示が出せないことである。「プレースホルダの前後で語順を整える」「です・ます調」「日本語と英数字の間に空白を入れない」は制御できず、後処理か人手で直すことになる。Google翻訳でインラインコードが文末に寄って技術文書が読みにくい、という報告もある（[chom](https://x.com/chom/status/2119525403090133412)）。
+
+## 選択肢5: 組み合わせ（ハイブリッド）
+
+| 構成 | 狙い | 評価 |
+| --- | --- | --- |
+| 安いモデルで一次訳→リント→不合格だけ上位モデル | 費用を最小にする | 費用は最小だが、リントは書式と用語しか見られない。訳の自然さや誤訳は安いモデルの水準のまま残る |
+| 高品質モデルで一次訳→リント→不合格だけ最上位モデル→別モデルで抜き取りレビュー | 品質を最大にする | 全文でも$100前後。**推奨** |
+| 機械翻訳→LLMで後編集 | 機械翻訳の安定性とLLMの自然さ | 機械翻訳の文字課金とLLMの課金が二重にかかり、LLM単独より高い。利点が小さい |
+| PLaMo 3 Translate（ローカル）で一次訳→LLMで後編集やレビュー | 翻訳特化モデルの訳質を、ほぼ無料で得る | ベイクオフ次第で有力。Markdownと長い文脈の扱いを先に確認する |
+
+## 費用の見積もり
+
+[前提](#見積もりの仮定)に従った米ドルの概算。小数点以下は丸めている。
+
+### LLMのAPIで、全量を1回訳す場合
+
+| モデル | (a)初版20ページ | (b)第2フェーズ | (c)全文 |
+| --- | ---: | ---: | ---: |
+| GPT-6 Luna（Batch） | $0.03 | $2 | $3 |
+| Claude Haiku 5.5（Batch） | $0.04 | $2 | $4 |
+| DeepSeek Flash（オフピーク） | $0.08 | $5 | $9 |
+| Gemini 3.5 Flash-Lite（Batch） | $0.14 | $9 | $16 |
+| PLaMo 3.1 Prime（API Standard） | $0.21 | $13 | $23 |
+| Gemini 3.8 Flash（Batch、2026年内の価格） | $0.23 | $14 | $26 |
+| GPT-6.1 Terra（Batch） | $0.31 | $19 | $34 |
+| **GPT-6.1 Sol（Batch）** | **$0.61** | **$38** | **$69** |
+| **Claude Sonnet 5.5（Batch）** | **$0.80** | **$50** | **$89** |
+| Gemini 4 Argon（Batch、12月以降の価格） | $1.23 | $77 | $138 |
+| Claude Opus 5.5（Batch） | $1.59 | $100 | $179 |
+| GPT-6 Astra（Batch） | $3.06 | $192 | $344 |
+
+### ハイブリッド
+
+| 構成 | (a) | (b) | (c) |
+| --- | ---: | ---: | ---: |
+| GPT-6 Lunaで一次訳＋15%をGPT-6.1 Solでやり直し | $0.12 | $8 | $14 |
+| Gemini 3.8 Flashで一次訳＋15%をClaude Sonnet 5.5でやり直し | $0.35 | $22 | $39 |
+| **GPT-6.1 Solで一次訳＋15%をClaude Opus 5.5でやり直し** | **$0.85** | **$53** | **$96** |
+
+抜き取りレビューを別モデルで足す場合は、レビュー対象の入力（原文＋訳文）と短い出力の分が加わる。全文の30%を最上位モデルでレビューしても、数十ドルの追加で収まる見込みである。
+
+### 機械翻訳API（コードブロック除く全文字数で計算した上限側）
+
+| サービス | (a) | (b) | (c) |
+| --- | ---: | ---: | ---: |
+| Azure Translator（S1） | $3（無料枠内） | $199 | $354 |
+| Google Translation LLM | $5 | $345 | $615 |
+| Google NMT | $6（ほぼ無料枠内） | $397 | $709 |
+| DeepL API（超過単価） | $9（Developerの無料枠内） | $547 | $975 |
+| Google Adaptive | $14 | $861 | $1,537 |
+
+DeepL Growthは月5,000万文字が上限なので、全文（約3,544万字）は1か月に収まる。退避でLiquidやインラインコードを課金対象から外せば、2割ほど下がる。
+
+### PLaMo 3 Translateをレンタルで動かす場合
+
+[選択肢3](#選択肢3-オープンウェイトモデルを自前またはレンタルgpuで動かす)の仮定どおりなら、全文で約$1〜41。初版の20ページは手元のMacやGPUで足りる。
+
+### 継続運用
+
+VS Codeの直近12本のリリースノートは、合計で約7.4万トークン（1本あたり約6,000トークン）だった。Claude Sonnet 5.5のバッチで1本訳しても$0.1未満である。差分だけ再翻訳する運用なら、月の費用は数ドル以下に収まる。
+
+## Xで見つけた実例と評判
+
+2026-11-11に、Xを日本語と英語で約20通りの条件で検索した。個人の感想が中心で、検証条件はそろっていない。採否の判断材料ではなく、試すときの注意点として読む。
+
+### 技術文書をLLMで訳す
+
+- Djangoドキュメントの翻訳品質を比べた人は、翻訳品質は「6 Astra ≒ Sonnet 5.5 ≧ Gemini 4 Argon ＞ Opus 5.5 ＞ その他」、品質評価はOpus 5.5が「一択」と書いている。訳すモデルと評価するモデルを分ける構成を勧めている（[Libratechw](https://x.com/Libratechw/status/2111275741883314226)）。
+- Microsoftの[Co-op Translator](https://x.com/AzureDevOps/status/2054579939936973289)は、「AI翻訳は意味ではなくMarkdownの構造で失敗している」として、パーサによるコードフェンス処理、リストを考慮した分割、アンカーの正規化、CJKの強調記号の安全な扱い、画像パスの修正を入れたと紹介している。品質確認でも、人手の修正の保持、Markdown表の破損、訳抜けや短縮の検出を重視しているという（[ochtum18による紹介](https://x.com/ochtum18/status/2113769152821522650)）。本プロジェクトのリント方針と同じ考え方である。
+- OpenClawのドキュメントは、専用リポジトリに翻訳を移し、言語ごとの用語集と翻訳メモリを整備して、「元の英語ドキュメントが本当に更新されたときだけ再翻訳する」仕組みにしたという（[h_a_t_a_r_a_k_e](https://x.com/h_a_t_a_r_a_k_e/status/2040833794195038555)）。FastAPIもドキュメントの翻訳パイプラインをLLM中心にしている（[repojournal](https://x.com/repojournal/status/2090358743988945386)）。
+- DeepSeekで300記事以上を訳した人は、「安く訳せると思った。その先で、品質の問題が見えた」と書いている（[autobullbear](https://x.com/autobullbear/status/2111984463542661450)）。DeepSeek V4 Proの日本語が不自然で読みづらい、という声もある（[snow_r18](https://x.com/snow_r18/status/2110002689954476158)）。
+
+### 用語の統一
+
+- 用語の統一は、AIへの指示より、決まった訳語に置き換えるスクリプトに任せたほうが表記揺れを無くせる、という意見がある（[rad_vrc](https://x.com/rad_vrc/status/1962360069833855382)）。
+- 翻訳時は用語の指示をせずに訳させ、そのあと文脈を保ったまま対訳表どおりの訳語に置き換える、と処理を分けた例もある（[saki_uskr](https://x.com/saki_uskr/status/2099482932280951071)）。
+- 「DeepLでもPLaMoでも翻訳漏れや用語不統一は同じくらい生じる」「こういう形式チェックはGPT、Claude、Geminiにさせると効率的」という特許翻訳者の声もある（[murapat](https://x.com/murapat/status/1998990789091996046)）。
+
+### PLaMo
+
+- 医学論文の抄録60本（730文）で、PLaMo 3 Translateの0.8B/2B/8Bを用語集あり/なしで試し、Claude Sonnetと比べた検証がある。結論は「モデルの重み＋用語集が有効でした」（[poporacchi](https://x.com/poporacchi/status/2118834928498684404)）。一方で、文単位で訳すと、文中で定義された略語の意味が伝わらず、嗅球を指すOBが「腹腔内投与」「産科」になる誤訳が出たという（[poporacchi](https://x.com/poporacchi/status/2118831147023237134)）。弱点は「訳語の知識よりも論文全体の内容理解」で、翻訳モデルの教師データが文単位の対訳だからだろう、とも書いている（[poporacchi](https://x.com/poporacchi/status/2120141306928501225)）。
+- 「技術文書の翻訳については全幅の信頼を置いている」という声がある（[h1de_n_n](https://x.com/h1de_n_n/status/2112188607251509415)）。Google翻訳ではインラインコードが文末に来て読みづらかったが、PLaMoではそれがないという（[chom](https://x.com/chom/status/2119525403090133412)）。
+- 逆に、PLaMo 3 Translateを技術文書などで試して「訳文の品質がまだ低い」「gemma4の代替にはならなかった」という声もある（[nnnczer2](https://x.com/nnnczer2/status/2119826281453990344)）。
+- PLaMo翻訳（サービス）について、バージョンが上がってから「em dashを多用する」（[minatochang](https://x.com/minatochang/status/2111884157911699567)）、「カタカナ表記に逃げまくる」（[idunaf_open](https://x.com/idunaf_open/status/2109975986704118010)）という指摘がある。リントで検出できる種類の癖である。
+- PLaMo翻訳はタグ混じりの文章を訳せるようで、段落ごとに訳し、リンクはあらかじめプレースホルダにしている、という使い方の報告がある（[tanakh](https://x.com/tanakh/status/2118534399184756838)）。READMEの見出しを残して訳せた、Markdownの翻訳も問題なさそう、という報告もある（[V3GAWAV3](https://x.com/V3GAWAV3/status/2107776501810655730)、[nekogang](https://x.com/nekogang/status/2118401190421725275)）。GitHub DocsのLiquidを含む文書で保てるかは未検証である。
+- 「PLaMo翻訳特化モデルのAPIがない」ので別の翻訳特化モデルに切り替えた、という声もある（[millfi_EOS](https://x.com/millfi_EOS/status/2111470882975793359)）。PFNのコスト主張については、「本文には料金や比較条件がない。性能の数字と費用の売り文句は分けて読みたい」という冷静な指摘がある（[connect24h](https://x.com/connect24h/status/2107981918423892272)）。
+
+### GitHub Docsの公式日本語版
+
+- 「日本語にするとレイアウト崩れる」という声がある（[_skmkzyk](https://x.com/_skmkzyk/status/2027552938483454445)）。誤訳はPRではなくIssueで報告すると直してもらえた、という報告もある（[so_zaneli](https://x.com/so_zaneli/status/1890254879551271086)）。
+
+## 推奨するパイプライン
+
+実装は別途、安価な一括処理に任せる。ここでは流れと責任分担だけを決める。
+
+1. **分解。** MarkdownをASTに変換し（例: remark/mdast）、Liquidを独自のトークナイザで切り出す。翻訳単位は「段落、見出し、リスト項目、表のセル、注意書き、画像のalt、フロントマターの訳してよい値」とする。表は行や列の構造を保ったまま、セル単位で訳す。
+2. **退避。** Liquidタグ、インラインコード、URL、HTMLタグ、`AUTOTITLE`、`octicon`などを、`⟦1⟧`のような短いプレースホルダに置き換える。`{% data variables.product.prodname_copilot %}`のように文中で名詞になるものは、展開後の英語（例: GitHub Copilot）を凡例としてモデルに渡し、助詞が自然につながるようにする。コードブロックは送らない。
+3. **翻訳。** ファイル単位でまとめ、セグメントIDつきのJSONで返させる（構造化出力）。用語集は、そのファイルに出る語だけを抜き出して渡す。指示文と用語集はキャッシュに載せる。バッチAPIで流す。
+4. **復元とリント。** プレースホルダを戻し、[リント](#リントで検出する項目案)を全件にかける。
+5. **やり直しと格上げ。** 不合格のセグメントは、エラー内容を添えて同じモデルに1回だけやり直させる。それでも不合格なら上位モデルに回す。それでも駄目なら原文のまま残して人の確認待ちにする（壊れた訳は公開しない）。
+6. **レビュー。** 別のモデルで、誤訳、訳抜け、不自然さを抜き取りでレビューし、指摘を人が確認する。人の修正は翻訳メモリに保存し、次の再翻訳で上書きしない。
+7. **差分の再翻訳。** セグメントの原文ハッシュをキーに翻訳メモリを持ち、上流のコミットで変わったセグメントだけを訳し直す。訳文ファイルのフロントマターに翻訳元コミットを記録する（[サイト構成案](site-structure.md#翻訳元コミットの記録)）。
+
+## リントで検出する項目（案）
+
+すべて、原文と訳文を比べる決定論的なプログラムで判定する。LLMの判断に頼らない。
+
+| 区分 | 検出すること |
+| --- | --- |
+| 構文の一致 | Liquidタグの数、種類、順序、中身が原文と一致する。`{%-`の空白制御も一致する。`ifversion`の開閉が対応する |
+| プレースホルダ | 退避したプレースホルダが、すべて1回ずつ残っている。勝手に増えたり消えたりしていない |
+| Markdown構造 | 見出しの数とレベル、リストの項目数と入れ子、表の行数と列数、コードフェンスの開閉、注意書き（`> [!NOTE]`など）の種類が一致する |
+| リンクと画像 | リンク先URLと画像パスが原文と一致する。内部リンクが解決できる。アンカーが存在する |
+| フロントマター | YAMLとして読める。キーが原文と同じ。訳してよいキー以外の値が変わっていない |
+| 訳抜けと短縮 | 訳文に英語の文がそのまま残っていない（用語集とコードを除く）。原文に対する訳文の長さの比が、想定の範囲（例: 文字数比0.4〜1.2）に収まる |
+| 用語集 | 用語集の英語が原文に出たら、指定の訳語（または英語のまま）が訳文に出ている。禁止訳語が出ていない |
+| 表記ルール | 日本語と英数字の間に空白が無い。全角英数字が無い。句読点と括弧の種類がルールどおり。です・ます調で統一されている。em dash（—）の多用が無い |
+| 文字 | 制御文字、置換文字（U+FFFD）、プロンプトの指示文の混入が無い |
+
+日本語の表記ルールには、[textlint](https://github.com/textlint/textlint)の既存ルールを使える可能性がある。原文と訳文を比べる検査は、独自に書く。
+
+## モデル選定の進め方
+
+1. 初版の20ページ（約7万トークン）を、候補ごとに全部訳す。候補は、GPT-6.1 Sol、Claude Sonnet 5.5、Gemini 4 Argon、Gemini 3.8 Flash、GPT-6 Luna、Claude Haiku 5.5、PLaMo 3 Translate 31B（ローカル）、PLaMo 3.1 Prime（API）とする。API分の費用は合計で$5前後の見込み。
+2. 各候補の訳をリントにかけ、セグメントの合格率を比べる。
+3. 合格した訳を、別系統の最上位モデル（例: Claude Opus 5.5）でレビューし、誤訳と訳抜けの指摘数を比べる。
+4. 人が、公式日本語版で崩れていたGitHub Docsの2ページ（[サイト構成案](site-structure.md#初版スコープ)の#14と#18）を中心に読み比べる。
+5. 合格率、指摘数、読みやすさ、費用で、一次訳のモデルと格上げ先のモデルを決める。
+
+## 未決事項
+
+1. **一次訳のモデル。** ベイクオフの結果で決める。費用差は小さいので、品質で決めてよい。
+2. **PLaMo 3 Translateを使う場合のライセンス表示。** 第5条第2項の「独立した長文の公表物」に当たるかに関わらず、フッターに「翻訳にPLaMoを利用」と書くか。
+3. **用語集の初期版。** 製品名やUI文言を訳すか英語のまま残すか（[サイト構成案](site-structure.md#未決事項)の8）。GitHub Docsの`data/glossaries`と、VS CodeのUIの日本語表示を参考にできる。
+4. **文体。** です・ます調で統一するか。
+5. **人のレビューの範囲。** 全ページを人が読むのか、リント不合格とレビュー指摘の箇所だけにするのか。
+6. **原文を送ることの扱い。** 原文は公開文書なので機密性の問題は小さい。ただし無料枠（PLaMo API Freeなど）は入出力が学習に使われるので、使うかどうかを決める。
+7. **料金の再確認。** Gemini 3.8 Flashは2027-01-01に、Gemini 4 Argonは2026-12-01に値上がりする。DeepLの単価は公式ページで確認していない。全文を流す直前に再確認する。
+
+## 出典
+
+料金と仕様（2026-11-11確認）:
+
+- OpenAI: [Pricing](https://platform.openai.com/docs/pricing)
+- Anthropic: [Pricing](https://docs.anthropic.com/en/docs/about-claude/pricing)
+- Google: [Gemini Developer API pricing](https://ai.google.dev/gemini-api/docs/pricing)、[Cloud Translation pricing](https://cloud.google.com/translate/pricing)
+- DeepSeek: [Models & Pricing](https://api-docs.deepseek.com/quick_start/pricing)
+- DeepL: [API plans](https://support.deepl.com/hc/en-us/articles/360021200939-DeepL-API-plans)、[Usage count and billing](https://support.deepl.com/hc/en-us/articles/360020685720-Usage-count-and-billing-in-DeepL-API)、[Usage and limits](https://developers.deepl.com/docs/resources/usage-limits)、単価は[notcheapai（2026-10-25確認値）](https://notcheapai.com/guides/deepl-api-vs-google-cloud-translation-vs-openai-ai-translation-cost-per-1-million-characters-2026/)
+- Microsoft: [Azure Translator pricing](https://azure.microsoft.com/en-us/pricing/details/translator/)、[Azure Retail Prices API](https://prices.azure.com/api/retail/prices)、[Translator 2026-06-06](https://learn.microsoft.com/en-us/azure/ai-services/translator/text-translation/2026-06-06/overview)
+- PFN: [PLaMo API](https://plamo.preferredai.jp/api)、[PLaMo翻訳](https://translate.preferredai.jp/)、[PLaMo 3 Translate 31B（Hugging Face）](https://huggingface.co/pfnet/plamo-3-translate-31b)、[PLaMoコミュニティライセンス](https://plamo.preferredai.jp/info/plamo-community-license-ja)、[TRAILの料金まとめ](https://thetrail.jp/tools/plamo/pricing/)
+- RunPod: [GPU Cloud Pricing](https://www.runpod.io/pricing)
+
+分量の測定:
+
+- 原文: `github/docs@7c3387d`、`microsoft/vscode-docs@0cc882e`
+- 日本語の比率: [mtkn1/vscode-docs-ja](https://github.com/mtkn1/vscode-docs-ja)のリリースノート14本
+- トークナイザ: [tiktoken](https://github.com/openai/tiktoken)の`o200k_base`

@@ -8,6 +8,8 @@ GitHub DocsとVS Codeのドキュメントを、原文の構成どおりにま�
 
 - [目的](#目的)
 - [対象範囲と優先順位](#対象範囲と優先順位)
+  - [初版スコープ](#初版スコープ)
+  - [次のフェーズ](#次のフェーズ)
 - [原文リポジトリと同期方針](#原文リポジトリと同期方針)
 - [ディレクトリとURLの対応](#ディレクトリとurlの対応)
 - [翻訳してはいけない構文と、書式が壊れやすい点](#翻訳してはいけない構文と書式が壊れやすい点)
@@ -26,7 +28,7 @@ VS Codeの週次リリースやagent周辺の機能、GitHub Docsの比較的新
 
 ## 対象範囲と優先順位
 
-対象は次の2系統である。どちらも、原文のフォルダ構成とURLに沿って「まるごと」訳すことを最終形とする。ただし初版から全バージョン・全画像・全APIリファレンスを静的出力すると、後述のホスティング制限に抵触しやすい。公開範囲は段階的に広げる。
+対象は次の2系統である。どちらも、原文のフォルダ構成とURLに沿って「まるごと」訳すことを最終形とする。公開範囲は段階的に広げる。初版は合計20ページ以内に絞り、新しい情報と書式崩壊の影響が大きいページだけを出す。
 
 | 対象 | 原文 | 最終形に含めるもの |
 | --- | --- | --- |
@@ -39,17 +41,53 @@ VS Codeの週次リリースやagent周辺の機能、GitHub Docsの比較的新
 - 公式日本語版（機械翻訳）の流用。
 - 製品の商標・ロゴの独自利用。ライセンスは商標権を付与しない。
 
-### 優先して訳すもの
+### 初版スコープ
 
-モチベーションに合わせて、新しい情報と書式崩壊の影響が大きいページを先にする。
+初版の公開対象は、次の**20ページ**に限る（indexなどの薄いランディングは含めない）。GitHub Docs側はバージョン展開せず、各原文ファイルをfptのURLで1ページとして出す。これらのページが参照する`data/reusables`や`data/variables`（VS Code側の変数を含む）だけを、あわせて訳す。
 
-1. **VS Codeのagent周辺と、直近の週次リリースノート。** `docs/agents/`（68ファイル）、`docs/agent-customization/`（12ファイル）、`docs/chat/`、`docs/intelligentapps/`、および`release-notes/`の最新版（調査時点ではv1.146）。
-2. **GitHub Docsの新しい機能領域。** とくに`content/copilot/`（568ファイル）。あわせて、直近に原文が更新されたActionsやリポジトリ、Codespacesなどのページ。
-3. **両サイトの「いま使う」中核。** VS Codeの`docs/`全体と`api/`、`learn/`。GitHub DocsのFree, Pro, & Team（fpt）向け中核（`get-started`、`actions`、`repositories`、`pull-requests`、`issues`、`authentication`、`codespaces`、`pages`、`github-cli`など）。
-4. **GitHub Enterprise Cloud（ghec）向けページ、残りのGitHub Docsセクション。**
-5. **GitHub Enterprise Server（ghes）の現行4バージョン、過去のVS Codeリリースノート、ブログ、REST/GraphQLリファレンス。**
+選定の根拠は、プロジェクトの動機そのものである。VS Codeには公式の日本語ドキュメントが無い。GitHub Docsの公式日本語版（機械翻訳）は、agent/クラウドエージェント周辺で書式や訳文の崩壊が目立つ。2026-11-11に公式日本語ページをいくつか開いて確認した例は次のとおり。
 
-REST（318ファイルが最大約1,487ページに展開）とGraphQL（62ファイルが最大約304ページに展開）は、本文量が少なく自動生成の比重が高い。更新頻度も高いため、初版では後回しを推奨する。`content/site-policy/`（72ファイル、約11.6万語）は法律文書なので、訳すかどうかは別途判断する。
+- [GitHubのクラウド上でCopilotの利用](https://docs.github.com/ja/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github): 導入文の語順が崩れている（「セッションGitHub直接開始し」）。太字が途中で閉じる（「** 環境を**開き」）。ボタン名が欠落する（「[ **** ]をクリック」）。手順リストが段落に潰れ、英語の注記が未訳のまま残る。
+- [GitHub Actions上のエージェントの開発環境を構成する](https://docs.github.com/ja/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment): 「を使用して、の開発環境をカスタマイズできます」のように目的語が欠ける。「Windows開発環境Copilot提供する」のように助詞が落ちる。表が本文に崩れ、`AUTOTITLE`がリンクテキストのまま残り、ホスト名のリストやプロキシ設定の表がコードフェンスや文章に混線する。
+
+パスは調査時点の上流リポジトリ基準（`microsoft/vscode-docs@0cc882e`、`github/docs@7c3387d`）である。
+
+| # | 系統 | 上流パス | 内容 | 初版に入れる理由 |
+| ---: | --- | --- | --- | --- |
+| 1 | VS Code | `release-notes/v1_146.md` | Visual Studio Code 1.146（2026-11-11、最新安定版） | 週次リリースの最新情報。公式日本語も有志の全体訳も無い |
+| 2 | VS Code | `docs/agents/overview.md` | VS CodeでAI/エージェントを使う入口 | agent機能の起点。公式日本語が無い |
+| 3 | VS Code | `docs/agents/quickstart.md` | エージェントで最初のタスクを完了するクイックスタート | 初めて使う人向けの最短経路 |
+| 4 | VS Code | `docs/agents/agents-tutorial.md` | エージェント開発のチュートリアル | 実際の操作を追える導入 |
+| 5 | VS Code | `docs/agents/concepts/agents.md` | AIエージェントの概念 | 後続ページの前提になる解説 |
+| 6 | VS Code | `docs/agents/run/agents-window.md` | Agents windowの使い方 | 並行セッションやPRまでの主UI |
+| 7 | VS Code | `docs/agents/run/chat-view.md` | Chat viewの使い方 | 日常的に使うもう一つの主UI |
+| 8 | VS Code | `docs/agents/run/cloud-sandbox-sessions.md` | クラウドでエージェントセッションを実行する | GitHub側のクラウドエージェントと接続する操作 |
+| 9 | VS Code | `docs/agent-customization/overview.md` | エージェントのカスタマイズ概要 | カスタム指示・MCP・カスタムエージェントの入口 |
+| 10 | VS Code | `docs/agent-customization/custom-agents.md` | カスタムエージェント | 新しい機能領域の中核 |
+| 11 | VS Code | `docs/agent-customization/custom-instructions.md` | カスタム指示 | プロジェクト規約をエージェントに渡す基本手段 |
+| 12 | VS Code | `docs/agent-customization/mcp-servers.md` | MCPサーバーの追加と利用 | ツール拡張の基本。GitHub側のMCPページと対になる |
+| 13 | GitHub Docs | `content/copilot/concepts/agent-capabilities/about-agents/about-github-copilot-agents.md` | GitHub Copilot agentsの概要 | クラウドエージェントとエージェントモードの違いを含む概念ページ |
+| 14 | GitHub Docs | `content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md` | GitHub上でクラウドエージェントを使う | 公式日本語の書式崩壊が顕著な、Webからの主How-to |
+| 15 | GitHub Docs | `content/copilot/how-tos/use-copilot-agents/cloud-agent/start-copilot-sessions.md` | Copilotセッションの開始方法 | 開始経路（GitHub、IDE、CLI、モバイルなど）の一覧 |
+| 16 | GitHub Docs | `content/copilot/how-tos/copilot-in-your-ide/use-copilot-agents/use-cloud-agent-in-your-ide.md` | IDEからクラウドエージェントを使う | VS Codeなど、エディタ側からの委任手順 |
+| 17 | GitHub Docs | `content/copilot/how-tos/copilot-in-your-ide/use-copilot-agents/use-agent-mode.md` | IDEのエージェントモード | クラウドエージェントとは別の、ローカルで自律編集する機能 |
+| 18 | GitHub Docs | `content/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment.md` | エージェント用開発環境の構成 | 公式日本語で表やコード、`AUTOTITLE`が崩れている設定ページ |
+| 19 | GitHub Docs | `content/copilot/tutorials/cloud-agent/get-the-best-results.md` | タスクを任せるときのベストプラクティス | 使い始めの品質に直結するガイド |
+| 20 | GitHub Docs | `content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-with-mcp.md` | MCP経由でクラウドエージェントを使う | VS CodeのMCPページと対になる、新しい拡張手段 |
+
+### 次のフェーズ
+
+初版の20ページのあと、次は**GitHub Docsのfpt（バージョン展開なし）**と、**現行のVS Code `docs/`（必要なら`api/`、`learn/`、直近のリリースノート）**に広げる。これが「いま使う」中核を一通り揃える段階である。
+
+その先の優先順位は、次のとおり。
+
+1. **残りのVS Code agent周辺。** `docs/agents/`、`docs/agent-customization/`、`docs/chat/`、`docs/intelligentapps/`のうち、初版に入れなかったページ。週次リリースノートは、出たものから順に足す。
+2. **GitHub DocsのCopilot残りと、直近に更新された中核セクション。** `content/copilot/`の続き、`actions`、`repositories`、`codespaces`など。
+3. **GitHub Docsのfpt向け残り**（`get-started`、`pull-requests`、`issues`、`authentication`、`pages`、`github-cli`など）と、VS Codeの`api/`、`learn/`。
+4. **ghec向けページ、残りのGitHub Docsセクション。**
+5. **GHESの現行4バージョン、過去のVS Codeリリースノート、ブログ、REST/GraphQLリファレンス。**
+
+REST（318ファイルが最大約1,487ページに展開）とGraphQL（62ファイルが最大約304ページに展開）は、本文量が少なく自動生成の比重が高い。更新頻度も高いため、後ろのフェーズに回す。`content/site-policy/`（72ファイル、約11.6万語）は法律文書なので、訳すかどうかは別途判断する。
 
 ## 原文リポジトリと同期方針
 
@@ -313,12 +351,12 @@ GitHub Docsの翻訳量は、contentとdataを合わせて約225万語・約1,61
 2. VS Codeの画像をある程度載せるなら、GitHub Pagesの公開サイズ1GBをすぐ超える。Cloudflare Pagesには同種の1GB上限が無い。
 3. ビルド制限（20分、帯域）が緩い。ドキュメントサイトの更新追従向きである。
 
-ただし無料プランの2万ファイル制限は、GitHub DocsをGHESまで全展開し、VS Codeの過去画像もすべて1サイトに載せる構成では超える（約26,600）。初版では次のようにするか、サイトを2プロジェクトに分ける。
+初版の20ページでは、ファイル数も容量もどちらの制限にも余裕がある。ただし無料プランの2万ファイル制限は、最終形（GitHub DocsをGHESまで全展開し、VS Codeの過去画像もすべて1サイトに載せる）では超える（約26,600）。第2フェーズ以降は次のように段階を踏む。
 
-- 公開対象はまず**GitHub Docsのfpt+ghec**と、**VS Codeの現行docs/api/learn、直近のリリースノート**にする。
+- **第2フェーズ**は、GitHub Docsのfpt（バージョン展開なし）と、現行のVS Code `docs/`（必要なら`api/`、`learn/`、直近のリリースノート）に広げる。画像は使う分だけにすれば、1サイトでも2万ファイルに収まりやすい。
 - 過去のリリースノートやブログの画像は、公式へリンクするか、必要な分だけ複製する。
 - 25MiB超のファイルはR2（または公式へのリンク）へ回す。
-- GHES全バージョンやREST/GraphQLは、ファイル数に余裕を見てから足す。必要ならGitHub用とVS Code用にプロジェクトを分ける。
+- ghecやGHES、REST/GraphQLは、ファイル数に余裕を見てから足す。必要ならGitHub用とVS Code用にプロジェクトを分ける。
 
 リポジトリを公開し、画像を1GB未満に抑える運用ができるなら、GitHub Pagesも有力である。GitHub上で完結し、公開リポジトリならActions分も無料になる。その場合でも、公式サイトの複製に見える点への免責（非公式であること、関係が無いこと）は両方のホスティングで必要である。
 
@@ -362,14 +400,14 @@ CC BY 4.0では、原著者（GitHub）のクレジット、ライセンスへ�
 方針を固めるために、次を決めてほしい。
 
 1. **リポジトリを公開するか、非公開のままにするか。** 非公開のままならCloudflare Pages一択に近い。公開するならGitHub Pagesも選べるが、翻訳ソースや未公開の下訳も公開される。
-2. **初版で出すGitHub Docsのバージョン範囲。** fptのみ、fpt+ghec、現行GHESまで、の3段階がある。推奨はfpt+ghecから始め、GHESは需要とファイル数を見て追加する。
-3. **REST/GraphQLリファレンスを初版に含めるか。** ページ数は大きいが本文は少なく、自動生成で変わりやすい。
+2. **第2フェーズ以降で出すGitHub Docsのバージョン範囲。** 初版は上記20ページで、バージョン展開はしない（fptのURLのみ）。第2フェーズはfptのみを推奨し、その後にghec、続いて現行GHESを足す。
+3. **REST/GraphQLリファレンスをどのフェーズで含めるか。** ページ数は大きいが本文は少なく、自動生成で変わりやすい。初版と第2フェーズには入れない。
 4. **`site-policy`などの法律文書を訳すか。** 誤訳のリスクが大きい。公式英語（または公式日本語）へリンクする選択肢もある。
-5. **VS Codeの過去リリースノートとブログをどこまで載せるか。** 本文量も画像量も大きく、週次で増える。直近N本+過去分は公式リンク、という切り方もできる。既存の有志サイト（リリースノートのみ）との役割分担も検討余地がある。
-6. **画像の配信方法。** 複製して自前配信するか、公式URLを参照するか。自前なら追従と容量の負担が増え、参照なら公式側のパス変更や利用条件に依存する。
-7. **公開ドメインと、1サイトか2プロジェクトか。** 例: `docs.example.jp/github/`と`/vscode/`の一体型か、サブドメインで分割か。
+5. **VS Codeの過去リリースノートとブログをどこまで載せるか。** 本文量も画像量も大きく、週次で増える。初版は最新安定版（1.146）のみ。その後は直近N本+過去分は公式リンク、という切り方もできる。既存の有志サイト（リリースノートのみ）との役割分担も検討余地がある。
+6. **画像の配信方法。** 複製して自前配信するか、公式URLを参照するか。自前なら追従と容量の負担が増え、参照なら公式側のパス変更や利用条件に依存する。初版の20ページでは、参照する図だけを複製すれば足りる。
+7. **公開ドメインと、1サイトか2プロジェクトか。** 例: `docs.example.jp/github/`と`/vscode/`の一体型か、サブドメインで分割か。初版は1サイトで足りる。
 8. **製品名やUI文言の扱い。** 「VS Code」「GitHub Copilot」「Agents window」などを日本語にするか、原文の製品名を残すか。`data/variables`の訳し方に直結する。
-9. **検索、目次、バージョン切替、更新日の出し方。** 静的サイトでも、バージョンピッカーと全文検索の要否は初版の範囲に影響する。
+9. **検索、目次、バージョン切替、更新日の出し方。** 初版の20ページでは簡易な目次で足りる。全文検索やバージョンピッカーは、第2フェーズ以降の判断にする。
 10. **翻訳文のライセンスと、誤訳の免責文面。**
 
 この文書は構成と方針の初期案であり、上記が決まったら範囲とURL、ホスティングの節を更新する。

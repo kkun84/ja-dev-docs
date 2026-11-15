@@ -1,0 +1,54 @@
+# Visual Studio Code 1.147 ⟦H1⟧
+
+[LinkedIn](⟦U13⟧)、[X](⟦U14⟧)、[Bluesky](⟦U15⟧)、[Instagram](⟦U16⟧)でフォローしてください ⟦H2⟧ ⟦H3⟧
+
+---
+
+_最終更新日: 2026年11月13日_
+
+Visual Studio Codeの1.147 ⟦H4⟧ リリースへようこそ。
+
+⟦H5⟧
+
+Happy Coding!
+
+---
+
+⟦H6⟧
+
+⟦H7⟧
+
+## 2026年11月12日
+
+* エディターのタブバーにテキストファイル、Markdownドキュメント、チャット、統合ブラウザータブを作成するための **+** メニューを追加しました。_[#347849: Experimental new tab (+) button in the editor tab bar](⟦U17⟧)_
+* コードの生成、チャットの開始、言語の選択、または無題のファイルを別のエディターで再度開くためのアクションを追加しました。_[#347848: Experiment: show a list of actions in the hint of new untitled files](⟦U18⟧)_
+* チャットに貼り付けられた画像について、利用可能な場合はソースファイル名に基づいて名前を付けるようにしました。_[#347828: Chat: name pasted images after their source file](⟦U19⟧)_
+* 兄弟プロジェクト間の移動を減らすため、Agentsウィンドウの **Open Folder** ダイアログが選択したローカルフォルダーの親フォルダーから開始されるようにしました。_[#335652: Choose Folder: Make parent folder of current folder the starting point](⟦U20⟧)_
+* ツールバーメニューを使用して、Agentsウィンドウのクリーンアップエディターでワークツリーをフィルターおよびソートできるようにしました。_[#347138: Controls area for worktree cleanup could use some design love](⟦U21⟧)_
+* HTMLファイルおよびCSSファイル内の1行の ⟦I8⟧ コメントに対してミニマップセクションヘッダーを表示するようにしました。_[#210637: Minimap section headers are not shown for regions in HTML and CSS](⟦U22⟧)_
+* [ローカル拡張機能開発](⟦U23⟧)中に、エディターおよびAgentsウィンドウのタイトルバーにボタンを提供するためのプロポーザル ⟦I9⟧ APIを追加しました。_[#347839: Proposed API: let extensions contribute buttons to the title bar of the editor and Agents windows](⟦U24⟧)_
+* 実験的な **AI Usage Statistics** ステータスバーウィジェットを削除しました。_[#340001: Remove the AI Usage Statistics widget](⟦U25⟧)_
+
+## 2026年11月11日
+
+* 両方のウィンドウが同じエージェントホストを使用している場合に、AgentsウィンドウとWSL、Remote - SSH、またはDev Containerエディターウィンドウとの間でエージェントセッションを共有できるようにしました。_[#346859: Share agent host sessions between the Agents Window and WSL, SSH and Dev Container editor windows](⟦U26⟧)_
+* セッションを互換性のあるインボックスカテゴリ間でドラッグして、ピン留め、保留、クリア、アーカイブ、または再開できるようにしました (実験的)。_[#346934: Inbox mode: Sessions cannot be dragged between groups](⟦U27⟧)_
+* すべてのWebリンクを統合ブラウザーで開くことを有効にできるようにしました。_[#316528: Option to open all links in Integrated Browser](⟦U28⟧)_
+
+## 2026年11月10日
+
+* インボックスモードの対象セッション向けに、インラインの **Merge Pull Request** アクションを追加しました (実験的)。_[#346936: Inbox mode: Ready to Merge sessions have no inline Merge action](⟦U29⟧)_
+* インボックスモードで **Inbox** を表示したまま、空のカテゴリを非表示にしました (実験的)。_[#346938: Inbox mode: Empty sections take up too much vertical space](⟦U30⟧)_
+* AgentsウィンドウでCompare Models (Preview)の親チャットにカーソルを合わせると、その元の設定が表示されるようにしました。_[#347109: Model compare: show original settings on hover of the parent chat](⟦U31⟧)_
+* セッション復元の通知を残しつつ、ワークツリーのクリーンアップ確認を簡略化しました。_[#347134: Worktree cleanup confirmation is unncessarily wordy](⟦U32⟧)_
+* Markdownエディターで折りたたみ可能な ⟦I10⟧ セクションのサポートを追加しました (実験的)。_[#347433: Markdown editor: render ⟦I11⟧/⟦I12⟧ as collapsible sections](⟦U33⟧)_
+* チャット入力欄の上にピン留めされたチャットファイルを表示するサポートを追加しました (実験的)。_[#345427: Let extensions dock views above the chat input](⟦U34⟧)_
+* VS Codeペットを非表示にするコンテキストメニューオプションを追加しました (実験的)。_[#346510: Remove option for vscode-pet](⟦U35⟧)_
+* ワークスペースおよび実行環境によってインボックスセッションをフィルターできるようにしました (実験的)。_[#347488: Add workspace and environment scope pickers to Inbox](⟦U36⟧)_
+
+---
+
+新機能が準備でき次第すぐにお試しいただけることを大変感謝しております。頻繁にここをチェックして新機能をご確認ください。
+
+<a id="scroll-to-top" role="button" title="Scroll to top" aria-label="scroll to top" href="#"><span class="icon"></span></a>
+<link rel="stylesheet" type="text/css" href="css/inproduct_releasenotes.css"/>

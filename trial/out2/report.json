@@ -1,0 +1,401 @@
+[
+  {
+    "source": "vscode",
+    "path": "docs/agents/overview.md",
+    "model": "gemini-3.8-flash@low",
+    "input_chars": 10908,
+    "placeholders": 69,
+    "attempts": [
+      {
+        "spec": "gemini-3.8-flash@low",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 2819,
+          "candidatesTokenCount": 2813,
+          "totalTokenCount": 5632,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 2819
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [],
+        "seconds": 138.3
+      }
+    ],
+    "errors": [],
+    "used": "gemini-3.8-flash@low",
+    "seconds": 148.3,
+    "ok": true
+  },
+  {
+    "source": "vscode",
+    "path": "docs/agents/overview.md",
+    "model": "pipeline",
+    "input_chars": 10908,
+    "placeholders": 69,
+    "attempts": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 2819,
+          "candidatesTokenCount": 2838,
+          "totalTokenCount": 5657,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 2819
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [],
+        "seconds": 6.7
+      }
+    ],
+    "errors": [],
+    "used": "gemini-3.5-flash-lite",
+    "seconds": 16.7,
+    "ok": true
+  },
+  {
+    "source": "vscode",
+    "path": "docs/agent-customization/custom-instructions.md",
+    "model": "gemini-3.8-flash@low",
+    "input_chars": 17387,
+    "placeholders": 103,
+    "attempts": [
+      {
+        "spec": "gemini-3.8-flash@low",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 3615,
+          "candidatesTokenCount": 3968,
+          "totalTokenCount": 7583,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 3615
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [],
+        "seconds": 172.3
+      }
+    ],
+    "errors": [],
+    "used": "gemini-3.8-flash@low",
+    "seconds": 182.3,
+    "ok": true
+  },
+  {
+    "source": "vscode",
+    "path": "docs/agent-customization/custom-instructions.md",
+    "model": "pipeline",
+    "input_chars": 17387,
+    "placeholders": 103,
+    "attempts": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 3615,
+          "candidatesTokenCount": 4028,
+          "totalTokenCount": 7643,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 3615
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [
+          "placeholder ⟦I64⟧: source 1, translation 0",
+          "placeholder ⟦I65⟧: source 1, translation 2"
+        ],
+        "seconds": 9.5
+      },
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 3615,
+          "candidatesTokenCount": 3944,
+          "totalTokenCount": 7559,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 3615
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [],
+        "seconds": 9.8
+      }
+    ],
+    "errors": [],
+    "used": "gemini-3.5-flash-lite",
+    "seconds": 39.3,
+    "ok": true
+  },
+  {
+    "source": "vscode",
+    "path": "release-notes/v1_147.md",
+    "model": "gemini-3.8-flash@low",
+    "input_chars": 6340,
+    "placeholders": 36,
+    "attempts": [
+      {
+        "spec": "gemini-3.8-flash@low",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 1535,
+          "candidatesTokenCount": 1335,
+          "totalTokenCount": 2870,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 1535
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [],
+        "seconds": 130.2
+      }
+    ],
+    "errors": [],
+    "used": "gemini-3.8-flash@low",
+    "seconds": 140.2,
+    "ok": true
+  },
+  {
+    "source": "vscode",
+    "path": "release-notes/v1_147.md",
+    "model": "pipeline",
+    "input_chars": 6340,
+    "placeholders": 36,
+    "attempts": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 1535,
+          "candidatesTokenCount": 1364,
+          "totalTokenCount": 2899,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 1535
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [],
+        "seconds": 3.2
+      }
+    ],
+    "errors": [],
+    "used": "gemini-3.5-flash-lite",
+    "seconds": 13.2,
+    "ok": true
+  },
+  {
+    "source": "github",
+    "path": "content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md",
+    "model": "gemini-3.8-flash@low",
+    "input_chars": 21800,
+    "placeholders": 160,
+    "attempts": [
+      {
+        "spec": "gemini-3.8-flash@low",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 5765,
+          "candidatesTokenCount": 5729,
+          "totalTokenCount": 11494,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5765
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [],
+        "seconds": 36.0
+      }
+    ],
+    "errors": [],
+    "used": "gemini-3.8-flash@low",
+    "seconds": 46.0,
+    "ok": true
+  },
+  {
+    "source": "github",
+    "path": "content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md",
+    "model": "pipeline",
+    "input_chars": 21800,
+    "placeholders": 160,
+    "attempts": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 5765,
+          "candidatesTokenCount": 5716,
+          "totalTokenCount": 11481,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5765
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [
+          "placeholder ⟦L80:projects.projects_v2_caps⟧: source 0, translation 1",
+          "placeholder ⟦L80:variables.projects.projects_v2_caps⟧: source 1, translation 0"
+        ],
+        "seconds": 12.7
+      },
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 5765,
+          "candidatesTokenCount": 5645,
+          "totalTokenCount": 11410,
+          "cachedContentTokenCount": 2035,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5765
+            }
+          ],
+          "cacheTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 2035
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [
+          "placeholder ⟦L53:variables.product.prodname_copilot_short⟧: source 1, translation 0"
+        ],
+        "seconds": 13.2
+      },
+      {
+        "spec": "gemini-3.8-flash@low",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 5765,
+          "candidatesTokenCount": 5702,
+          "totalTokenCount": 11467,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5765
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [],
+        "seconds": 101.8
+      }
+    ],
+    "errors": [],
+    "used": "gemini-3.8-flash@low",
+    "seconds": 157.6,
+    "ok": true
+  },
+  {
+    "source": "github",
+    "path": "content/get-started/learning-about-github/access-permissions-on-github.md",
+    "model": "gemini-3.8-flash@low",
+    "input_chars": 2093,
+    "placeholders": 18,
+    "attempts": [
+      {
+        "spec": "gemini-3.8-flash@low",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 703,
+          "candidatesTokenCount": 378,
+          "totalTokenCount": 1081,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 703
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [],
+        "seconds": 41.8
+      }
+    ],
+    "errors": [],
+    "used": "gemini-3.8-flash@low",
+    "seconds": 51.8,
+    "ok": true
+  },
+  {
+    "source": "github",
+    "path": "content/get-started/learning-about-github/access-permissions-on-github.md",
+    "model": "pipeline",
+    "input_chars": 2093,
+    "placeholders": 18,
+    "attempts": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 703,
+          "candidatesTokenCount": 385,
+          "totalTokenCount": 1088,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 703
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [
+          "placeholder ⟦L5⟧: source 1, translation 0"
+        ],
+        "seconds": 1.6
+      },
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "finish_reason": "STOP",
+        "usage": {
+          "promptTokenCount": 703,
+          "candidatesTokenCount": 382,
+          "totalTokenCount": 1085,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 703
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "errors": [],
+        "seconds": 1.4
+      }
+    ],
+    "errors": [],
+    "used": "gemini-3.5-flash-lite",
+    "seconds": 23.0,
+    "ok": true
+  }
+]

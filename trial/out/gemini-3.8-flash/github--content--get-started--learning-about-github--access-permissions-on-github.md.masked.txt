@@ -1,0 +1,26 @@
+## ⟦L1:variables.product.github⟧のアクセス権限について
+
+⟦L2:reusables.organizations.about-roles⟧
+
+ロールの機能はアカウントの種類によって異なります。アカウントについて詳しくは、[AUTOTITLE](⟦U11⟧)を参照してください。
+
+## 個人アカウント
+
+個人アカウントが所有するリポジトリには、_repository owner_と_collaborators_の2つの権限レベルがあります。詳しくは、[AUTOTITLE](⟦U12⟧)を参照してください。
+
+## Organizationアカウント
+
+Organizationのメンバーは、_owner_⟦L3⟧、_billing manager_⟦L4⟧、または_member_のロールを持つことができます。ownerはOrganizationへの完全な管理者アクセス権を持ち⟦L5⟧、billing managerは請求設定を管理できます⟦L6⟧。memberは、それ以外のすべてのユーザーのデフォルトのロールです。チームを使用すると、複数のメンバーのアクセス権限を一度に管理できます。詳しくは、以下を参照してください。
+* [AUTOTITLE](⟦U13⟧)
+* [AUTOTITLE](⟦U14⟧)
+* [AUTOTITLE](⟦U15⟧)
+
+## Enterpriseアカウント
+
+Enterpriseアカウントには、Enterprise設定へのユーザーのアクセス権を定義するさまざまな事前定義ロールがあります。また、カスタムEnterpriseロールを作成して、独自のきめ細かな権限セットを定義することもできます。
+
+詳しくは、⟦L7⟧⟦L8:variables.product.prodname_ghe_cloud⟧ドキュメントの[AUTOTITLE](⟦U16⟧)⟦L9⟧[AUTOTITLE](⟦U17⟧)⟦L10⟧を参照してください。
+
+## 参考資料
+
+* [AUTOTITLE](⟦U18⟧)

@@ -1,0 +1,245 @@
+[
+  {
+    "source": "vscode",
+    "path": "docs/agents/overview.md",
+    "model": "gemini-3.5-flash-lite",
+    "input_chars": 10908,
+    "placeholders": 69,
+    "finish_reason": "STOP",
+    "usage": {
+      "promptTokenCount": 2819,
+      "candidatesTokenCount": 2834,
+      "totalTokenCount": 5653,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 2819
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "errors": [
+      "placeholder ⟦U62⟧: source 1, translation 2",
+      "placeholder ⟦U63⟧: source 1, translation 0",
+      "placeholder ⟦U64⟧: source 1, translation 0",
+      "placeholder ⟦U68⟧: source 1, translation 2"
+    ],
+    "seconds": 7.1,
+    "ok": false
+  },
+  {
+    "source": "vscode",
+    "path": "docs/agents/overview.md",
+    "model": "gemini-3.8-flash",
+    "input_chars": 10908,
+    "placeholders": 69,
+    "finish_reason": "STOP",
+    "usage": {
+      "promptTokenCount": 2819,
+      "candidatesTokenCount": 2825,
+      "totalTokenCount": 10595,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 2819
+        }
+      ],
+      "thoughtsTokenCount": 4951,
+      "serviceTier": "standard"
+    },
+    "errors": [],
+    "seconds": 165.2,
+    "ok": true
+  },
+  {
+    "source": "vscode",
+    "path": "docs/agent-customization/custom-instructions.md",
+    "model": "gemini-3.5-flash-lite",
+    "input_chars": 17387,
+    "placeholders": 103,
+    "finish_reason": "STOP",
+    "usage": {
+      "promptTokenCount": 3615,
+      "candidatesTokenCount": 3985,
+      "totalTokenCount": 7600,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 3615
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "errors": [],
+    "seconds": 9.4,
+    "ok": true
+  },
+  {
+    "source": "vscode",
+    "path": "docs/agent-customization/custom-instructions.md",
+    "model": "gemini-3.8-flash",
+    "input_chars": 17387,
+    "placeholders": 103,
+    "finish_reason": "STOP",
+    "usage": {
+      "promptTokenCount": 3615,
+      "candidatesTokenCount": 3858,
+      "totalTokenCount": 16513,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 3615
+        }
+      ],
+      "thoughtsTokenCount": 9040,
+      "serviceTier": "standard"
+    },
+    "errors": [],
+    "seconds": 103.2,
+    "ok": true
+  },
+  {
+    "source": "vscode",
+    "path": "release-notes/v1_147.md",
+    "model": "gemini-3.5-flash-lite",
+    "input_chars": 6340,
+    "placeholders": 36,
+    "finish_reason": "STOP",
+    "usage": {
+      "promptTokenCount": 1535,
+      "candidatesTokenCount": 1352,
+      "totalTokenCount": 2887,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 1535
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "errors": [],
+    "seconds": 3.5,
+    "ok": true
+  },
+  {
+    "source": "vscode",
+    "path": "release-notes/v1_147.md",
+    "model": "gemini-3.8-flash",
+    "input_chars": 6340,
+    "placeholders": 36,
+    "finish_reason": "STOP",
+    "usage": {
+      "promptTokenCount": 1535,
+      "candidatesTokenCount": 1302,
+      "totalTokenCount": 5981,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 1535
+        }
+      ],
+      "thoughtsTokenCount": 3144,
+      "serviceTier": "standard"
+    },
+    "errors": [],
+    "seconds": 296.4,
+    "ok": true
+  },
+  {
+    "source": "github",
+    "path": "content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md",
+    "model": "gemini-3.5-flash-lite",
+    "input_chars": 21800,
+    "placeholders": 160,
+    "finish_reason": "STOP",
+    "usage": {
+      "promptTokenCount": 5765,
+      "candidatesTokenCount": 5817,
+      "totalTokenCount": 11582,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 5765
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "errors": [
+      "placeholder ⟦L22:variables.product.prodname_copilot_short⟧: source 1, translation 2",
+      "placeholder ⟦L23:variables.product.prodname_copilot_short⟧: source 1, translation 0"
+    ],
+    "seconds": 12.5,
+    "ok": false
+  },
+  {
+    "source": "github",
+    "path": "content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md",
+    "model": "gemini-3.8-flash",
+    "input_chars": 21800,
+    "placeholders": 160,
+    "finish_reason": "STOP",
+    "usage": {
+      "promptTokenCount": 5765,
+      "candidatesTokenCount": 5680,
+      "totalTokenCount": 17072,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 5765
+        }
+      ],
+      "thoughtsTokenCount": 5627,
+      "serviceTier": "standard"
+    },
+    "errors": [],
+    "seconds": 194.0,
+    "ok": true
+  },
+  {
+    "source": "github",
+    "path": "content/get-started/learning-about-github/access-permissions-on-github.md",
+    "model": "gemini-3.5-flash-lite",
+    "input_chars": 2093,
+    "placeholders": 18,
+    "finish_reason": "STOP",
+    "usage": {
+      "promptTokenCount": 703,
+      "candidatesTokenCount": 384,
+      "totalTokenCount": 1087,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 703
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "errors": [],
+    "seconds": 2.0,
+    "ok": true
+  },
+  {
+    "source": "github",
+    "path": "content/get-started/learning-about-github/access-permissions-on-github.md",
+    "model": "gemini-3.8-flash",
+    "input_chars": 2093,
+    "placeholders": 18,
+    "finish_reason": "STOP",
+    "usage": {
+      "promptTokenCount": 703,
+      "candidatesTokenCount": 369,
+      "totalTokenCount": 2904,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 703
+        }
+      ],
+      "thoughtsTokenCount": 1832,
+      "serviceTier": "standard"
+    },
+    "errors": [],
+    "seconds": 84.0,
+    "ok": true
+  }
+]

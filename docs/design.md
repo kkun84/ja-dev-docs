@@ -70,16 +70,26 @@ AstroのドキュメントテーマStarlightを使います。
 
 ## URL
 
-このサイトのURLは、原文のURLのホスト名とパスを、このサイトのドメインの後ろに付けた形にします。
+このサイトは、持っているドメインのサブドメイン(例: `ja.<ドメイン>`)で公開します。このサイトのURLは、原文のURLを、このサイトのドメインの後ろにそのまま付けた形にします。
 
 ```
 原文:     https://code.visualstudio.com/docs/editor/codebasics
-日本語訳: https://<このサイト>/code.visualstudio.com/docs/editor/codebasics
+日本語訳: https://ja.<ドメイン>/https://code.visualstudio.com/docs/editor/codebasics
 ```
 
-- 原文のURLをそのまま後ろに貼った形(`https://<このサイト>/https://code.visualstudio.com/...`)も受け付け、上の形へリダイレクトします。
+- 読者は、原文のURLをコピーし、このサイトのドメインの後ろに貼るだけで日本語訳を開けます。
+- `https://`を省いた形(`https://ja.<ドメイン>/code.visualstudio.com/...`)も受け付けます。こちらを正規のURLとし、`https://`付きの形からはリダイレクトします。
+- URLエンコードされた形(`https%3A%2F%2Fcode.visualstudio.com%2F...`)も受け付けます。Chromeのサイト内検索のショートカットから開くと、この形になるためです。
 - GitHub Docsの`/en/`などの言語の部分は取り除きます。バージョンの部分(`/enterprise-cloud@latest/`など)は残し、そのバージョンの本文として訳します。
-- 独自ドメインを取る場合は、サブドメインで原文のサイトを表す形(`code.visualstudio.<このサイトのドメイン>`)も使えます。独自ドメインを取るかは未決です。
+
+### 開き方の補助
+
+サイトに、次の2つの設定方法を載せます。
+
+- Chromeのサイト内検索のショートカット。URLを`https://ja.<ドメイン>/%s`、ショートカットを`ja`にして登録します。読者は、アドレスバーに`ja`と入力してTabキーを押し、原文のURLを貼ってEnterキーを押せば、日本語訳を開けます。
+- ブックマークレット。`javascript:location.href='https://ja.<ドメイン>/'+location.href`をブックマークとして登録します。原文のページを開いた状態でこのブックマークを押せば、日本語訳を開けます。iPhoneのSafariでも使えます。
+
+原文のホスト名の後ろにこのサイトのドメインを足す形(`code.visualstudio.com.ja.<ドメイン>`)は採りません。アドレスバーでURLの途中を書き換える必要があり、貼り付けや入力の手間が増えるためです。
 
 ## ページの表示
 
@@ -215,5 +225,5 @@ Workerがその場でページを返します。
 
 ## 未決事項
 
-- 独自ドメインを取るか。取らなければ`workers.dev`のサブドメインで、費用はかかりません。
+- 使うドメインの名前と、サブドメインの名前
 - 翻訳文のライセンス

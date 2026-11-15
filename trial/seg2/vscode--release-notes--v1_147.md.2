@@ -1,0 +1,84 @@
+---
+Order: 157
+TOCTitle: Insiders
+PageTitle: "Visual Studio Code 1.147 (Insiders)"
+MetaDescription: Learn what is new in Visual Studio Code Insiders, including agent session management, chat resources, and Markdown editing.
+MetaSocialImage: 1_147/release-highlights.webp
+Date: 2026-11-18
+DownloadVersion: 1.147.0
+Milestone: 1.147.0
+ProductEdition: Insiders
+---
+# Visual Studio Code 1.147 <!-- %IF INSIDERS % (Insiders) %ENDIF % -->
+
+[LinkedIn](https://www.linkedin.com/showcase/vs-code)、[X](https://go.microsoft.com/fwlink/?LinkID=533687)、[Bluesky](https://bsky.app/profile/vscode.dev)、[Instagram](https://www.instagram.com/vscode)をフォローしてください<!-- %IF INSIDERS % | Follow Insiders Changelog on [X](https://x.com/VSCodeChangelog) or [Bluesky](https://bsky.app/profile/vscodechangelog.bsky.social) %ENDIF % --> <!-- %IF IN_PRODUCT % | [View online](https://code.visualstudio.com/updates)%ENDIF % -->
+
+---
+
+_最終更新日: 2026年11月13日_
+
+Visual Studio Codeの1.147 <!-- %IF INSIDERS % Insiders %ENDIF % -->リリースへようこそ。
+
+<!-- %IF INSIDERS %
+These release notes cover the Insiders build of VS Code and continue to evolve as new features are added.
+
+You can still track our progress in the [Commit log](https://github.com/Microsoft/vscode/commits/main) and our list of [Closed issues](https://github.com/Microsoft/vscode/issues?q=is%3Aissue%20is%3Aclosed%20milestone%3A1.147.0).
+%ENDIF % -->
+
+ハッピーコーディング！
+
+---
+
+<!-- %IF STABLE %
+To try new features as soon as possible, [**download the nightly Insiders build**](https://code.visualstudio.com/insiders), which includes the latest updates as soon as they are available.
+
+---
+%ENDIF % -->
+
+<!-- TOC
+<div class="toc-nav-layout">
+  <nav id="toc-nav">
+    <div>In this update</div>
+    <ul>
+      <li><a href="#november-12-2026">November 12, 2026</a></li>
+      <li><a href="#november-11-2026">November 11, 2026</a></li>
+      <li><a href="#november-10-2026">November 10, 2026</a></li>
+    </ul>
+  </nav>
+  <div class="notes-main">
+Navigation End -->
+
+## 2026年11月12日
+
+* テキストファイル、Markdownドキュメント、チャット、統合ブラウザタブを作成するためのエディタータブバーの**+**メニューを追加します。_[#347849:エディタータブバー内の実験的な新しいタブ(+)ボタン](https://github.com/microsoft/vscode/issues/347849)_
+* コードの生成、チャットの開始、言語の選択、または未保存ファイル別のエディターでの再オープンを行うアクションを追加します。_[#347848:実験的機能:新しい未保存ファイルのヒントにアクションのリストを表示する](https://github.com/microsoft/vscode/issues/347848)_
+* チャットに貼り付けられた画像に、可能な場合はそのソースファイルにちなんだ名前を付けます。_[#347828:チャット:貼り付けられた画像にソースファイルの名前を付ける](https://github.com/microsoft/vscode/issues/347828)_
+* 兄弟プロジェクト間の移動を減らすため、Agentsウィンドウの**フォルダーを開く**ダイアログが選択したローカルフォルダーの親から開始されるようにします。_[#335652:フォルダーの選択:現在のフォルダーの親フォルダーを開始点にする](https://github.com/microsoft/vscode/issues/335652)_
+* Agentsウィンドウのワークツリークリーンアップエディターで、ツールバーメニューを使用してワークツリーのフィルターと並べ替えを行います。_[#347138:ワークツリークリーンアップのコントロール領域のデザインを改善する](https://github.com/microsoft/vscode/issues/347138)_
+* HTMLおよびCSSファイルの単行`#region`コメントのミニマップセクションヘッダーを表示します。_[#210637: HTMLおよびCSSのリージョンでミニマップセクションヘッダーが表示されない](https://github.com/microsoft/vscode/issues/210637)_
+* [ローカル拡張機能の開発](https://code.visualstudio.com/api/advanced-topics/using-proposed-api)中に、エディターおよびAgentsウィンドウのタイトルバーにボタンを追加するための提案された`contribTitleBar` APIを追加します。_[#347839:提案されたAPI:拡張機能がエディターおよびAgentsウィンドウのタイトルバーにボタンを追加できるようにする](https://github.com/microsoft/vscode/issues/347839)_
+* 実験的な**AI Usage Statistics**ステータスバーウィジェットを削除します。_[#340001: AI Usage Statisticsウィジェットを削除する](https://github.com/microsoft/vscode/issues/340001)_
+
+## 2026年11月11日
+
+* 両方のウィンドウで同じエージェントホストを使用している場合、AgentsウィンドウとWSL、Remote - SSH、またはDev Containerエディターウィンドウの間でエージェントセッションを共有します。_[#346859: AgentsウィンドウとWSL、SSH、Dev Containerエディターウィンドウの間でエージェントホストセッションを共有する](https://github.com/microsoft/vscode/issues/346859)_
+* 互換性のある受信トレイカテゴリ間でセッションをドラッグして、ピン留め、保持、クリア、アーカイブ、または再開します(実験的)。_[#346934:受信トレイモード:グループ間でセッションをドラッグできない](https://github.com/microsoft/vscode/issues/346934)_
+* 統合ブラウザですべてのWebリンクを開くことを有効にします。_[#316528:すべてのリンクを統合ブラウザで開くオプション](https://github.com/microsoft/vscode/issues/316528)_
+
+## 2026年11月10日
+
+* 受信トレイモードの対象セッションにインラインの**Merge Pull Request**アクションを追加します(実験的)。_[#346936:受信トレイモード:マージ準備完了のセッションにインラインのマージアクションがない](https://github.com/microsoft/vscode/issues/346936)_
+* **Inbox**を表示したまま、受信トレイモード(実験的)で空のカテゴリを非表示にします。_[#346938:受信トレイモード:空のセクションが垂直方向のスペースを占有しすぎる](https://github.com/microsoft/vscode/issues/346938)_
+* AgentsウィンドウでCompare Models (プレビュー)の親チャットにマウスオーバーし、その元の設定を表示します。_[#347109:モデル比較:親チャットのマウスオーバー時に元の設定を表示する](https://github.com/microsoft/vscode/issues/347109)_
+* セッション復元のリマインダーを維持しながら、ワークツリークリーンアップの確認メッセージを短縮します。_[#347134:ワークツリークリーンアップの確認が不必要に冗長である](https://github.com/microsoft/vscode/issues/347134)_
+* Markdownエディターでの折りたたみ可能な`<details>`セクションのサポートを追加します(実験的)。_[#347433: Markdownエディター: `<details>`/`<summary>`を折りたたみ可能なセクションとしてレンダリングする](https://github.com/microsoft/vscode/issues/347433)_
+* チャット入力の上にピン留めされたチャットファイルを表示するサポートを追加します(実験的)。_[#345427:拡張機能がチャット入力の上にビューをドッキングできるようにする](https://github.com/microsoft/vscode/issues/345427)_
+* VS Codeマスコットを非表示にするコンテキストメニューオプションを追加します(実験的)。_[#346510: vscode-petのオプションを削除する](https://github.com/microsoft/vscode/issues/346510)_
+* ワークスペースと実行環境で受信トレイセッションをフィルターします(実験的)。_[#347488:ワークスペースと環境のスコープピッカーをInboxに追加する](https://github.com/microsoft/vscode/issues/347488)_
+
+---
+
+新機能の準備ができたらすぐにお試しいただけることを大変感謝しております。定期的にこちらを確認して新機能についてご確認ください。
+
+<a id="scroll-to-top" role="button" title="Scroll to top" aria-label="scroll to top" href="#"><span class="icon"></span></a>
+<link rel="stylesheet" type="text/css" href="css/inproduct_releasenotes.css"/>

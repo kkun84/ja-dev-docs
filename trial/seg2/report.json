@@ -1,0 +1,510 @@
+[
+  {
+    "path": "docs/agents/overview.md",
+    "repeat": 0,
+    "segments": 59,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 59,
+        "failed": [
+          {
+            "id": 40,
+            "errors": [
+              "placeholder"
+            ]
+          }
+        ],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 3638,
+          "candidatesTokenCount": 2678,
+          "totalTokenCount": 6316,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 3638
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 17.4
+      },
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 1,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 472,
+          "candidatesTokenCount": 81,
+          "totalTokenCount": 553,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 472
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 10.9
+      }
+    ]
+  },
+  {
+    "path": "docs/agents/overview.md",
+    "repeat": 1,
+    "segments": 59,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 59,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 3640,
+          "candidatesTokenCount": 2607,
+          "totalTokenCount": 6247,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 3640
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 17.0
+      }
+    ]
+  },
+  {
+    "path": "docs/agents/overview.md",
+    "repeat": 2,
+    "segments": 59,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 59,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 3640,
+          "candidatesTokenCount": 3216,
+          "totalTokenCount": 6856,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 3640
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 18.1
+      }
+    ]
+  },
+  {
+    "path": "docs/agent-customization/custom-instructions.md",
+    "repeat": 0,
+    "segments": 128,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 128,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 6001,
+          "candidatesTokenCount": 6199,
+          "totalTokenCount": 12200,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6001
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 24.1
+      }
+    ]
+  },
+  {
+    "path": "docs/agent-customization/custom-instructions.md",
+    "repeat": 1,
+    "segments": 128,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 128,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 5995,
+          "candidatesTokenCount": 5020,
+          "totalTokenCount": 11015,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5995
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 22.4
+      }
+    ]
+  },
+  {
+    "path": "docs/agent-customization/custom-instructions.md",
+    "repeat": 2,
+    "segments": 128,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 128,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 5965,
+          "candidatesTokenCount": 6214,
+          "totalTokenCount": 12179,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 5965
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 24.4
+      }
+    ]
+  },
+  {
+    "path": "release-notes/v1_147.md",
+    "repeat": 0,
+    "segments": 28,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 28,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 2468,
+          "candidatesTokenCount": 1642,
+          "totalTokenCount": 4110,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 2468
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 14.2
+      }
+    ]
+  },
+  {
+    "path": "release-notes/v1_147.md",
+    "repeat": 1,
+    "segments": 28,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 28,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 2470,
+          "candidatesTokenCount": 1641,
+          "totalTokenCount": 4111,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 2470
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 14.9
+      }
+    ]
+  },
+  {
+    "path": "release-notes/v1_147.md",
+    "repeat": 2,
+    "segments": 28,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 28,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 2470,
+          "candidatesTokenCount": 1920,
+          "totalTokenCount": 4390,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 2470
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 14.7
+      }
+    ]
+  },
+  {
+    "path": "content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md",
+    "repeat": 0,
+    "segments": 131,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 131,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 7348,
+          "candidatesTokenCount": 5524,
+          "totalTokenCount": 12872,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7348
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 22.9
+      }
+    ]
+  },
+  {
+    "path": "content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md",
+    "repeat": 1,
+    "segments": 131,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 131,
+        "failed": [
+          {
+            "id": 84,
+            "errors": [
+              "placeholder"
+            ]
+          },
+          {
+            "id": 93,
+            "errors": [
+              "placeholder"
+            ]
+          },
+          {
+            "id": 105,
+            "errors": [
+              "placeholder"
+            ]
+          },
+          {
+            "id": 117,
+            "errors": [
+              "placeholder"
+            ]
+          }
+        ],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 7344,
+          "candidatesTokenCount": 5657,
+          "totalTokenCount": 13001,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7344
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 23.8
+      },
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 4,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 542,
+          "candidatesTokenCount": 200,
+          "totalTokenCount": 742,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 542
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 11.3
+      }
+    ]
+  },
+  {
+    "path": "content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md",
+    "repeat": 2,
+    "segments": 131,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 131,
+        "failed": [
+          {
+            "id": 16,
+            "errors": [
+              "link target"
+            ]
+          }
+        ],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 7328,
+          "candidatesTokenCount": 5470,
+          "totalTokenCount": 12798,
+          "cachedContentTokenCount": 3945,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 7328
+            }
+          ],
+          "cacheTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 3945
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 122.6
+      },
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 1,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 427,
+          "candidatesTokenCount": 89,
+          "totalTokenCount": 516,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 427
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 10.9
+      }
+    ]
+  },
+  {
+    "path": "content/get-started/learning-about-github/access-permissions-on-github.md",
+    "repeat": 0,
+    "segments": 14,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 14,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 1133,
+          "candidatesTokenCount": 630,
+          "totalTokenCount": 1763,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 1133
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 12.2
+      }
+    ]
+  },
+  {
+    "path": "content/get-started/learning-about-github/access-permissions-on-github.md",
+    "repeat": 1,
+    "segments": 14,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 14,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 1141,
+          "candidatesTokenCount": 503,
+          "totalTokenCount": 1644,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 1141
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 11.9
+      }
+    ]
+  },
+  {
+    "path": "content/get-started/learning-about-github/access-permissions-on-github.md",
+    "repeat": 2,
+    "segments": 14,
+    "left_in_english": [],
+    "steps": [
+      {
+        "spec": "gemini-3.5-flash-lite",
+        "sent": 14,
+        "failed": [],
+        "finish": "STOP",
+        "usage": {
+          "promptTokenCount": 1129,
+          "candidatesTokenCount": 639,
+          "totalTokenCount": 1768,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 1129
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "seconds": 12.1
+      }
+    ]
+  }
+]

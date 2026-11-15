@@ -1,0 +1,39 @@
+name: Trial translation
+
+# 試訳のブランチに試訳のスクリプトやページ一覧を積むと、Geminiで訳して結果をブランチにコミットする。
+on:
+  push:
+    branches: [trial]
+    paths:
+      - "tools/trial/**"
+      - ".github/workflows/trial.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trial
+  cancel-in-progress: false
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Translate
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          rm -rf trial/out
+          python3 tools/trial/translate.py --models gemini-3.5-flash-lite gemini-3.8-flash
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add trial/out
+          git commit -m "試訳の結果 (${GITHUB_SHA::7})" || exit 0
+          git push

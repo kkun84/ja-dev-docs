@@ -1,0 +1,6 @@
+# 試訳する原文。1行に「原文のリポジトリ パス」
+vscode docs/agents/overview.md
+vscode docs/agent-customization/custom-instructions.md
+vscode release-notes/v1_147.md
+github content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md
+github content/get-started/learning-about-github/access-permissions-on-github.md

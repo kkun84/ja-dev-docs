@@ -35,7 +35,8 @@ Placeholders:
 Markdown structure:
 - Keep every heading, list item, table row, blockquote marker, alert marker such as [!NOTE], and blank line in the same place.
 - Keep the same heading levels, list markers, numbering, and indentation.
-- Translate link text, but keep the link target placeholder unchanged.
+- Translate link text, but keep the link target unchanged.
+- Never change anything inside backticks.
 
 Style:
 - Use polite form (です・ます調). For steps, end sentences with 〜します. Use 〜してください only for warnings or required actions.
@@ -70,9 +71,19 @@ TOKEN_RE = {
 }
 
 
-def instructions(style):
-    return INSTRUCTIONS_TEMPLATE.format(placeholders=PLACEHOLDER_TEXT[style])
+def base_style(style):
+    # 「rand-min」は、IDの形はrandと同じで、行内コードとリンク先を退避せずに見せる形。
+    return style.split("-")[0]
 
+
+def instructions(style):
+    return INSTRUCTIONS_TEMPLATE.format(placeholders=PLACEHOLDER_TEXT[base_style(style)])
+
+
+VISIBLE_RE = {
+    "inline code": re.compile(r"(`+)(?!`)(?:.+?)(?<!`)\1(?!`)"),
+    "link target": re.compile(r"\]\((?P<v>[^)\s]+)"),
+}
 
 FENCE_RE = re.compile(r"^(\s*)(`{3,}|~{3,})")
 HEADING_RE = re.compile(r"^(#{1,6})\s")
@@ -95,7 +106,7 @@ class Masker:
             token = f"⟦{kind}{self.count}" + (f":{hint}" if hint else "") + "⟧"
         else:
             ident = self._new_id()
-            token = f"⟦{ident}⟧" if self.style == "rand" else f'<x id="{ident}"/>'
+            token = f"⟦{ident}⟧" if base_style(self.style) == "rand" else f'<x id="{ident}"/>'
         self.store[token] = original
         return token
 
@@ -127,12 +138,14 @@ class Masker:
                 return near[0]
             return token
 
-        return TOKEN_RE[self.style].sub(fix, text), fixed
+        return TOKEN_RE[base_style(self.style)].sub(fix, text), fixed
 
     def mask(self, text):
         text = self._mask_fences(text)
         text = re.sub(r"<!--.*?-->", lambda m: self.put("H", m.group(0)), text, flags=re.S)
         text = re.sub(r"\{%-?.*?-?%\}|\{\{.*?\}\}", self._liquid, text, flags=re.S)
+        if self.style.endswith("-min"):
+            return text
         text = re.sub(r"(`+)(?!`)(.+?)(?<!`)\1(?!`)", lambda m: self.put("I", m.group(0)), text)
         text = re.sub(r"(\]\()([^)\s]+)((?:\s+\"[^\"]*\")?\))", lambda m: m.group(1) + self.put("U", m.group(2)) + m.group(3), text)
         text = re.sub(r"^(\s*\[[^\]]+\]:\s+)(\S+)", lambda m: m.group(1) + self.put("U", m.group(2)), text, flags=re.M)
@@ -205,10 +218,20 @@ def structure(text):
     return {"headings": headings, "list_items": lists, "table_rows": tables}
 
 
+def visible(pattern, text):
+    # 名前付きグループvがあればその部分を、無ければ一致した全体を取り出す。
+    return sorted(m.group("v") if "v" in pattern.groupindex else m.group(0) for m in pattern.finditer(text))
+
+
 def check(source_masked, translated_masked, style="seq"):
     errors = []
-    src_tokens = TOKEN_RE[style].findall(source_masked)
-    out_tokens = TOKEN_RE[style].findall(translated_masked)
+    src_tokens = TOKEN_RE[base_style(style)].findall(source_masked)
+    out_tokens = TOKEN_RE[base_style(style)].findall(translated_masked)
+    # 退避せずに見せた行内コードとリンク先も、原文と同じものが同じ数だけあるかを確かめる。
+    for name, pattern in VISIBLE_RE.items():
+        a, b = visible(pattern, source_masked), visible(pattern, translated_masked)
+        if a != b:
+            errors.append(f"{name}: missing {sorted(set(a) - set(b))[:5]}, extra {sorted(set(b) - set(a))[:5]}")
     for token in sorted(set(src_tokens) | set(out_tokens)):
         a, b = src_tokens.count(token), out_tokens.count(token)
         if a != b:
@@ -300,7 +323,7 @@ def main():
     parser.add_argument("--models", nargs="*", default=[], help="それぞれ単独で訳すモデル。モデル名@推論の量 の形で推論の量を指定できる")
     parser.add_argument("--pipeline", nargs="+", help="構造検査に落ちたら次へ進む順に並べたモデル。同じモデルを2回並べると訳し直しになる")
     parser.add_argument("--out", default="trial/out")
-    parser.add_argument("--styles", nargs="+", default=["seq"], choices=["seq", "rand", "xml"], help="目印の形")
+    parser.add_argument("--styles", nargs="+", default=["seq"], choices=["seq", "rand", "xml", "rand-min"], help="目印の形")
     parser.add_argument("--repeat", type=int, default=1, help="同じ条件で何回訳すか")
     parser.add_argument("--dry-run", action="store_true", help="訳さずに、退避と検査だけを確かめる")
     args = parser.parse_args()

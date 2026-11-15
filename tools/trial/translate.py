@@ -231,7 +231,8 @@ def check(source_masked, translated_masked, style="seq"):
     for name, pattern in VISIBLE_RE.items():
         a, b = visible(pattern, source_masked), visible(pattern, translated_masked)
         if a != b:
-            errors.append(f"{name}: missing {sorted(set(a) - set(b))[:5]}, extra {sorted(set(b) - set(a))[:5]}")
+            diff = {v: (a.count(v), b.count(v)) for v in set(a) | set(b) if a.count(v) != b.count(v)}
+            errors.append(f"{name}: source/translation counts {dict(list(diff.items())[:5])}")
     for token in sorted(set(src_tokens) | set(out_tokens)):
         a, b = src_tokens.count(token), out_tokens.count(token)
         if a != b:
@@ -283,6 +284,34 @@ def response_text(data):
     return text, candidate.get("finishReason")
 
 
+VARIABLE_RE = re.compile(r"\{%-?\s*data\s+variables\.([\w.\-]+)\s*-?%\}")
+
+
+def expand_variables(source, text, cache):
+    """{% data variables.X.Y %}を、data/variables/X.ymlのYの値に置き換える。
+
+    製品名などの短い名詞なので、目印にせず文字のまま見せる。目印にすると、日本語で
+    主語を省くときにモデルが目印ごと落とし、検査に落ちるため。値にLiquidを含むものは残す。
+    """
+    import yaml
+
+    def value(m):
+        file, *keys = m.group(1).split(".")
+        if file not in cache:
+            try:
+                cache[file] = yaml.safe_load(fetch(source, f"data/variables/{file}.yml")) or {}
+            except Exception:
+                cache[file] = {}
+        node = cache[file]
+        for key in keys:
+            node = node.get(key) if isinstance(node, dict) else None
+        if isinstance(node, str) and "{%" not in node and "{{" not in node:
+            return node
+        return m.group(0)
+
+    return VARIABLE_RE.sub(value, text)
+
+
 def fetch(source, path):
     with urllib.request.urlopen(SOURCES[source].format(path=path), timeout=60) as response:
         return response.read().decode()
@@ -325,6 +354,7 @@ def main():
     parser.add_argument("--out", default="trial/out")
     parser.add_argument("--styles", nargs="+", default=["seq"], choices=["seq", "rand", "xml", "rand-min"], help="目印の形")
     parser.add_argument("--repeat", type=int, default=1, help="同じ条件で何回訳すか")
+    parser.add_argument("--expand-variables", action="store_true", help="{% data variables.… %}を値に展開してから訳す")
     parser.add_argument("--dry-run", action="store_true", help="訳さずに、退避と検査だけを確かめる")
     args = parser.parse_args()
 
@@ -335,10 +365,13 @@ def main():
     pages = [line.split() for line in Path(args.pages).read_text().splitlines() if line.strip() and not line.startswith("#")]
     out = Path(args.out)
     report = []
+    variable_cache = {}
 
     for source, path in pages:
         original = fetch(source, path)
         front, body = split_front_matter(original)
+        if args.expand_variables:
+            body = expand_variables(source, body, variable_cache.setdefault(source, {}))
         slug = f"{source}--" + path.replace("/", "--")
 
         runs = [[m] for m in args.models]

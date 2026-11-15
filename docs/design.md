@@ -142,10 +142,10 @@ Workerがその場でページを返します。
 | Gemini 3.5 Flash-Lite 無料枠 | 1日500リクエスト | あり | リクエスト直後の翻訳 |
 | Gemini 3.8 Flash 無料枠 | 1日20リクエスト | あり | リクエストの多いページへの追加の訳 |
 | PLaMo 3.1 Prime 無料プラン | 24時間で50回 | あり | リクエストの多いページへの追加の訳 |
-| PLaMo 3 Translate 8B | 手元のPCで動かせば上限なし | なし | 未定 |
+| PLaMo 3 Translate 8B | GitHub ActionsでCPU実行すれば上限なし | なし | Gemini 3.5 Flash-Liteの1日の上限に達したときの代わり |
 
 - Geminiの無料枠の上限は、プロジェクトごとに違うという報告があります。実際の値は、APIキーを作ってから確かめます。
-- PLaMo 3 Translate 8Bは、非商用であれば登録なしで無償利用できます。動かすには手元のPCのGPUが必要で、リクエストからすぐ訳す流れには組み込みにくいため、役割は未定です。
+- PLaMo 3 Translate 8Bは、非商用であれば登録なしで無償利用できます。公開リポジトリのGitHub Actionsの標準ランナー(4 vCPU、メモリ16GB)で、4bit量子化のGGUFをCPUで動かします。APIの上限が無い代わりに、1ページに数分以上かかる見込みです。実際の速度は試訳で測ります。
 - PLaMo 3.1 Primeの無料プランは、利用者の登録が必要です。24時間で50回という上限は、[PLaMo APIの料金プラン](https://plamo.preferredai.jp/api)の記載です。[制限事項](https://docs.plamo.preferredai.jp/ja/limit)のページには、無料プランのPrimeの上限が載っていません。実際の上限は、登録してから確かめます。
 
 お金がかかるため使わないモデルは次のとおりです。料金は100万トークンあたりの入力/出力です。

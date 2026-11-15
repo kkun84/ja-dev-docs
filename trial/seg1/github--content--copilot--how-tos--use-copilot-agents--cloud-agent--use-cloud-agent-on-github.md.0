@@ -1,0 +1,263 @@
+---
+title: Using Copilot in the cloud on GitHub
+shortTitle: Use Copilot in the cloud on GitHub
+allowTitleToDifferFromFilename: true
+intro: 'Start {% data variables.copilot.copilot_in_the_cloud_short %} sessions directly on {% data variables.product.github %}, then iterate on the results without leaving your browser.'
+product: '{% data reusables.gated-features.copilot-in-the-cloud %}<br><a href="https://github.com/features/copilot/plans?ref_product=copilot&ref_type=purchase&ref_style=button&utm_source=use-cloud-gh-purchase&utm_medium=docs&utm_campaign=universe-2026" target="_blank" class="btn btn-primary mt-3 mr-3 no-underline"><span>Sign up for {% data variables.product.prodname_copilot_short %}</span> {% octicon "link-external" height:16 %}</a>'
+versions:
+  feature: copilot
+redirect_from:
+  - /copilot/how-tos/copilot-on-github/use-copilot-agents/iterate-with-copilot
+  - /copilot/how-tos/use-copilot-agents/coding-agent/make-changes-to-an-existing-pr
+  - /copilot/how-tos/use-copilot-agents/cloud-agent/make-changes-to-an-existing-pr
+contentType: how-tos
+category:
+  - Author and optimize with Copilot
+---
+
+## はじめに
+
+GitHub上のいくつかの場所から、GitHub Copilot in the cloudのセッションを開始できます。セッションの実行が開始されたら、その進捗を監視したり、フォローアップのプロンプトで指示を与えたり、ブラウザを離れることなく作成されたpull requestを改善したりすることができます。
+
+Copilot in the cloudの詳細については、[AUTOTITLE](/copilot/concepts/copilot-surfaces/copilot-on-github)を参照してください。
+
+また、エージェントアプリを使用して、これらと同じエントリポイントからパートナーが構築したエージェントを開始することもできます。詳細については、[AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/use-agent-apps)を参照してください。
+
+## Copilot in the cloudセッションの開始
+
+いくつかの異なるエントリポイントからセッションを開始できます。
+
+* [github.com/copilot](https://github.com/copilot?ref_product=copilot&ref_type=engagement&ref_style=text&utm_source=cloud-gh-docs-home-cta&utm_medium=docs&utm_campaign=universe-2026)にあるCopilot {% octicon "home" aria-label="The home icon" %}のホームページ。
+* [https://github.com](https://github.com?ref_product=copilot&ref_type=engagement&ref_style=text)にサインインしているときの、{% octicon "mark-github" aria-label="The github octocat logo" %} GitHubパーソナルダッシュボードまたは{% octicon "home" aria-label="The home icon" %}ホームページ。
+* リポジトリ内の**{% octicon "agent" aria-label="The Agents icon" %} Agents**タブまたはパネル。
+
+デフォルト設定のまますぐにプロンプトを送信することも、プロンプトを送信する前にタスクに合わせてセッションを構成することもできます。
+
+1. プロンプトボックスで、Copilotに実行させたい内容を記述します。求められる成果と、あらゆる制約を含めてください。
+
+   > [!TIP]
+   > また、プロンプト内でスラッシュコマンドを使用して特定のアクションを実行することもできます。例えば、2つ目の意見を得るための`/rubber-duck`、脆弱性がないかリポジトリをレビューするための`/security-review`、またはセッションの使用情報を表示するための`/usage`などを使用できます。
+
+1. 必要に応じて、**{% octicon "plus" aria-hidden="true" aria-label="plus" %} Attach**をクリックして、Copilotのリクエストに対する参照資料を提供します。
+
+   **Files and folders**、**Upload from computer**、**Repository**、または**Space**を選択して、リクエストのコンテキストを提供します。
+
+   クラウドサンドボックスセッションでは、コネクタやパーソナルカスタムMCPサーバーを構成することで、サードパーティのソースから追加のコンテキストを提供できます。[AUTOTITLE](/copilot/concepts/customizations/copilot-connectors)および[AUTOTITLE](/copilot/concepts/customizations/mcp#personal-mcp-servers)を参照してください。
+
+1. **Mode**ピッカーを開き、Copilotとどのように連携するかを選択します。
+
+   * **Interactive**:（デフォルト）Copilotとステップバイステップで作業します。
+   * **Autopilot**:エンドツーエンドの実行をCopilotに委任します。
+
+   同じメニューで、**Tool permissions**を使用してツールリクエストの承認方法を制御します。
+
+   * **Assisted**（デフォルト）を選択します。これは、安全性チェックを使用してリクエストを承認するかどうか、またはユーザーに確認するかを判断します。
+   * **Always ask**を選択して、リクエストごとに承認を必須にします。
+   * **Allow all**を選択して、すべてのツール、パス、URLのリクエストを自動的に承認します。
+
+1. **Models**ピッカーを開き、**Auto**（デフォルト）または特定モデルを選択します。モデルは、速度とコスト効率、汎用性と知能、または複雑なタスクへの適性の間で選択しやすいように、その強みごとにグループ化されています。選択したモデルが**Balance**などの設定可能な推論をサポートしている場合は、ドロップダウンメニューを使用して推論レベルを選択することもできます。
+
+1. プロンプトボックスの下にある**Chat**セッションコンテキストピッカーを使用して、セッションのスコープ（個人、組織、またはリポジトリ）を選択します。
+
+   * 検索ボックスにリポジトリ名を入力して、追加するリポジトリを検索します。
+   * **Ask anything across repositories**の下で、**Chat**を選択してリポジトリ横断的に質問します。デフォルトのスコープは個人のリポジトリです。右側の画像をクリックしてアカウントメニューを開き、組織を選択するか、リポジトリの所有者（ユーザーまたは組織）で検索してスコープを変更します。
+   * **Work in a repository**の下で、作業を行う最近のリポジトリを選択します。リストされるリポジトリは、選択されたスコープを反映します。
+
+   > [!NOTE]
+   > * **Attach**メニュー（前のステップ）からリポジトリを追加すると、プロンプトの参照（コンテキスト資料）が提供されます。一方、ここで**Start a session**の下で選択すると、そのリポジトリがセッションの作業リポジトリ（スコープ）になります。セッションの開始時に、クラウドサンドボックスはリポジトリのコピーを取得し、既存の制約内でそのコンテンツを操作する権限をCopilotに付与します。
+   > * リポジトリがリストに表示されない場合、個人の設定、組織、またはエンタープライズのポリシーによってCopilotから除外されている可能性があります。
+
+   オプションとして、上記でリポジトリを選択した場合、**main**（またはリストされているデフォルトのブランチ名）をクリックして、Copilotが作業コンテキストとして使用し、その中で操作を行うブランチを選択することもできます。
+
+{% data reusables.copilot.environment-picker %}
+
+1. **Send message**をクリックするか、<kbd>Enter</kbd>を押してプロンプトを送信し、セッションを開始します。
+
+Copilotはプロンプトに応答し、選択されたコンテキストと環境に基づいてセッションを開始します。要求された場合、Copilotは変更されたファイルのリスト、pull request、生成した成果物（調査計画など）、およびその他の関連する出力を生成します。
+
+### ファイル、issue、またはpull request内からのCopilotの開始
+
+コンテキストページからCopilotとのチャットセッションを開くと、セッションは開いているファイル、issue、またはpull requestのコンテキストで開始されます。
+
+コンテキストパネル自体の中から新しいエージェントセッションを開始することはできません。Copilotページ、ホームページ、またはエージェントタブから開始する必要があります。
+
+## Copilotクラウドエージェントでのセッションの開始
+
+### エージェントタブまたはパネルからのセッションの開始
+
+エージェントタブとエージェントパネルからセッションを開始できます。唯一の違いはエントリポイントであり、「New agent task」フォームが表示されたら、手順は同じです。
+
+{% data reusables.copilot.open-agents-panel-or-page %}
+{% data reusables.copilot.cloud-agent.new-agent-task-form-instructions %}
+
+### ダッシュボードからのセッションの開始
+
+ダッシュボードのプロンプトボックスからCopilotに作業の開始を依頼できます。ダッシュボードは、ログイン中に[https://github.com](https://github.com)にアクセスしたときに表示される、GitHub上のアクティビティのパーソナライズされた概要です。
+
+1. [https://github.com](https://github.com/?ref_product=desktop&ref_type=engagement&ref_style=text)のダッシュボードに移動します。
+1. **{% octicon "agent" aria-label="The Agents icon" %} Task**ボタンをクリックします。
+1. プロンプトフィールドのドロップダウンメニューを使用して、Copilotに作業させたいリポジトリを選択します。
+1. リクエストを説明するプロンプトを入力します。
+
+    例えば、`Implement a user friendly message for common errors.`
+
+    Copilotにpull requestを開いてほしい場合は、例えば`Open a pull request to implement a user friendly message for common errors.`のようにプロンプトで依頼できます。
+
+1. オプションで、Copilotのpull request用のベースブランチを選択します。Copilotはこのブランチに基づいて新しいブランチを作成します。
+{% data reusables.copilot.optional-select-custom-agent-dotcom %}
+1. **{% octicon "paper-airplane" aria-label="Send now" %} Send now**をクリックするか、<kbd>Return</kbd>を押します。
+
+   エージェントタブに移動し、Copilotが新しいセッションを開始します。これはプロンプトボックスの下にある「Recent sessions」リストに表示されます。Copilotはタスクに取り組み、コードの変更をプッシュします。
+
+   > [!NOTE]
+   > 機能プレビューで**New Dashboard Experience**を有効にしている場合、新しいセッションはダッシュボードのプロンプトボックスの下にある「Agent sessions」に表示されます。詳細については、[AUTOTITLE](/account-and-profile/reference/personal-dashboard#home-dashboard-view)を参照してください。
+
+### Copilot Chatからの開始
+
+Copilot Chatからタスクを開始すると、新しいCopilotクラウドエージェントセッションに現在のチャット会話のコンテキストが組み込まれます。つまり、`/task`プロンプトですでにCopilotと共有した詳細を言い直す必要はありません。
+
+1. GitHub.comでGitHub Copilot Chatを開きます。
+1. `/task`と入力してCopilotにpull requestの作成を依頼し、Copilotに変更させたい内容の詳細を指定します。
+
+   例えば、`/task Create a pull request to put backticks around file names and variables in output.`
+
+1. オプションで、Copilotのpull request用のベースブランチを選択します。Copilotはこのブランチに基づいて新しいブランチを作成し、そのブランチをターゲットとするpull requestに変更をプッシュします。
+{% data reusables.copilot.optional-select-custom-agent-dotcom %}
+1. **{% octicon "paper-airplane" aria-label="Start task" %}**をクリックするか、<kbd>Enter</kbd>を押します。
+
+   Copilotが新しいセッションを開始し、プロンプトボックスの下のリストに表示されます。Copilotはタスクに取り組み、pull requestに変更をプッシュし、完了するとレビュアーとしてあなたを追加して通知をトリガーします。
+
+## issueへのCopilotの担当者（Assignee）への割り当て
+
+issueをCopilotに割り当てることで、Copilotにissueの作業を開始させることができます。Copilotはタスクの作業を開始し、pull requestを作成し、完了したらあなたにレビューを依頼します。
+
+> [!NOTE]
+> この機能はパブリックプレビュー段階であり、変更される可能性があります。
+
+{% data reusables.repositories.navigate-to-repo %}
+{% data reusables.repositories.sidebar-issues %}
+
+1. Copilotに割り当てたいissueを開きます。
+1. 右側のメニューで、**Assignees**をクリックします。
+
+   ![issueの右サイドバーのスクリーンショット。「Assignees」というラベルの付いたヘッダーが濃いオレンジ色で囲まれています。](/assets/images/help/issues/assignee-menu.png)
+
+1. 担当者リストから**Copilot**をクリックします。
+
+   ![issueの「Assignees」ウィンドウのスクリーンショット。リストでCopilotを利用できます。](/assets/images/help/copilot/cloud-agent/assign-to-copilot.png)
+
+   追加のオプションが表示されます。
+
+   ![ターゲットリポジトリ、開始ブランチ、カスタムエージェント、および追加の指示のオプションを表示する「Assign to Copilot」ダイアログのスクリーンショット。](/assets/images/help/copilot/cloud-agent/assign-to-copilot-dialog.png)
+
+1. **Optional prompt**フィールドでは、Copilotに対する具体的なガイダンスを追加できます。Copilotがタスクを理解して完了するのに役立つコンテキスト、制約、または特定の要件を追加してください。
+
+   例えば、使用する特定のコーディングパターンやフレームワーク、テスト要件、コードスタイルの好み、変更すべきまたは変更すべきではないファイルやディレクトリに関する指示を含めることができます。
+
+   ここで提供する詳細に加えて、Copilotはターゲットリポジトリに構成されているカスタム指示を使用します。[AUTOTITLE](/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions)を参照してください。
+
+1. ダイアログのドロップダウンメニューを使用して、Copilotが作業を行うリポジトリと、分岐元のブランチを変更できます。
+
+   **少なくとも**読み取りアクセス権を持つすべてのリポジトリが、リポジトリのドロップダウンメニューに表示されます。ただし、リポジトリに対する書き込みアクセス権があり、**かつ**そのリポジトリでCopilotクラウドエージェントが有効になっている場合にのみ、リポジトリを選択できます。
+
+   issueのソース組織とは異なる組織のリポジトリを選択した場合、またはissueがプライベートリポジトリにあるときにパブリックリポジトリを選択した場合、警告が表示されます。
+
+   リポジトリを指定しない場合、Copilotはissueと同じリポジトリで作業します。ブランチを指定しない場合、Copilotは選択したリポジトリのデフォルトブランチから作業を行います。
+
+   > [!TIP]
+   > issueをCopilotに割り当てると、issueのタイトル、説明、現在存在するコメント、および提供した追加の指示が送信されます。issueを割り当てた後、Copilotはその後にissueに追加されたコメントを認識しないため、それに対して反応しません。追加の情報や元の要件からの変更がある場合は、Copilotが作成したpull requestのコメントとして追加してください。
+
+{% data reusables.copilot.optional-select-custom-agent-dotcom %}
+{% data reusables.copilot.optional-select-copilot-cloud-agent-model %}
+
+GitHub.comの他の場所からもissueをCopilotに割り当てることができます。
+
+* リポジトリの**{% octicon "issue-opened" aria-hidden="true" aria-label="issue-opened" %} Issues**ページのissueリストから。
+* GitHub Projectsでissueを表示しているとき。
+
+## 新しいリポジトリのシード（初期コンテンツの作成）
+
+新しいリポジトリを作成するときに、プロンプトを入力してCopilotに新しいリポジトリのシードを作成するように依頼できます。
+
+{% data reusables.repositories.create_new %}
+{% data reusables.repositories.owner-drop-down %}
+1. **Prompt**フィールドに、Copilotに構築させたい内容を説明するプロンプトを入力します。
+
+    例えば、`Create a Rust CLI for converting CSV spreadsheets to Markdown`
+{% data reusables.repositories.create-repo %}
+
+    Copilotは直ちにドラフトのpull requestを開きます。Copilotはタスクに取り組み、pull requestに変更をプッシュし、完了するとレビュアーとしてあなたを追加して通知をトリガーします。
+
+## 失敗したGitHub Actionsワークフロー実行の修正
+
+pull requestのブランチでGitHub Actionsのワークフロー実行が失敗した場合、Copilotに原因の調査と失敗の修正を依頼できます。
+
+1. GitHubで、失敗したワークフロー実行のジョブページに移動します。
+1. **{% octicon "agent" aria-label="The Agents icon" %} Fix with Copilot**ボタンをクリックします。
+
+   Copilotは新しいセッションを開始し、失敗の原因を調査し、修正をブランチにプッシュします。
+
+## pull requestでの作業の継続
+
+既存のpull requestに対して、Copilotに変更を行わせたり、レビューコメントに対処させたりすることができます。その後、結果のセッションを追跡し、フォローアップの指示を提供できます。
+
+### Copilotに変更を依頼する
+
+任意のpull requestのコメントで`@copilot`をメンションして、Copilotに変更を依頼できます。これは、Copilotが作成したpull requestや、あなたや他の人が作成したpull requestで機能します。
+
+デフォルトでは、Copilotはpull requestのブランチに直接コミットをプッシュします。代わりに別のpull requestを作成するには、その旨をコメントに記述します。また、ブランチをチェックアウトして自分で変更をプッシュすることもできます。
+
+GitHub Webインターフェースからpull requestのコメント（レビューやレビューコメントではない）を送信する場合は、モデルピッカーでモデルを選択します。Copilotはデフォルトで元のpull requestのモデルを使用します。
+
+### レビューコメントの委任
+
+レビューコメントを委任して、人間のレビュアーやGitHub CopilotコードレビューからのフィードバックをCopilotに実装させることができます。
+
+1. pull requestで、**Files changed**タブを開きます。
+1. Copilotに実装させたい最初のレビューコメントに移動します。
+   * 1つのコメントを委任するには、**Fix with Copilot**をクリックします。
+   * 複数のコメントを委任するには、**Add to batch**をクリックします。Copilotに作業させたいコメントを追加し続けます。
+1. **Manage batch**パネルで、追加の指示を追加し、必要に応じてモデルピッカーでモデルを選択します。
+1. Copilotに変更を適用する方法を選択します。
+   * 変更をブランチに直接コミットするには、**{% octicon "agent" aria-label="The Agents icon" %} Fix and commit**をクリックします。
+   * Copilotに変更を含む新しいpull requestを作成させるには、ドロップダウンメニューから**Fix and open pull request**をクリックします。
+
+### セッションの追跡と継続
+
+{% data reusables.copilot.cloud-agent.write-access-required %}
+
+コメントに応答してCopilotが新しいセッションを開始すると、コメントに目の絵文字（👀）のリアクションが表示されます。pull requestのタイムラインに「Copilot has started work」イベントが表示されます。
+
+![目のリアクションが付いたレビューコメントと、「Copilot started work」タイムラインイベントが表示されているpull requestのタイムラインのスクリーンショット。](/assets/images/help/copilot/cloud-agent/comment-to-agent-on-pr.png)
+
+Copilotは同じpull requestでの以前のセッションからのコンテキストを記憶しているため、フォローアップのリクエストがより速く、より信頼性の高いものになります。pull requestがカスタムエージェントによって作成された場合、`@copilot`をメンションすると、その同じエージェントの使用が継続されます。
+
+## マージ競合の解決
+
+pull request上のマージ競合を解決するようCopilotに依頼するには、2つの方法があります。
+
+* **「Fix with Copilot」ボタンを使用する場合**: pull requestにマージ競合がある場合は、マージボックスに表示される**Fix with Copilot**ボタンをクリックします。
+* **@copilotメンションを使用する場合**: pull requestのコメントで`@copilot`をメンションし、競合を修正するように依頼します（例：「@copilot resolve the merge conflicts on this PR.」）。
+
+Copilotは競合する変更を分析し、それらを解決し、ビルド、テスト、およびリンターが引き続き合格することを確認します。その後、マージする前に解決を確認できるようにレビューを依頼します。
+
+## 自動化によるCopilotの自動実行
+
+スケジュールに従って、またはissueが開かれるなどのイベントに応答して、Copilotを自動的に実行するように自動化を設定できます。自動化は、リポジトリの**Agents**タブにある**Automations**ペインから作成および管理します。詳細については、[AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/create-automations)を参照してください。
+
+## GitHub Actionsワークフロー実行の管理
+
+{% data reusables.copilot.cloud-agent-workflow-run-approval-default %}詳細については、[AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/configuring-agent-settings)を参照してください。
+
+## Copilotの作業に対するフィードバックの提供
+
+Copilotのpull requestやコメントにあるフィードバックボタンを使用して、出力を評価します。あなたのフィードバックは、Copilotの品質向上に役立ちます。
+
+1. Copilotのpull requestまたはコメントで、サムズアップ（:+1:）またはサムズダウン（:-1:）ボタンをクリックします。
+1. サムズダウンボタンをクリックした場合は、必要に応じて理由を選択し、コメントを残して、**Submit feedback**をクリックします。
+
+## 参考資料
+
+* [AUTOTITLE](/copilot/concepts/copilot-surfaces/copilot-on-github)
+* [AUTOTITLE](/copilot/tutorials/cloud-agent/get-the-best-results)
+* [AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/troubleshoot-cloud-agent)

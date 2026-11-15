@@ -146,11 +146,16 @@ def check(source_masked, translated_masked):
     return errors
 
 
-def call_gemini(model, api_key, text, retries=3):
+def call_gemini(spec, api_key, text, retries=3):
+    # specは「モデル名」か「モデル名@推論の量」。推論の量はlow、mediumなど。
+    model, _, level = spec.partition("@")
+    config = {"maxOutputTokens": 65536}
+    if level:
+        config["thinkingConfig"] = {"thinkingLevel": level}
     body = {
         "systemInstruction": {"parts": [{"text": INSTRUCTIONS}]},
         "contents": [{"role": "user", "parts": [{"text": text}]}],
-        "generationConfig": {"maxOutputTokens": 65536},
+        "generationConfig": config,
     }
     request = urllib.request.Request(
         GEMINI_URL.format(model=model),
@@ -186,10 +191,38 @@ def fetch(source, path):
         return response.read().decode()
 
 
+def translate_once(spec, api_key, masked, dry_run):
+    started = time.time()
+    result = {"spec": spec}
+    try:
+        if dry_run:
+            data = {"candidates": [{"content": {"parts": [{"text": masked}]}, "finishReason": "STOP"}]}
+        else:
+            data = call_gemini(spec, api_key, masked)
+        text, finish = response_text(data)
+        result["text"] = text
+        result["finish_reason"] = finish
+        result["usage"] = data.get("usageMetadata")
+        result["errors"] = check(masked, text)
+        if finish not in ("STOP", None):
+            result["errors"].append(f"finish reason: {finish}")
+    except Exception as e:
+        result["errors"] = [f"request failed: {e}"]
+    result["seconds"] = round(time.time() - started, 1)
+    return result
+
+
+def keep_trailing_newlines(source, translated):
+    # モデルは末尾の改行を落とすことがあるので、原文の末尾の改行に揃える。
+    tail = source[len(source.rstrip("\n")):]
+    return translated.rstrip("\n") + tail
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--pages", default="tools/trial/pages.txt")
-    parser.add_argument("--models", nargs="+", required=True)
+    parser.add_argument("--models", nargs="*", default=[], help="それぞれ単独で訳すモデル。モデル名@推論の量 の形で推論の量を指定できる")
+    parser.add_argument("--pipeline", nargs="+", help="構造検査に落ちたら次へ進む順に並べたモデル。同じモデルを2回並べると訳し直しになる")
     parser.add_argument("--out", default="trial/out")
     parser.add_argument("--dry-run", action="store_true", help="訳さずに、退避と検査だけを確かめる")
     args = parser.parse_args()
@@ -209,35 +242,35 @@ def main():
         masked = masker.mask(body)
         slug = f"{source}--" + path.replace("/", "--")
 
-        for model in args.models:
-            entry = {"source": source, "path": path, "model": model, "input_chars": len(body), "placeholders": masker.count}
-            model_dir = out / model
+        runs = [[m] for m in args.models]
+        if args.pipeline:
+            runs.append(args.pipeline)
+        for chain in runs:
+            name = "pipeline" if len(chain) > 1 else chain[0]
+            entry = {"source": source, "path": path, "model": name, "input_chars": len(body), "placeholders": masker.count, "attempts": []}
+            model_dir = out / name
             model_dir.mkdir(parents=True, exist_ok=True)
             started = time.time()
-            try:
-                if args.dry_run:
-                    data = {"candidates": [{"content": {"parts": [{"text": masked}]}, "finishReason": "STOP"}]}
-                else:
-                    data = call_gemini(model, api_key, masked)
-                text, finish = response_text(data)
-                entry["finish_reason"] = finish
-                entry["usage"] = data.get("usageMetadata")
-                entry["errors"] = check(masked, text)
-                if finish not in ("STOP", None):
-                    entry["errors"].append(f"finish reason: {finish}")
+            for spec in chain:
+                attempt = translate_once(spec, api_key, masked, args.dry_run)
+                entry["attempts"].append({k: v for k, v in attempt.items() if k != "text"})
+                if not args.dry_run:
+                    time.sleep(10)
+                if not attempt["errors"]:
+                    break
+            entry["errors"] = attempt["errors"]
+            entry["used"] = spec
+            text = attempt.get("text")
+            if text is not None:
                 (model_dir / (slug + ".masked.txt")).write_text(text)
-                restored = masker.unmask(text)
+                restored = keep_trailing_newlines(body, masker.unmask(text))
                 if args.dry_run and restored != body:
                     entry["errors"].append("dry run: unmask did not restore the source")
                 (model_dir / slug).write_text(front + restored)
-            except Exception as e:
-                entry["errors"] = [f"request failed: {e}"]
             entry["seconds"] = round(time.time() - started, 1)
             entry["ok"] = not entry["errors"]
             report.append(entry)
             print(json.dumps(entry, ensure_ascii=False), flush=True)
-            if not args.dry_run:
-                time.sleep(10)
 
     out.mkdir(parents=True, exist_ok=True)
     (out / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")

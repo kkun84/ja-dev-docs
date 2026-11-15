@@ -27,13 +27,13 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          rm -rf trial/out
-          python3 tools/trial/translate.py --models gemini-3.5-flash-lite gemini-3.8-flash
+          rm -rf trial/out2
+          python3 tools/trial/translate.py --out trial/out2 --models gemini-3.8-flash@low --pipeline gemini-3.5-flash-lite gemini-3.5-flash-lite gemini-3.8-flash@low
 
       - name: Commit results
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add trial/out
+          git add trial/out2
           git commit -m "試訳の結果 (${GITHUB_SHA::7})" || exit 0
           git push

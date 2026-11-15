@@ -1,0 +1,246 @@
+## はじめに
+
+⟦SK43⟧セッションは、⟦VB25⟧上のさまざまな場所から開始できます。セッションの実行後は、ブラウザを開いたまま進行状況を監視したり、追加プロンプトで誘導したり、結果として作成されたpull requestを反復修正したりできます。
+
+⟦PPTR⟧の詳細については、[AUTOTITLE](/copilot/concepts/copilot-surfaces/copilot-on-github)を参照してください。
+
+また、⟦7TCN⟧を使用して、これらの同じエントリーポイントからパートナー構築のエージェントを開始することもできます。詳細については、[AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/use-agent-apps)を参照してください。
+
+## ⟦TVGY⟧セッションの開始
+
+いくつかの異なるエントリーポイントからセッションを開始できます。
+
+* [github.com/copilot](https://github.com/copilot?ref_product=copilot&ref_type=engagement&ref_style=text&utm_source=cloud-gh-docs-home-cta&utm_medium=docs&utm_campaign=universe-2026)にある⟦HGSN⟧ ⟦4MAH⟧のホームページ。
+* [https://github.com](https://github.com?ref_product=copilot&ref_type=engagement&ref_style=text)にサインインしているときの⟦N96X⟧ ⟦QK7B⟧のパーソナルダッシュボードまたは⟦NCXC⟧のホームページ。
+* リポジトリ内の**⟦ZSX9⟧ Agents**タブまたはパネル。
+
+デフォルト設定のまま即座にプロンプトを送信することも、タスクに合わせてセッションを設定してからプロンプトを送信することもできます。
+
+1. プロンプトボックスに、⟦X3ZD⟧に行わせたい内容を記述します。求められる成果物や制約事項を含めてください。
+
+   > [!TIP]
+   > また、プロンプト内でスラッシュコマンドを使用して特定の操作を実行することもできます。たとえば、第2の意見を得るための `/rubber-duck`、リポジトリの脆弱性をレビューするための `/security-review`、セッションの使用状況情報を表示するための `/usage` などがあります。
+
+1. オプションで、**⟦Q9WW⟧ Attach**をクリックして、⟦FJF7⟧にリクエストの参照情報を提供します。
+
+   リクエストのコンテキストを提供するために、**Files and folders**、**Upload from computer**、**Repository**、または**Space**を選択します。
+
+   クラウドサンドボックスセッションの場合、コネクタや個人のカスタムMCPサーバーを設定することで、サードパーティソースからの追加コンテキストを提供できます。[AUTOTITLE](/copilot/concepts/customizations/copilot-connectors)および[AUTOTITLE](/copilot/concepts/customizations/mcp#personal-mcp-servers)を参照してください。
+
+1. **Mode**ピッカーを開いて、⟦JCYQ⟧とのコラボレーション方法を選択します。
+
+   * **Interactive**: （デフォルト）⟦5KR8⟧とステップバイステップで作業します。
+   * **Autopilot**: タスクを⟦NYJX⟧に委任し、エンドツーエンドで実行させます。
+
+   同じメニューで、**Tool permissions**を使用してツールリクエストの承認方法を制御します。
+
+   * **Assisted**（デフォルト）を選択します。これは、安全チェックを使用してリクエストを承認するかどうか、またはユーザーに確認するかを決定します。
+   * **Always ask**を選択して、リクエストごとに承認を必須にします。
+   * **Allow all**を選択して、すべてのツール、パス、URLのリクエストを自動的に承認します。
+
+1. **Models**ピッカーを開いて、**Auto**（デフォルト）または特定モデルを選択します。モデルは、速度とコスト効率、汎用性と知性、あるいは複雑なタスクへの適性のいずれかを選択しやすくするために、それぞれの長所ごとにグループ化されています。選択したモデルが**Balance**などの設定可能な推論をサポートしている場合は、ドロップダウンメニューを使用して推論レベルを選択することもできます。
+
+1. プロンプトボックスの下部にある**Chat**セッションコンテキストピッカーを使用して、セッションのスコープ（個人、組織、またはリポジトリ）を選択します。
+
+   * 検索ボックスにリポジトリ名を入力して、追加するリポジトリを検索します。
+   * **Ask anything across repositories**の下で、**Chat**を選択して複数のリポジトリにわたって質問します。デフォルトのスコープは個人のリポジトリです。右側の画像をクリックしてアカウントメニューを開き、組織を選択するか、リポジトリ所有者（ユーザーまたは組織）で検索してスコープを変更します。
+   * **Work in a repository**の下で、作業対象とする最近のリポジトリを選択します。リストされるリポジトリは、選択したスコープを反映します。
+
+   > [!NOTE]
+   > * **Attach**メニュー（前の手順）からリポジトリを追加すると、プロンプトの参照（コンテキスト資料）が提供されます。一方、ここで**Start a session**の下で選択すると、そのリポジトリがセッションの作業用リポジトリ（スコープ）になります。セッションの開始時に、クラウドサンドボックスはそのリポジトリのコピーを作成し、既存の制約の範囲内でそのコンテンツを操作する権限を⟦4NAJ⟧に与えます。
+   > * リポジトリがリストに表示されない場合、個人設定、組織、またはエンタープライズポリシーによって⟦V4VB⟧から除外されている可能性があります。
+
+   オプションで、上記でリポジトリを選択した場合、**main**（または表示されているデフォルトブランチ名）をクリックして、⟦FBW9⟧が作業コンテキストとして使用し、その中で操作を行うブランチを選択することもできます。
+
+⟦RPNB⟧
+
+1. **Send message**をクリックするか、<kbd>Enter</kbd>キーを押してプロンプトを送信し、セッションを開始します。
+
+⟦8D7A⟧はプロンプトに応答し、選択されたコンテキストと環境に基づいてセッションを開始します。要求された場合、⟦DG8B⟧は変更されたファイルのリスト、pull request、生成された成果物（調査計画など）、およびその他の関連する出力を生成します。
+
+### ファイル、issue、またはpull request内からの⟦D8Z5⟧の開始
+
+コンテキストページから⟦PTAQ⟧とのチャットセッションを開くと、セッションは開いているファイル、issue、またはpull requestのコンテキストを引き継いで開始されます。
+
+コンテキストパネル内から新しいエージェントセッションを開始することはできません。⟦XAW3⟧ページ、ホームページ、またはエージェントタブから開始する必要があります。
+
+## ⟦M833⟧を使用したセッションの開始
+
+### エージェントタブまたはパネルからのセッションの開始
+
+エージェントタブとエージェントパネルからセッションを開始できます。「New agent task」フォームが表示されれば、違いはエントリーポイントのみであり、その後の手順は同じです。
+
+⟦AEGM⟧
+⟦PJCZ⟧
+
+### ダッシュボードからのセッションの開始
+
+ダッシュボードのプロンプトボックスから、⟦HFD9⟧に作業の開始を依頼できます。ダッシュボードは、ログインした状態で [https://github.com](https://github.com) にアクセスしたときに表示される、⟦WJK7⟧でのアクティビティのパーソナライズされた概要です。
+
+1. [https://github.com](https://github.com/?ref_product=desktop&ref_type=engagement&ref_style=text)のダッシュボードに移動します。
+1. **⟦EYCG⟧ Task**ボタンをクリックします。
+1. プロンプトフィールドのドロップダウンメニューを使用して、⟦KQDN⟧に作業させたいリポジトリを選択します。
+1. リクエストを説明するプロンプトを入力します。
+
+    たとえば、`Implement a user friendly message for common errors.`
+
+    ⟦J89D⟧にpull requestを開かせたい場合は、プロンプト内で `Open a pull request to implement a user friendly message for common errors.` のように要求できます。
+
+1. オプションで、⟦GZW7⟧のpull requestのベースブランチを選択します。⟦N9H8⟧はこのブランチに基づいて新しいブランチを作成します。
+⟦DNX4⟧
+1. **⟦MC7D⟧ Send now**をクリックするか、<kbd>Return</kbd>キーを押します。
+
+   エージェントタブに移動し、⟦ED49⟧が新しいセッションを開始します。これはプロンプトボックスの下部にある「Recent sessions」リストに表示されます。⟦GRSC⟧はタスクに取り組み、コードの変更をプッシュします。
+
+   > [!NOTE]
+   > フィーチャープレビューで**New Dashboard Experience**を有効にしている場合、新しいセッションはダッシュボードのプロンプトボックスの下部にある「Agent sessions」に表示されます。詳細については、[AUTOTITLE](/account-and-profile/reference/personal-dashboard#home-dashboard-view)を参照してください。
+
+### ⟦CV8X⟧からの開始
+
+⟦ZE93⟧からタスクを開始すると、新しい⟦ZPHN⟧セッションに現在のチャット会話のコンテキストが組み込まれます。つまり、`/task`プロンプトで⟦KGP6⟧にすでに共有した詳細を言い直す必要はありません。
+
+1. ⟦9A9D⟧で⟦SWF2⟧を開きます。
+1. `/task`と入力して、pull requestを作成するように⟦VE74⟧に依頼し、⟦C4MR⟧に変更させたい内容の詳細を指定します。
+
+   たとえば、`/task Create a pull request to put backticks around file names and variables in output.` と入力します。
+
+1. オプションで、⟦6BBR⟧のpull requestのベースブランチを選択します。⟦GM9Q⟧はこのブランチに基づいて新しいブランチを作成し、そのブランチをターゲットとするpull requestに変更をプッシュします。
+⟦HCC8⟧
+1. **⟦NNNQ⟧**をクリックするか、<kbd>Enter</kbd>キーを押します。
+
+   ⟦KDKE⟧が新しいセッションを開始します。これはプロンプトボックスの下部のリストに表示されます。⟦SA4Q⟧はタスクに取り組み、そのpull requestに変更をプッシュした後、完了時にあなたをレビュアーとして追加して通知をトリガーします。
+
+## ⟦Z7EM⟧へのissueの割り当て
+
+issueを⟦J7G7⟧に割り当てることで、⟦PYVV⟧にissueの作業開始を依頼できます。⟦EVG2⟧はタスクの作業を開始し、pull requestを作成し、完了時にあなたにレビューを依頼します。
+
+> [!NOTE]
+> この機能は⟦GTJE⟧であり、変更される可能性があります。
+
+⟦99FY⟧
+⟦8S8X⟧
+
+1. 割り当てたいissueを開きます。
+1. 右側のメニューで、**Assignees**をクリックします。
+
+   ![Screenshot of the right sidebar of an issue. A header, labeled "Assignees", is outlined in dark orange.](/assets/images/help/issues/assignee-menu.png)
+
+1. 担当者リストから**Copilot**をクリックします。
+
+   ![Screenshot of "Assignees" window on an issue. Copilot is available in the list.](/assets/images/help/copilot/cloud-agent/assign-to-copilot.png)
+
+   追加のオプションが表示されます。
+
+   ![Screenshot of "Assign to Copilot" dialog showing options for target repository, starting branch, ⟦6KQ9⟧, and additional instructions.](/assets/images/help/copilot/cloud-agent/assign-to-copilot-dialog.png)
+
+1. **Optional prompt**フィールドに、⟦4TJQ⟧に対する具体的なガイダンスを追加できます。⟦FZXY⟧がタスクを理解して完了するのに役立つコンテキスト、制約事項、または特定の要件を追加します。
+
+   たとえば、使用する特定のコーディングパターンやフレームワーク、テスト要件、コードスタイルの好み、変更すべき（または変更してはならない）ファイルやディレクトリに関する指示を含めることができます。
+
+   ここで提供する詳細に加えて、⟦HQZZ⟧はターゲットリポジトリ用に設定されたカスタムインストラクションを使用します。[AUTOTITLE](/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions)を参照してください。
+
+1. ダイアログのドロップダウンメニューを使用して、⟦YXS6⟧が作業を行うリポジトリと、分岐元となるブランチを変更できます。
+
+   **少なくとも**読み取りアクセス権を持つすべてのリポジトリが、リポジトリのドロップダウンメニューに表示されます。ただし、リポジトリを選択できるのは、そのリポジトリに対する書き込みアクセス権があり、**かつ**そのリポジトリで⟦RC4J⟧が有効になっている場合のみです。
+
+   issueの元の組織とは異なる組織のリポジトリを選択した場合、またはissueがプライベートリポジトリにあるときにパブリックリポジトリを選択した場合、警告が表示されます。
+
+   リポジトリを指定しない場合、⟦CCMJ⟧はissueと同じリポジトリで作業します。ブランチを指定しない場合、⟦RJD5⟧は選択したリポジトリのデフォルトブランチから作業を行います。
+
+   > [!TIP]
+   > issueを⟦ZXY9⟧に割り当てると、issueのタイトル、説明、既存のコメント、および提供した追加の指示が送信されます。issueを割り当てた後、⟦W4AD⟧はそれ以降にissueに追加されたコメントを認識しないため、反応しません。追加の情報や元の要件からの変更がある場合は、⟦7V3K⟧が作成するpull requestのコメントとして追加してください。
+
+⟦NTBP⟧
+⟦QGJE⟧
+
+⟦B9CR⟧上の他の場所から⟦2PZB⟧にissueを割り当てることもできます。
+
+* リポジトリの**⟦EP87⟧ Issues**ページのissueリストから。
+* ⟦HSF4⟧ ⟦T6K2⟧でissueを表示しているとき。
+
+## 新しいリポジトリのシード
+
+新しいリポジトリを作成する際、プロンプトを入力して⟦T77X⟧に新しいリポジトリのシードを作成させることができます。
+
+⟦S9TD⟧
+⟦W84V⟧
+1. **Prompt**フィールドに、⟦QC8E⟧に構築させたい内容を説明するプロンプトを入力します。
+
+    たとえば、`Create a Rust CLI for converting CSV spreadsheets to Markdown` と入力します。
+⟦DQCV⟧
+
+    ⟦NER2⟧はすぐにドラフトのpull requestを開きます。⟦WEQ3⟧はタスクに取り組み、そのpull requestに変更をプッシュした後、完了時にあなたをレビュアーとして追加して通知をトリガーします。
+
+## 失敗した⟦X9BT⟧ワークフロー実行の修正
+
+pull requestのブランチで⟦MFX7⟧のワークフロー実行が失敗した場合、⟦CXY4⟧に調査と失敗の修正を依頼できます。
+
+1. ⟦4N9B⟧で、失敗したワークフロー実行のジョブページに移動します。
+1. **⟦4GZV⟧ Fix with ⟦ADVD⟧**ボタンをクリックします。
+
+   ⟦VHK4⟧は新しいセッションを開始し、失敗の原因を調査して、ブランチに修正をプッシュします。
+
+## pull requestでの作業の継続
+
+⟦8JXC⟧に変更を行ったり、既存のpull requestに対するレビューコメントに対処したりするよう依頼できます。その後、結果のセッションを追跡し、後続の指示を提供できます。
+
+### ⟦8K9S⟧への変更の依頼
+
+任意のpull requestのコメントで `@copilot` をメンションして、⟦97B5⟧に変更を依頼できます。これは、⟦VRV6⟧によって作成されたpull requestや、あなたや他の人が作成したpull requestで機能します。
+
+デフォルトでは、⟦GPZX⟧はpull requestブランチに直接コミットをプッシュします。代わりに別のpull requestを作成するには、その旨をコメントに記述します。また、ブランチをチェックアウトして自分で変更をプッシュすることもできます。
+
+⟦EDHP⟧のWebインターフェースからpull requestのコメント（レビューやレビューコメントではない）を送信する場合は、モデルピッカーでモデルを選択します。⟦4RAQ⟧はデフォルトで元のpull requestのモデルを使用します。
+
+### レビューコメントの委任
+
+レビューコメントを委任して、人間のレビュアーや⟦269H⟧からのフィードバックを⟦PQ8D⟧に実装させることができます。
+
+1. pull requestで、**Files changed**タブを開きます。
+1. ⟦KNYP⟧に実装させたい最初のレビューコメントに移動します。
+   * 1つのコメントを委任するには、**Fix with ⟦MHZ4⟧**をクリックします。
+   * 複数のコメントを委任するには、**Add to batch**をクリックします。⟦J2CN⟧に作業させたいコメントを追加し続けます。
+1. **Manage batch**パネルで、追加の指示を記述し、オプションでモデルピッカーでモデルを選択します。
+1. ⟦8Y3C⟧に変更を適用する方法を選択します。
+   * ブランチに変更を直接コミットするには、**⟦WJFJ⟧ Fix and commit**をクリックします。
+   * ⟦3NJX⟧に変更を含む新しいpull requestを作成させるには、ドロップダウンメニューから**Fix and open pull request**をクリックします。
+
+### セッションの追跡と継続
+
+⟦VCXV⟧
+
+コメントに応答して⟦699Y⟧が新しいセッションを開始すると、コメントに目の絵文字（👀）リアクションが表示されます。pull requestのタイムラインに「Copilot has started work」イベントが表示されます。
+
+![Screenshot of a pull request timeline with a review comment with the eyes reaction and a "Copilot started work" timeline event.](/assets/images/help/copilot/cloud-agent/comment-to-agent-on-pr.png)
+
+⟦69N6⟧は同じpull requestでの以前のセッションのコンテキストを記憶しているため、後続のリクエストがより速く、より確実になります。pull requestが⟦DJEF⟧によって作成された場合、`@copilot`をメンションすることで、同じエージェントの使用が継続されます。
+
+## マージコンフリクトの解決
+
+pull requestのマージコンフリクトを解決するように⟦WABQ⟧に依頼するには、2つの方法があります。
+
+* **「Fix with ⟦TAGT⟧」ボタンの使用**: pull requestにマージコンフリクトがある場合、マージボックスに表示される**Fix with ⟦KTZR⟧**ボタンをクリックします。
+* **@copilotメンションの使用**: pull requestのコメントで `@copilot` をメンションし、コンフリクトの修正を依頼します（例：「@copilot resolve the merge conflicts on this PR」）。
+
+⟦XBBS⟧は競合する変更を分析し、それらを解決して、ビルド、テスト、およびリンターが引き続き合格することを確認します。その後、マージする前に解決を確認できるようにレビューを要求します。
+
+## ⟦SBP4⟧を使用した⟦5DTN⟧の自動実行
+
+スケジュールに沿って、またはissueのオープンなどのイベントに応答して、⟦Z4HA⟧に⟦YAPJ⟧を自動実行するように設定できます。⟦4Y5M⟧は、リポジトリの**Agents**タブにある**⟦MPK6⟧**ペインから作成および管理します。詳細については、[AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/create-automations)を参照してください。
+
+## ⟦RF29⟧ワークフロー実行の管理
+
+⟦TAQS⟧詳細については、[AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/configuring-agent-settings)を参照してください。
+
+## ⟦TQB8⟧の作業に関するフィードバックの提供
+
+⟦MGZT⟧のpull requestやコメントにあるフィードバックボタンを使用して、出力を評価します。フィードバックは⟦743F⟧の品質向上に役立ちます。
+
+1. ⟦JSN5⟧のpull requestまたはコメントで、thumbs up（:+1:）またはthumbs down（:-1:）ボタンをクリックします。
+1. thumbs downボタンをクリックした場合は、オプションで理由を選択してコメントを残し、**Submit feedback**をクリックします。
+
+## さらに読む
+
+* [AUTOTITLE](/copilot/concepts/copilot-surfaces/copilot-on-github)
+* [AUTOTITLE](/copilot/tutorials/cloud-agent/get-the-best-results)
+* [AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/troubleshoot-cloud-agent)

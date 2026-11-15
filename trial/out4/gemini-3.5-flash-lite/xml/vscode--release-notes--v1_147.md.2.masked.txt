@@ -1,0 +1,54 @@
+# Visual Studio Code 1.147 <x id="V9XE"/>
+
+[LinkedIn](<x id="DT79"/>)、[X](<x id="H35E"/>)、[Bluesky](<x id="FNJY"/>)、[Instagram](<x id="C5GH"/>) のフォローをお願いします。<x id="9QPK"/> <x id="H7JM"/>
+
+---
+
+_最終更新日: 2026年11月13日_
+
+Visual Studio Code のリリース 1.147 <x id="TCWB"/> へようこそ。
+
+<x id="3MG2"/>
+
+ハッピーコーディング！
+
+---
+
+<x id="RVSQ"/>
+
+<x id="F92W"/>
+
+## 2026年11月12日
+
+* テキストファイル、Markdownドキュメント、チャット、統合ブラウザータブを作成するためのエディタータブバーの **+** メニューを追加しました。_[#347849: Experimental new tab (+) button in the editor tab bar](<x id="7XWW"/>)_
+* コードの生成、チャットの開始、言語の選択、または無題のファイルを別のエディターで再度開くためのアクションを追加しました。_[#347848: Experiment: show a list of actions in the hint of new untitled files](<x id="FD5D"/>)_
+* チャットに貼り付けられた画像に、可能な場合はそのソースファイルにちなんだ名前を付けるようにしました。_[#347828: Chat: name pasted images after their source file](<x id="HHJF"/>)_
+* 兄弟プロジェクト間の移動を減らすため、Agents ウィンドウの **Open Folder** ダイアログが選択したローカルフォルダーの親から開始するようにしました。_[#335652: Choose Folder: Make parent folder of current folder the starting point](<x id="RQFS"/>)_
+* ツールバーメニューを使用して、Agents ウィンドウのクリーンアップエディターでワークツリーのフィルターと並べ替えを行います。_[#347138: Controls area for worktree cleanup could use some design love](<x id="2FCE"/>)_
+* HTMLおよびCSSファイルの単行 <x id="EKDY"/> コメントのミニマップセクションヘッダーを表示するようにしました。_[#210637: Minimap section headers are not shown for regions in HTML and CSS](<x id="2T62"/>)_
+* [ローカル拡張機能開発](<x id="E7MN"/>)中にエディターおよび Agents ウィンドウのタイトルバーにボタンを追加するための、提案された <x id="58B8"/> API を追加しました。_[#347839: Proposed API: let extensions contribute buttons to the title bar of the editor and Agents windows](<x id="WDAK"/>)_
+* 実験的な **AI Usage Statistics** ステータスバーウィジェットを削除しました。_[#340001: Remove the AI Usage Statistics widget](<x id="NAQ5"/>)_
+
+## 2026年11月11日
+
+* 両方のウィンドウで同じエージェントホストを使用している場合に、Agents ウィンドウと WSL、Remote - SSH、または Dev Container のエディターウィンドウ間でエージェントセッションを共有します。_[#346859: Share agent host sessions between the Agents Window and WSL, SSH and Dev Container editor windows](<x id="38B2"/>)_
+* 互換性のある受信トレイカテゴリ間でセッションをドラッグして、ピン留め、保持、クリア、アーカイブ、または再開します (実験的)。_[#346934: Inbox mode: Sessions cannot be dragged between groups](<x id="KMBG"/>)_
+* すべてのウェブリンクを統合ブラウザーで開くことを有効にします。_[#316528: Option to open all links in Integrated Browser](<x id="T9M7"/>)_
+
+## 2026年11月10日
+
+* 受信トレイモードで条件を満たすセッション用のインライン **Merge Pull Request** アクションを追加しました (実験的)。_[#346936: Inbox mode: Ready to Merge sessions have no inline Merge action](<x id="9GYR"/>)_
+* **Inbox** を表示したまま、受信トレイモードの空のカテゴリを非表示にします (実験的)。_[#346938: Inbox mode: Empty sections take up too much vertical space](<x id="G9ZE"/>)_
+* Agents ウィンドウで Compare Models (Preview) の親チャットにマウスオーバーすると、元の設定が表示されます。_[#347109: Model compare: show original settings on hover of the parent chat](<x id="VF27"/>)_
+* セッション復元のリマインダーを残しつつ、ワークツリークリーンアップの確認メッセージを短縮しました。_[#347134: Worktree cleanup confirmation is unncessarily wordy](<x id="9HXB"/>)_
+* Markdownエディターでの折りたたみ可能な <x id="H4QD"/> セクションのサポートを追加しました (実験的)。_[#347433: Markdown editor: render <x id="9ZMQ"/>/<x id="SJ9C"/> as collapsible sections](<x id="QQ8W"/>)_
+* チャット入力の上にピン留めされたチャットファイルを表示する機能のサポートを追加しました (実験的)。_[#345427: Let extensions dock views above the chat input](<x id="JMTJ"/>)_
+* VS Code のペットを非表示にするコンテキストメニューオプションを追加しました (実験的)。_[#346510: Remove option for vscode-pet](<x id="KG2J"/>)_
+* 受信トレイのセッションをワークスペースおよび実行環境でフィルターします (実験的)。_[#347488: Add workspace and environment scope pickers to Inbox](<x id="DBES"/>)_
+
+---
+
+新機能の準備ができたらすぐに試してくださる皆様に深く感謝いたします。定期的にこちらをチェックして、新機能をご確認ください。
+
+<a id="scroll-to-top" role="button" title="Scroll to top" aria-label="scroll to top" href="#"><span class="icon"></span></a>
+<link rel="stylesheet" type="text/css" href="css/inproduct_releasenotes.css"/>

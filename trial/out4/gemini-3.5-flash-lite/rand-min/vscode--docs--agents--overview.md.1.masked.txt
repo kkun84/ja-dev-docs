@@ -1,0 +1,113 @@
+# ⟦9PSS⟧でのAIによるビルド
+
+⟦9PSS⟧では、タスクに必要な量のAIを活用できます。入力に応じたサジェスト機能の利用、コード、テスト、デバッガーの横で動作するエージェントとの協業、あるいは⟦D5RA⟧でのプロジェクトを跨いだタスク調整などが行えます。作業の変化に応じて、これらのアプローチを組み合わせてください。
+
+複数のプロバイダーからモデルを選択し、サポートされているアカウントまたは独自のAPIキーを使用して、⟦XZRD⟧、⟦4F22⟧、または⟦E7W3⟧のエージェントハーネスを利用できます。ハーネスはモデル周辺のツールとワークフローを提供します。カスタマイズやプラグインにより、作業に合わせてエージェントを調整できます。
+
+継続性機能により、最初からやり直すことなく、サポートされているインターフェース間でエージェントの作業を引き継ぐことができます。⟦DYCR⟧を介して自分のマシンのセッションに接続するか、ローカルのホストをオンラインに維持せずにクラウドセッションを使用します。
+
+## 開始方法の選択
+
+<div class="card-grid">
+    <a class="card" href="/docs/agents/quickstart">
+        <i class="codicon codicon-hubot" aria-hidden="true"></i>
+        <div>
+            <p><strong>最初のAIタスクを完了する</strong></p>
+            <p>AIコーディングは初めてですか？推奨されるデフォルト設定で小さなアプリを構築して検証し、変更内容を確認します。</p>
+        </div>
+    </a>
+    <a class="card" href="/docs/agents/guides/overview#experienced-agent-fast-track">
+        <i class="codicon codicon-tools" aria-hidden="true"></i>
+        <div>
+            <p><strong>⟦YE6D⟧でAIワークフローを活用する</strong></p>
+            <p>すでにAIコーディングツールを使用していますか？アカウントまたはモデルを接続し、エージェントハーネスを選択して、自分のリポジトリで作業します。</p>
+        </div>
+    </a>
+</div>
+
+* **自分のコードから始めたい場合:** [ファイルを変更せずにコードベースを探索し](/docs/agents/guides/explore-a-codebase.md)、説明に対してコードを検証します。
+* **⟦3X9M⟧が初めての場合:** まず[エディターをインストールしてワークスペースを開きます](/docs/getstarted/overview.md)。
+
+<video src="images/agents-overview/build-with-ai-overview.mp4" title="Video overview of building with AI in VS Code, showing inline suggestions, collaboration alongside code, and task orchestration in the Agents window." autoplay loop controls muted></video>
+
+<a name="what-you-can-do-with-ai"></a>
+<a name="ways-to-work-with-agents"></a>
+
+## 作業方法の選択
+
+タスクに応じて異なるエクスペリエンスを切り替え、[インターフェース間でエージェントセッションを継続](#continue-across-interfaces-and-machines)して、中断したところから再開します。
+
+<div class="card-grid">
+    <a class="card" href="/docs/editing/ai-powered-suggestions">
+        <i class="codicon codicon-edit" aria-hidden="true"></i>
+        <div>
+            <p><strong>アシスタント付きでコードを書く</strong></p>
+            <p>入力時にインラインサジェストを取得します。これには次の編集の提案も含まれます。</p>
+        </div>
+    </a>
+    <a id="work-alongside-your-code" class="card" href="/docs/agents/run/chat-view">
+        <i class="codicon codicon-comment-discussion" aria-hidden="true"></i>
+        <div>
+            <p><strong>コードの横で協業する</strong></p>
+            <p>⟦85D8⟧のエージェントと協力し、エディター、ターミナル、テスト、デバッガーとともに現在のワークスペースに集中して作業します。</p>
+        </div>
+    </a>
+    <a id="delegate-and-manage-tasks" class="card" href="/docs/agents/run/agents-window">
+        <i class="codicon codicon-hubot" aria-hidden="true"></i>
+        <div>
+            <p><strong>作業を委任して調整する</strong></p>
+            <p>⟦N9H4⟧でプロジェクトを跨いだタスクの割り当てとエージェントセッションの管理を行います。</p>
+        </div>
+    </a>
+</div>
+
+[エージェント](/docs/agents/concepts/agents.md)は、モデルとツールを使用して関連コードの検索、変更の実行、チェックを行います。⟦V5DD⟧と⟦SZKK⟧の両方でエージェントが実行されます。ユーザーが目標を設定し、作業を誘導し、結果を確認します。
+
+日常的な作業には、プロンプトを[オートメーション](/docs/agents/run/automations.md)として保存します。スケジュールに従ってローカルで実行するか、クラウドオートメーション `feature(cloud-automations)` を使用して、コンピュータの電源がオフの間も継続するスケジュールまたはイベントトリガーによるリポジトリ作業を実行します。定期的な作業を有効にする前に、手動での実行を確認してください。
+
+焦点を絞った編集を行うには、コードから離れることなく[インラインチャット](/docs/chat/inline-chat.md)を使用します。特定のタスクの機能を比較するには、[AI機能早見表](/docs/agents/reference/ai-features-cheat-sheet.md#choose-a-feature)を使用します。
+
+## モデル、エージェント、ツールの選択
+
+最初のエージェントタスクでは、すべてのオプションを設定せずに[クイックスタートを使用](/docs/agents/quickstart.md)します。ニーズの変化に応じて、以下の選択肢を適宜変更できます。
+
+| 選択肢 | オプション |
+|--------|---------|
+| **モデル** | ⟦VZVN⟧を介して[複数のプロバイダーのモデル](/docs/agent-customization/language-models.md)を選択するか、独自の[APIキー (BYOK)](/docs/agent-customization/language-models.md#bring-your-own-language-model-key)やサポートされているローカルモデルを使用します。 |
+| **エージェントハーネス** | その[ツールとワークフロー](/docs/agents/run/agent-harnesses.md#compare-agent-harnesses)に基づいて、⟦65BQ⟧、⟦7JVE⟧、または⟦HMYB⟧から選択します。 |
+| **アクセスと課金** | 既存の⟦P9XA⟧プラン、サポートされているプロバイダーアカウント、またはAPIキーを使用します。[ハーネスの要件](/docs/agents/run/agent-harnesses.md#requirements-and-setup)を確認してください。 |
+| **カスタマイズ** | [プラグイン](/docs/agent-customization/agent-plugins.md)、[プロジェクト指示](/docs/agents/guides/customize-copilot-guide.md)、[スキル](/docs/agent-customization/agent-skills.md)を使用してエージェントを調整します。[Model Context Protocol (MCP) サーバー](/docs/agent-customization/mcp-servers.md)を介して外部ツールを接続します。 |
+
+## インターフェースとマシンを跨いだ継続
+
+継続性とは、最初からやり直すことなく、サポートされているインターフェースやマシンを跨いでエージェントの作業を引き継ぐことを意味します。ワークスペースと実行環境はホスト上に維持したまま、エージェントと対話する場所を選択します。セッションのサポート内容や要件は、ハーネスや宛先によって異なります。
+
+| 作業を行いたい場所 | ここから開始 |
+|------------------------|------------|
+| **⟦TSN7⟧アプリとデバイスを跨ぐ** | [⟦J429⟧](/docs/agents/run/remote-agent-sessions.md#github-environments) `feature(github-environments)` を使用して開発マシンを登録し、⟦V2XD⟧、⟦ZXWE⟧、⟦5AB7⟧、GitHub.com、またはGitHub Mobileからエージェントセッションを継続します。利用可能なアクションはクライアントによって異なります。 |
+| **管理されたクラウドコンピュート上** | 自分のマシンをオンラインに維持せずにインタラクティブなエージェント作業を行うには、[クラウドセッション](/docs/agents/run/cloud-sandbox-sessions.md) `feature(cloud-sessions)` を使用します。既存のクラウドセッションを再度開いて会話を継続します。実行はクラウド環境で行われ、その可用性とライフタイムはサービスによって管理されます。 |
+| **エディターまたは⟦HT2B⟧** | ⟦D524⟧で⟦BYAW⟧、⟦7XK2⟧、または⟦9FWR⟧のエージェントハーネスを使用し、[インターフェース間でセッションを継続](/docs/agents/run/sessions/manage-sessions.md#continue-between-the-chat-view-and-agents-window)します。 |
+| **別のマシンの⟦7Y62⟧** | [SSH](/docs/agents/run/remote-agent-sessions.md#connect-via-ssh)または[開発トンネル](/docs/agents/run/remote-agent-sessions.md#connect-via-dev-tunnel)を介して、⟦Y32D⟧固有のリモート接続を使用します。開発トンネルは[ブラウザーベースの⟦BNKT⟧](/docs/agents/run/remote-agent-sessions.md#use-the-agents-window-in-the-browser)もサポートしています。 |
+
+自分のマシンで実行されるセッションの場合は、ホストを実行状態にしてアクセス可能な状態に維持してください。クラウドセッションでは、代わりに管理されたコンピュートを使用します。クラウドでの作業のためにクラウドセッションを開始し、後からそのセッションを再度開いて継続します。
+
+自身のプライベートリポジトリを使用して[⟦8QGQ⟧でクラウドエージェントタスクを開始し、⟦6ZA6⟧で継続](/docs/agents/cloud-continuity-tutorial.md)します（実験的機能）。
+
+ツールが実行される場所とモデルがホストされる場所は個別に選択できます。エージェントは、ホストされているプロバイダーにモデルリクエストを送信しながら、自分のマシン上のファイルを編集できます。
+
+## 制御の維持
+
+AIは不正確なコードを生成したり、意図を誤解したりする可能性があります。どの変更をコードベースに反映させるかは、引き続きユーザーが責任を負う必要があります。
+
+* **統合前にレビューする。** エージェントはセッションフォルダーやワークツリーに直接編集内容を保存できます。変更をコミットまたはマージする前に、[差分を確認し、結果を検証](/docs/agents/run/review-code-edits.md)してください。
+* **アクションを制御し、作業を誘導する。** [権限と承認](/docs/agents/run/approvals.md)を使用して、どのアクションに確認が必要かを決定します。[リクエストの誘導や停止](/docs/chat/chat-overview.md#send-messages-while-a-request-is-running)を行うことはできますが、停止しても完了したアクションや外部サービスへの変更は取り消されません。
+* **分離について理解する。** Gitワークツリーはコードの変更を分離しますが、セキュリティ境界ではありません。エージェントが実行するターミナルコマンドのファイルシステムおよびネットワークの制限事項については、[プラットフォーム固有のサンドボックスオプション](/docs/agents/run/agent-sandboxing.md)を確認してください。
+
+既存のプロジェクトでエージェントを使用する前に、[推奨されるセキュリティベースライン](/docs/agents/run/security.md#recommended-security-baseline)を確認してください。管理されたデバイスでは、組織が[エンタープライズAIポリシー](/docs/enterprise/manage-ai-settings.md)を通じて、利用可能なエージェント、モデル、ツールを制限している場合があります。チャットにエージェントが表示されない場合は、[可用性のトラブルシューティング手順](/docs/agents/agent-troubleshooting/faq.md#agents-are-not-available-in-chat)を確認してください。
+
+キーボード、スクリーンリーダー、低視力者向けのワークフローについては、[アクセシブルビューおよびその他のアクセシビリティ機能](/docs/configure/accessibility/accessibility.md#accessible-view)の使用方法を確認してください。
+
+## 次のステップ
+
+* [エージェントのベストプラクティスをプロジェクトに適用する](/docs/agents/best-practices.md)。
+* [品質、信頼性、AIクレジットの使用量を比較する](/docs/agents/guides/optimize-usage.md)。

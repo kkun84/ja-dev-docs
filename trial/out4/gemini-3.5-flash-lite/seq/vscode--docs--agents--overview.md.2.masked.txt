@@ -1,0 +1,113 @@
+# ⟦L1:variables.product.prodname_vscode_shortname⟧でのAIを活用したビルド
+
+⟦L2:variables.product.prodname_vscode⟧では、タスクに合わせて必要な分だけAIを利用できます。入力を進めながら提案を受け取ったり、コード、テスト、デバッガーの横でエージェントと協業したり、⟦L3:variables.copilot.agents_window⟧で複数のプロジェクトにわたるタスクを調整したりできます。作業の変化に応じて、これらのアプローチを組み合わせてください。
+
+複数のプロバイダーからモデルを選択し、サポートされているアカウントまたは独自のAPIキーを使用して、⟦L4:variables.product.prodname_copilot_short⟧、⟦L5:variables.product.prodname_anthropic_claude_short⟧、または⟦L6:variables.product.prodname_openai_codex_short⟧のエージェントハーネスを利用できます。ハーネスは、モデル周辺のツールとワークフローを提供します。カスタマイズやプラグインにより、作業に合わせてエージェントを調整できます。
+
+継続性機能により、最初からやり直すことなく、サポートされているインターフェイス間でエージェントの作業を引き継ぐことができます。⟦L7:variables.copilot.github_environments⟧を通じて自分のマシンのセッションに接続するか、ローカルホストをオンラインに維持せずにクラウドセッションを使用できます。
+
+## 開始方法の選択
+
+<div class="card-grid">
+    <a class="card" href="/docs/agents/quickstart">
+        <i class="codicon codicon-hubot" aria-hidden="true"></i>
+        <div>
+            <p><strong>最初のAIタスクを完了する</strong></p>
+            <p>AIコーディングは初めてですか？おすすめのデフォルト設定で小さなアプリを構築して検証し、変更内容を確認します。</p>
+        </div>
+    </a>
+    <a class="card" href="/docs/agents/guides/overview#experienced-agent-fast-track">
+        <i class="codicon codicon-tools" aria-hidden="true"></i>
+        <div>
+            <p><strong>⟦L8:variables.product.prodname_vscode_shortname⟧にAIワークフローを持ち込む</strong></p>
+            <p>すでにAIコーディングツールを使用していますか？アカウントまたはモデルを接続し、エージェントハーネスを選択して、自身のレポジトリで作業します。</p>
+        </div>
+    </a>
+</div>
+
+* **自分のコードから始めたい場合:** [ファイルを変更せずにコードベースを探索し](⟦U37⟧)、その説明をご自身のコードと照らし合わせて検証します。
+* **⟦L9:variables.product.prodname_vscode_shortname⟧が初めての場合:** まず[エディターをインストールしてワークスペースを開きます](⟦U38⟧)。
+
+<video src="images/agents-overview/build-with-ai-overview.mp4" title="VS CodeでのAIを活用したビルドの概要ビデオ。インラインの提案、コード横での協業、エージェントウィンドウでのタスクオーケストレーションを示しています。" autoplay loop controls muted></video>
+
+<a name="what-you-can-do-with-ai"></a>
+<a name="ways-to-work-with-agents"></a>
+
+## 作業方法の選択
+
+タスクに応じて異なるエクスペリエンスを切り替え、[インターフェイス間でエージェントセッションを継続し](⟦U39⟧)、中断したところから再開します。
+
+<div class="card-grid">
+    <a class="card" href="/docs/editing/ai-powered-suggestions">
+        <i class="codicon codicon-edit" aria-hidden="true"></i>
+        <div>
+            <p><strong>アシスタント付きでコードを書く</strong></p>
+            <p>次の編集の提案を含め、入力に応じたインラインの提案を受け取ります。</p>
+        </div>
+    </a>
+    <a id="work-alongside-your-code" class="card" href="/docs/agents/run/chat-view">
+        <i class="codicon codicon-comment-discussion" aria-hidden="true"></i>
+        <div>
+            <p><strong>コードの横で協業する</strong></p>
+            <p>エディター、ターミナル、テスト、デバッガーの横で現在のワークスペースにフォーカスしながら、⟦L10:variables.copilot.chat_view⟧でエージェントと作業します。</p>
+        </div>
+    </a>
+    <a id="delegate-and-manage-tasks" class="card" href="/docs/agents/run/agents-window">
+        <i class="codicon codicon-hubot" aria-hidden="true"></i>
+        <div>
+            <p><strong>作業を委任して調整する</strong></p>
+            <p>⟦L11:variables.copilot.agents_window⟧で、プロジェクトにわたるタスクの割り当てとエージェントセッションの管理を行います。</p>
+        </div>
+    </a>
+</div>
+
+[エージェント](⟦U40⟧)は、モデルとツールを使用して関連コードの検索、変更の実行、およびチェックを行います。⟦L12:variables.copilot.chat_view⟧と⟦L13:variables.copilot.agents_window⟧の両方でエージェントが実行されます。目標を設定し、作業を誘導し、結果を確認するのはユーザー自身です。
+
+定型作業の場合は、プロンプトを[自動化](⟦U41⟧)として保存します。ローカルでスケジュール実行するか、コンピュータの電源が切れている間も継続するスケジュールまたはイベントトリガーによるリポジトリ作業のためにクラウド自動化⟦I34⟧を使用します。定期的な作業を有効にする前に、手動での実行を確認してください。
+
+集中した編集を行うには、コードから離れることなく[インラインチャット](⟦U42⟧)を使用します。特定のタスクの機能を比較するには、[AI機能の早見表](⟦U43⟧)を使用します。
+
+## モデル、エージェント、およびツールの選択
+
+最初のエージェントタスクでは、すべてのオプションを設定することなく[クイックスタートを使用します](⟦U44⟧)。ニーズの変化に応じて、以下の選択肢を適宜変更できます。
+
+| 選択肢 | オプション |
+|--------|---------|
+| **モデル** | ⟦L14:variables.product.prodname_copilot⟧を通じて[複数のプロバイダーのモデル](⟦U45⟧)を選択するか、独自の[APIキー（BYOK）](⟦U46⟧)またはサポートされているローカルモデルを使用します。 |
+| **エージェントハーネス** | [ツールとワークフロー](⟦U47⟧)に基づいて、⟦L15:variables.product.prodname_copilot_short⟧、⟦L16:variables.product.prodname_anthropic_claude_short⟧、または⟦L17:variables.product.prodname_openai_codex_short⟧から選択します。 |
+| **アクセスと課金** | 既存の⟦L18:variables.product.prodname_copilot⟧プラン、サポートされているプロバイダーのアカウント、またはAPIキーを使用します。[ハーネスの要件](⟦U48⟧)を確認してください。 |
+| **カスタマイズ** | [プラグイン](⟦U49⟧)、[プロジェクトの指示](⟦U50⟧)、[スキル](⟦U51⟧)を使用してエージェントをカスタマイズします。[Model Context Protocol (MCP) サーバー](⟦U52⟧)を介して外部ツールを接続します。 |
+
+## インターフェイスとマシン間での継続
+
+継続性とは、最初からやり直すことなく、サポートされているインターフェイスやマシン間でエージェントの作業を引き継ぐことを意味します。ワークスペースと実行環境をホスト側に維持したまま、エージェントとやり取りする場所を選択できます。セッションのサポート状況や要件は、ハーネスや宛先によって異なります。
+
+| 作業を行いたい場所 | ここから開始 |
+|------------------------|------------|
+| **⟦L19:variables.product.prodname_copilot_short⟧のアプリとデバイス間** | [⟦L20:variables.copilot.github_environments⟧](⟦U53⟧) ⟦I35⟧を使用して開発マシンを登録し、⟦L21:variables.product.prodname_vscode_shortname⟧、⟦L22:variables.copilot.github_copilot_app⟧、⟦L23:variables.copilot.copilot_cli_short⟧、GitHub.com、またはGitHub Mobileからエージェントセッションを継続します。利用可能なアクションはクライアントによって異なります。 |
+| **管理されたクラウドコンピュート上** | 自分のマシンをオンラインに維持せずにインタラクティブなエージェント作業を行うには、[クラウドセッション](⟦U54⟧) ⟦I36⟧を使用します。既存のクラウドセッションを再度開いて会話を続行します。実行はクラウド環境内で行われ、その可用性とライフタイムはサービスによって管理されます。 |
+| **エディターまたは⟦L24:variables.copilot.agents_window⟧** | ⟦L25:variables.product.prodname_copilot⟧、⟦L26:variables.product.prodname_anthropic_claude_short⟧、または⟦L27:variables.product.prodname_openai_codex_short⟧のエージェントハーネスを⟦L28:variables.product.prodname_vscode_shortname⟧内で使用し、[インターフェイス間でセッションを継続します](⟦U55⟧)。 |
+| **別マシンの⟦L29:variables.product.prodname_vscode_shortname⟧** | [SSH](⟦U56⟧)または[開発用トンネル](⟦U57⟧)を通じた、⟦L30:variables.product.prodname_vscode_shortname⟧固有のリモート接続を使用します。開発用トンネルは、[ブラウザーベースの⟦L31:variables.copilot.agents_window⟧](⟦U58⟧)もサポートしています。 |
+
+自分のマシンで実行されるセッションの場合は、ホストの実行と通信可能な状態を維持してください。クラウドセッションでは、代わりに管理されたコンピュートを使用します。クラウドでの作業のためにクラウドセッションを開始し、後からそのセッションを再び開いて続行します。
+
+自身のプライベートリポジトリを使用して、[⟦L32:variables.product.prodname_vscode_shortname⟧でクラウドエージェントタスクを開始し、⟦L33:variables.copilot.copilot_cli_short⟧でそれを継続します](⟦U59⟧)（実験的機能）。
+
+ツールが実行される場所とモデルがホストされる場所は、個別の選択項目です。エージェントは、ホストされているプロバイダーにモデルリクエストを送信しながら、自分のマシン上のファイルを編集できます。
+
+## 制御の維持
+
+AIは不正確なコードを生成したり、意図を誤解したりする可能性があります。どの変更をコードベースに反映させるかの最終的な責任は常にユーザーにあります。
+
+* **統合前のレビュー。** エージェントは、セッションフォルダーやワークツリーに直接編集内容を保存できます。変更をコミットまたはマージする前に、[差分を確認して結果を検証します](⟦U60⟧)。
+* **アクションの制御と作業のリダイレクト。** 確認が必要なアクションを決定するために、[権限と承認](⟦U61⟧)を使用します。[リクエストの誘導や停止](⟦U62⟧)を行うことができますが、停止しても、完了したアクションや外部サービスへの変更は元に戻りません。
+* **分離の理解。** Gitワークツリーはコードの変更を分離しますが、セキュリティ境界ではありません。エージェントが実行するターミナルコマンドに対するファイルシステムやネットワークの制限については、[プラットフォーム固有のサンドボックスオプション](⟦U63⟧)を確認してください。
+
+既存のプロジェクトでエージェントを使用する前に、[推奨されるセキュリティベースライン](⟦U64⟧)を確認してください。管理されたデバイスでは、組織が[企業のAIポリシー](⟦U65⟧)を通じて、利用可能なエージェント、モデル、ツールを制限している場合があります。チャットにエージェントが表示されない場合は、[可用性のトラブルシューティング手順](⟦U66⟧)を確認してください。
+
+キーボード、スクリーンリーダー、ロービジョン向けのワークフローについては、[アクセシブルビューおよびその他のユーザー補助機能](⟦U67⟧)の使用方法を参照してください。
+
+## 次のステップ
+
+* [エージェントのベストプラクティスをプロジェクトに適用する](⟦U68⟧)。
+* [品質、信頼性、AIクレジットの使用量を比較する](⟦U69⟧)。

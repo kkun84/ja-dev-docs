@@ -1,0 +1,262 @@
+---
+title: Using Copilot in the cloud on GitHub
+shortTitle: Use Copilot in the cloud on GitHub
+allowTitleToDifferFromFilename: true
+intro: 'Start {% data variables.copilot.copilot_in_the_cloud_short %} sessions directly on {% data variables.product.github %}, then iterate on the results without leaving your browser.'
+product: '{% data reusables.gated-features.copilot-in-the-cloud %}<br><a href="https://github.com/features/copilot/plans?ref_product=copilot&ref_type=purchase&ref_style=button&utm_source=use-cloud-gh-purchase&utm_medium=docs&utm_campaign=universe-2026" target="_blank" class="btn btn-primary mt-3 mr-3 no-underline"><span>Sign up for {% data variables.product.prodname_copilot_short %}</span> {% octicon "link-external" height:16 %}</a>'
+versions:
+  feature: copilot
+redirect_from:
+  - /copilot/how-tos/copilot-on-github/use-copilot-agents/iterate-with-copilot
+  - /copilot/how-tos/use-copilot-agents/coding-agent/make-changes-to-an-existing-pr
+  - /copilot/how-tos/use-copilot-agents/cloud-agent/make-changes-to-an-existing-pr
+contentType: how-tos
+category:
+  - Author and optimize with Copilot
+---
+## はじめに
+
+{% data variables.copilot.copilot_in_the_cloud %} セッションは {% data variables.product.github %} のさまざまな場所から開始できます。セッションが実行されたら、その進捗を監視し、フォローアップのプロンプトで指示を与え、ブラウザを離れることなく生成された pull request を反復して修正できます。
+
+{% data variables.copilot.copilot_in_the_cloud_short %} の詳細については、[AUTOTITLE](/copilot/concepts/copilot-surfaces/copilot-on-github) を参照してください。
+
+また、{% data variables.copilot.agent_apps %} を使用して、これらと同じエントリーポイントからパートナーが構築したエージェントを開始することもできます。詳細については、[AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/use-agent-apps) を参照してください。
+
+## {% data variables.copilot.copilot_in_the_cloud_short %} セッションの開始
+
+セッションは、いくつかの異なるエントリーポイントから開始できます。
+
+* [github.com/copilot](https://github.com/copilot?ref_product=copilot&ref_type=engagement&ref_style=text&utm_source=cloud-gh-docs-home-cta&utm_medium=docs&utm_campaign=universe-2026) にある {% data variables.product.prodname_copilot_short %} {% octicon "home" aria-label="The home icon" %} のホームページ。
+* [https://github.com](https://github.com?ref_product=copilot&ref_type=engagement&ref_style=text) にサインインした状態での、{% octicon "mark-github" aria-label="The github octocat logo" %} {% data variables.product.github %} の個人用ダッシュボードまたは {% octicon "home" aria-label="The home icon" %} ホームページ。
+* リポジトリ内の **{% octicon "agent" aria-label="The Agents icon" %} Agents** タブまたはパネル。
+
+デフォルト設定でプロンプトをすぐに送信することも、プロンプトを送信する前にタスクに合わせてセッションを設定することもできます。
+
+1. プロンプトボックスに、{% data variables.product.prodname_copilot_short %} に実行させたい内容を入力します。希望する結果と制約事項を含めてください。
+
+   > [!TIP]
+   > プロンプト内でスラッシュコマンドを使用して、2番目の意見を求める `/rubber-duck`、リポジトリの脆弱性をレビューする `/security-review`、セッションの使用状況情報を表示する `/usage` など、特定のアクションを実行することもできます。
+
+1. オプションで **{% octicon "plus" aria-hidden="true" aria-label="plus" %} Attach** をクリックして、{% data variables.product.prodname_copilot_short %} にリクエストの参照情報を提供します。
+
+   **Files and folders**、**Upload from computer**、**Repository**、または **Space** を選択して、リクエストのコンテキストを提供します。
+
+   クラウドサンドボックスセッションの場合は、コネクタや個人のカスタム MCP サーバーを設定することで、サードパーティのソースから追加のコンテキストを提供できます。[AUTOTITLE](/copilot/concepts/customizations/copilot-connectors) および [AUTOTITLE](/copilot/concepts/customizations/mcp#personal-mcp-servers) を参照してください。
+
+1. **Mode** ピッカーを開いて、{% data variables.product.prodname_copilot_short %} とどのようにコラボレーションするかを選択します。
+
+   * **Interactive**: （デフォルト）{% data variables.product.prodname_copilot_short %} とステップバイステップで作業します。
+   * **Autopilot**: エンドツーエンドの実行を {% data variables.product.prodname_copilot_short %} に委任します。
+
+   同じメニューで、**Tool permissions** を使用してツールリクエストの承認方法を制御します。
+
+   * **Assisted**（デフォルト）を選択します。安全チェックを使用して、リクエストを承認するかユーザーに確認するかを決定します。
+   * **Always ask** を選択して、リクエストごとに承認を必須にします。
+   * **Allow all** を選択して、すべてのツール、パス、および URL のリクエストを自動的に承認します。
+
+1. **Models** ピッカーを開き、**Auto**（デフォルト）または特定モデルを選択します。モデルは、速度と費用対効果、汎用性と知性、または複雑なタスクへの適性の間で選択しやすくなるように、その長所ごとにグループ化されています。選択したモデルが **Balance** などの設定可能な推論をサポートしている場合は、ドロップダウンメニューを使用して推論レベルを選択することもできます。
+
+1. プロンプトボックスの下部にある **Chat** セッションコンテキストピッカーを使用して、セッションのスコープ（個人、組織、またはリポジトリ）を選択します。
+
+   * 検索ボックスに追加するリポジトリ名を入力してリポジトリを検索します。
+   * **Ask anything across repositories** の下にある **Chat** を選択して、リポジトリ横断的に質問します。デフォルトのスコープは個人用リポジトリです。右側の画像をクリックしてアカウントメニューを開き、組織を選択するか、リポジトリ所有者（ユーザーまたは組織）で検索してスコープを変更します。
+   * **Work in a repository** の下で、作業を行う最近のリポジトリを選択します。リストされるリポジトリは、選択したスコープを反映します。
+
+   > [!NOTE]
+   > * **Attach** メニュー（前のステップ）からリポジトリを追加すると、プロンプトの参照（コンテキスト資料）が提供されます。一方、ここで **Start a session** の下で選択すると、そのリポジトリがセッションの作業用リポジトリ（スコープ）になります。セッションの開始時に、クラウドサンドボックスがリポジトリのコピーを作成し、既存の制約内でそのコンテンツを操作する権限を {% data variables.product.prodname_copilot_short %} に与えます。
+   > * リポジトリがリストに表示されない場合、個人設定、組織、またはエンタープライズポリシーによって {% data variables.product.prodname_copilot_short %} から除外されている可能性があります。
+
+   オプションで、上記でリポジトリを選択した場合は、**main**（またはリストされているデフォルトブランチ名）をクリックして、{% data variables.product.prodname_copilot_short %} が作業コンテキストとして使用し、その中で操作を行うブランチを選択することもできます。
+
+{% data reusables.copilot.environment-picker %}
+
+1. **Send message** をクリックするか、<kbd>Enter</kbd> キーを押してプロンプトを送信し、セッションを開始します。
+
+{% data variables.product.prodname_copilot_short %} は、選択されたコンテキストと環境に基づいて、プロンプトに応答し、セッションを開始します。要求された場合、{% data variables.product.prodname_copilot_short %} は、変更されたファイルのリスト、pull request、生成された成果物（調査計画など）、およびその他の関連する出力を生成します。
+
+### ファイル、issue、または pull request 内からの {% data variables.product.prodname_copilot_short %} の開始
+
+コンテキストページから {% data variables.product.prodname_copilot_short %} とのチャットセッションを開くと、セッションは開いているファイル、issue、または pull request のコンテキストから始まります。
+
+コンテキストパネル自体の中から新しいエージェントセッションを開始することはできません。{% data variables.product.prodname_copilot_short %} ページ、ホームページ、またはエージェントタブから開始する必要があります。
+
+## {% data variables.copilot.copilot_cloud_agent %} を使用したセッションの開始
+
+### エージェントタブまたはパネルからのセッションの開始
+
+エージェントタブとエージェントパネルからセッションを開始できます。唯一の違いはエントリーポイントです。「New agent task」フォームが表示されたら、手順は同じです。
+
+{% data reusables.copilot.open-agents-panel-or-page %}
+{% data reusables.copilot.cloud-agent.new-agent-task-form-instructions %}
+
+### ダッシュボードからのセッションの開始
+
+ダッシュボードのプロンプトボックスから {% data variables.product.prodname_copilot_short %} に作業の開始を依頼できます。ダッシュボードは、ログインした状態で [https://github.com](https://github.com) にアクセスしたときに表示される、{% data variables.product.github %} でのアクティビティのパーソナライズされた概要です。
+
+1. [https://github.com](https://github.com/?ref_product=desktop&ref_type=engagement&ref_style=text) のダッシュボードに移動します。
+1. **{% octicon "agent" aria-label="The Agents icon" %} Task** ボタンをクリックします。
+1. プロンプトフィールドのドロップダウンメニューを使用して、{% data variables.product.prodname_copilot_short %} に作業させたいリポジトリを選択します。
+1. リクエストを説明するプロンプトを入力します。
+
+    たとえば、`Implement a user friendly message for common errors.`
+
+    {% data variables.product.prodname_copilot_short %} に pull request を作成させたい場合は、プロンプトでたとえば `Open a pull request to implement a user friendly message for common errors.` のように依頼できます。
+
+1. オプションで、{% data variables.product.prodname_copilot_short %} の pull request のベースブランチを選択します。{% data variables.product.prodname_copilot_short %} はこのブランチに基づいて新しいブランチを作成します。
+{% data reusables.copilot.optional-select-custom-agent-dotcom %}
+1. **{% octicon "paper-airplane" aria-label="Send now" %} Send now** をクリックするか、<kbd>Return</kbd> キーを押します。
+
+   エージェントタブに移動し、{% data variables.product.prodname_copilot_short %} が新しいセッションを開始します。これはプロンプトボックスの下にある「Recent sessions」リストに表示されます。{% data variables.product.prodname_copilot_short %} はタスクに取り組み、コードの変更をプッシュします。
+
+   > [!NOTE]
+   > 機能プレビューで **New Dashboard Experience** を有効にしている場合、新しいセッションはダッシュボードのプロンプトボックスの下にある「Agent sessions」に表示されます。詳細については、[AUTOTITLE](/account-and-profile/reference/personal-dashboard#home-dashboard-view) を参照してください。
+
+### {% data variables.copilot.copilot_chat_short %} からの開始
+
+{% data variables.copilot.copilot_chat_short %} からタスクを開始すると、新しい {% data variables.copilot.copilot_cloud_agent %} セッションには現在のチャット会話のコンテキストが組み込まれます。つまり、`/task` のプロンプトですでに {% data variables.product.prodname_copilot_short %} と共有した詳細を再入力する必要はありません。
+
+1. {% data variables.product.prodname_dotcom_the_website %} で {% data variables.copilot.copilot_chat %} を開きます。
+1. `/task` と入力して {% data variables.product.prodname_copilot_short %} に pull request の作成を依頼し、{% data variables.product.prodname_copilot_short %} に変更させたい内容の詳細を指定します。
+
+   たとえば、`/task Create a pull request to put backticks around file names and variables in output.`
+
+1. オプションで、{% data variables.product.prodname_copilot_short %} の pull request のベースブランチを選択します。{% data variables.product.prodname_copilot_short %} はこのブランチに基づいて新しいブランチを作成し、そのブランチをターゲットとする pull request に変更をプッシュします。
+{% data reusables.copilot.optional-select-custom-agent-dotcom %}
+1. **{% octicon "paper-airplane" aria-label="Start task" %}** をクリックするか、<kbd>Enter</kbd> キーを押します。
+
+   {% data variables.product.prodname_copilot_short %} が新しいセッションを開始します。これはプロンプトボックスの下のリストに表示されます。{% data variables.product.prodname_copilot_short %} はタスクに取り組み、その pull request に変更をプッシュし、完了するとレビュアーとしてあなたを追加して通知をトリガーします。
+
+## {% data variables.product.prodname_copilot_short %} への issue の割り当て
+
+issue を {% data variables.product.prodname_copilot_short %} に割り当てることで、{% data variables.product.prodname_copilot_short %} に issue の作業開始を依頼できます。{% data variables.product.prodname_copilot_short %} はタスクの作業を開始し、pull request を作成し、完了するとあなたにレビューを依頼します。
+
+> [!NOTE]
+> この機能は {% data variables.release-phases.public_preview %} であり、変更される可能性があります。
+
+{% data reusables.repositories.navigate-to-repo %}
+{% data reusables.repositories.sidebar-issues %}
+
+1. {% data variables.product.prodname_copilot_short %} に割り当てたい issue を開きます。
+1. 右側のメニューで **Assignees** をクリックします。
+
+   ![issue の右サイドバーのスクリーンショット。「Assignees」というラベルの付いたヘッダーが濃いオレンジ色で囲まれています。](/assets/images/help/issues/assignee-menu.png)
+
+1. アサイン先リストから **Copilot** をクリックします。
+
+   ![issue の「Assignees」ウィンドウのスクリーンショット。リストに Copilot があります。](/assets/images/help/copilot/cloud-agent/assign-to-copilot.png)
+
+   追加のオプションが表示されます。
+
+   ![ターゲットリポジトリ、開始ブランチ、{% data variables.copilot.copilot_custom_agent_short %}、および追加の指示のオプションを示す「Assign to Copilot」ダイアログのスクリーンショット。](/assets/images/help/copilot/cloud-agent/assign-to-copilot-dialog.png)
+
+1. **Optional prompt** フィールドに、{% data variables.product.prodname_copilot_short %} に対する具体的なガイダンスを追加できます。{% data variables.product.prodname_copilot_short %} がタスクを理解して完了するのに役立つコンテキスト、制約、または具体的な要件を追加します。
+
+   たとえば、使用する特定のコーディングパターンやフレームワーク、テスト要件、コードスタイルの好み、変更すべきまたは変更すべきではないファイルやディレクトリについての指示を含めることができます。
+
+   ここで提供する詳細に加えて、{% data variables.product.prodname_copilot_short %} はターゲットリポジトリに設定されているカスタムインストラクションを使用します。[AUTOTITLE](/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions) を参照してください。
+
+1. ダイアログのドロップダウンメニューを使用して、{% data variables.product.prodname_copilot_short %} が作業を行うリポジトリと、その分岐元となるブランチを変更できます。
+
+   **少なくとも**読み取りアクセス権を持っているすべてのリポジトリが、リポジトリのドロップダウンメニューに表示されます。ただし、リポジトリを選択できるのは、そのリポジトリに対する書き込みアクセス権があり、**かつ**そのリポジトリで {% data variables.copilot.copilot_cloud_agent %} が有効になっている場合のみです。
+
+   issue の元となった組織とは異なる組織のリポジトリを選択した場合、または issue がプライベートリポジトリにあるときにパブリックリポジトリを選択した場合は、警告が表示されます。
+
+   リポジトリを指定しない場合、{% data variables.product.prodname_copilot_short %} は issue と同じリポジトリで作業します。ブランチを指定しない場合、{% data variables.product.prodname_copilot_short %} は選択したリポジトリのデフォルトブランチから作業を行います。
+
+   > [!TIP]
+   > {% data variables.product.prodname_copilot_short %} に issue を割り当てると、issue のタイトル、説明、既存のコメント、および提供した追加の指示が送信されます。issue を割り当てた後、{% data variables.product.prodname_copilot_short %} はその後のコメントを認識せず、したがって反応しません。詳細情報や元の要件への変更がある場合は、{% data variables.product.prodname_copilot_short %} が作成する pull request のコメントとして追加してください。
+
+{% data reusables.copilot.optional-select-custom-agent-dotcom %}
+{% data reusables.copilot.optional-select-copilot-cloud-agent-model %}
+
+{% data variables.product.prodname_dotcom_the_website %} の他の場所からも {% data variables.product.prodname_copilot_short %} に issue を割り当てることができます。
+
+* リポジトリの **{% octicon "issue-opened" aria-hidden="true" aria-label="issue-opened" %} Issues** ページにある issue のリストから。
+* {% data variables.product.github %} {% data variables.projects.projects_v2_caps %} で issue を表示しているとき。
+
+## 新しいリポジトリのシード
+
+新しいリポジトリを作成するときに、プロンプトを入力して {% data variables.product.prodname_copilot_short %} に新しいリポジトリのシードを依頼できます。
+
+{% data reusables.repositories.create_new %}
+{% data reusables.repositories.owner-drop-down %}
+1. **Prompt** フィールドに、{% data variables.product.prodname_copilot_short %} に構築させたい内容を記述するプロンプトを入力します。
+
+    たとえば、`Create a Rust CLI for converting CSV spreadsheets to Markdown`
+{% data reusables.repositories.create-repo %}
+
+    {% data variables.product.prodname_copilot_short %} はすぐにドラフト pull request を開きます。{% data variables.product.prodname_copilot_short %} はタスクに取り組み、その pull request に変更をプッシュし、完了するとレビュアーとしてあなたを追加して通知をトリガーします。
+
+## 失敗した {% data variables.product.prodname_actions %} ワークフロー実行の修正
+
+pull request ブランチで {% data variables.product.prodname_actions %} ワークフローの実行が失敗した場合は、{% data variables.product.prodname_copilot_short %} に調査と失敗の修正を依頼できます。
+
+1. {% data variables.product.github %} で、失敗したワークフローの実行ジョブページに移動します。
+1. **{% octicon "agent" aria-label="The Agents icon" %} Fix with {% data variables.product.prodname_copilot_short %}** ボタンをクリックします。
+
+   {% data variables.product.prodname_copilot_short %} は新しいセッションを開始し、失敗の原因を調査し、ブランチに修正をプッシュします。
+
+## pull request での作業の継続
+
+既存の pull request の変更やレビューコメントへの対応を {% data variables.product.prodname_copilot_short %} に依頼できます。その後、結果のセッションを追跡し、フォローアップの指示を提供できます。
+
+### 変更の依頼を {% data variables.product.prodname_copilot_short %} に行う
+
+任意の pull request のコメントで `@copilot` をメンションして、{% data variables.product.prodname_copilot_short %} に変更を依頼できます。これは、{% data variables.product.prodname_copilot_short %} が作成した pull request や、あなたや他の人が作成した pull request で機能します。
+
+デフォルトでは、{% data variables.product.prodname_copilot_short %} は pull request ブランチに直接コミットをプッシュします。代わりに別の pull request を作成するには、その旨をコメントに記述します。また、自分でブランチをチェックアウトして変更をプッシュすることもできます。
+
+{% data variables.product.github %} の Web インターフェースから pull request のコメント（レビューやレビューコメントではない）を送信する場合は、モデルピッカーでモデルを選択します。{% data variables.product.prodname_copilot_short %} はデフォルトで元の pull request のモデルを使用します。
+
+### レビューコメントの委任
+
+レビューコメントを委任して、人間のレビュアーや {% data variables.copilot.copilot_code-review %} からのフィードバックを {% data variables.product.prodname_copilot_short %} に実装させることができます。
+
+1. pull request で **Files changed** タブを開きます。
+2. {% data variables.product.prodname_copilot_short %} に実装させたい最初のレビューコメントに移動します。
+   * 1つのコメントを委任するには、**Fix with {% data variables.product.prodname_copilot_short %}** をクリックします。
+   * 複数のコメントを委任するには、**Add to batch** をクリックします。{% data variables.product.prodname_copilot_short %} に作業させたいコメントを追加し続けます。
+3. **Manage batch** パネルで、追加の指示を追加し、必要に応じてモデルピッカーでモデルを選択します。
+4. {% data variables.product.prodname_copilot_short %} に変更を適用する方法を選択します。
+   * 変更をブランチに直接コミットするには、**{% octicon "agent" aria-label="The Agents icon" %} Fix and commit** をクリックします。
+   * 変更を加えた新しい pull request を {% data variables.product.prodname_copilot_short %} に作成させるには、ドロップダウンメニューから **Fix and open pull request** をクリックします。
+
+### セッションの追跡と継続
+
+{% data reusables.copilot.cloud-agent.write-access-required %}
+
+コメントに対する応答として {% data variables.product.prodname_copilot_short %} が新しいセッションを開始すると、コメントに目の絵文字（👀）のリアクションが表示されます。pull request のタイムラインに「Copilot has started work」イベントが表示されます。
+
+![目の絵文字のリアクションと「Copilot started work」タイムラインイベントがあるレビューコメントが含まれる pull request のタイムラインのスクリーンショット。](/assets/images/help/copilot/cloud-agent/comment-to-agent-on-pr.png)
+
+{% data variables.product.prodname_copilot_short %} は同じ pull request での以前のセッションのコンテキストを記憶しているため、フォローアップのリクエストがより速く、より確実になります。pull request が {% data variables.copilot.copilot_custom_agent_short %} によって作成された場合、`@copilot` をメンションすると、その同じエージェントの使用が継続されます。
+
+## マージコンフリクトの解決
+
+次の2つの方法のいずれかで、pull request のマージコンフリクトを解決するよう {% data variables.product.prodname_copilot_short %} に依頼できます。
+
+* **「Fix with {% data variables.product.prodname_copilot_short %}」ボタンの使用**: pull request にマージコンフリクトがある場合は、マージボックスに表示される **Fix with {% data variables.product.prodname_copilot_short %}** ボタンをクリックします。
+* **@copilot メンションの使用**: pull request のコメントで `@copilot` をメンションし、コンフリクトを修正するよう依頼します（例：「@copilot resolve the merge conflicts on this PR」）。
+
+{% data variables.product.prodname_copilot_short %} はコンフリクトしている変更を分析して解決し、ビルド、テスト、およびリンターが引き続き合格することを確認します。その後、マージする前に解決を確認できるようにレビューを依頼します。
+
+## {% data variables.copilot.copilot_automations %} を使用した {% data variables.product.prodname_copilot_short %} の自動実行
+
+スケジュールに沿って、または issue が開かれるなどのイベントに応答して、{% data variables.copilot.copilot_automations %} が {% data variables.product.prodname_copilot_short %} を自動的に実行するように設定できます。{% data variables.copilot.copilot_automations %} は、リポジトリの **Agents** タブにある **{% data variables.copilot.copilot_automations_cap %}** ペインから作成および管理します。詳細については、[AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/create-automations) を参照してください。
+
+## {% data variables.product.prodname_actions %} ワークフローの実行の管理
+
+{% data reusables.copilot.cloud-agent-workflow-run-approval-default %} 詳細については、[AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/configuring-agent-settings) を参照してください。
+
+## {% data variables.product.prodname_copilot_short %} の作業に対するフィードバックの提供
+
+{% data variables.product.prodname_copilot_short %} の pull request やコメントにあるフィードバックボタンを使用して、出力を評価します。フィードバックは {% data variables.product.prodname_copilot_short %} の品質向上に役立ちます。
+
+1. {% data variables.product.prodname_copilot_short %} の pull request またはコメントで、サムズアップ（:+1:）またはサムズダウン（:-1:）ボタンをクリックします。
+2. サムズダウンボタンをクリックした場合は、オプションで理由を選択してコメントを残し、**Submit feedback** をクリックします。
+
+## さらに読む
+
+* [AUTOTITLE](/copilot/concepts/copilot-surfaces/copilot-on-github)
+* [AUTOTITLE](/copilot/tutorials/cloud-agent/get-the-best-results)
+* [AUTOTITLE](/copilot/how-tos/use-copilot-agents/cloud-agent/troubleshoot-cloud-agent)

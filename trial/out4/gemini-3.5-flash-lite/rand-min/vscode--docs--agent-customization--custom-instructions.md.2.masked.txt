@@ -1,0 +1,209 @@
+# ⟦JGN5⟧ でカスタム指示を使用する
+
+カスタム指示を使用すると、コードを追加する場所、使用するライブラリ、実行するテストなど、プロジェクトに関する再利用可能なガイダンスをエージェントに提供できます。このガイダンスをすべてのプロンプトで繰り返すのではなく Markdown ファイルに保存し、ソース管理を通じてプロジェクトの指示を共有します。
+
+エージェントが繰り返し見落としている1つの規約から始めます。[Agent Customizations editor](/docs/agent-customization/overview.md#agent-customizations-editor) で指示を作成し、よりターゲットを絞ったガイダンスを追加する前に、新しいチャットでその効果をテストします。サポートされている場所、ファイルの構文、設定については、[Custom instructions reference](/docs/agents/reference/custom-instructions-reference.md) を参照してください。
+
+指示はモデルをガイドするものです。準拠を保証するものではなく、テスト、コードレビュー、セキュリティ制御の代わりにもなりません。入力時の [inline suggestions](/docs/editing/ai-powered-suggestions.md) には適用されません。
+
+## プロジェクト指示の開始
+
+リポジトリのルートを開き、使用する [agent harness を選択](/docs/agents/run/agent-harnesses.md#select-a-harness) します。ハーネスによって、読み込む指示ファイルが決まります。たとえば、⟦A7H9⟧ セッションで Claude モデルを選択しても、Claude ハーネスには切り替わりません。
+
+最初のセットアップでは、テストセッションが未コミットの指示にアクセスできるようにするため、新しいワークツリーではなく現在のフォルダーで作業します。
+
+### プロジェクト指示の作成
+
+1. コマンドパレット (`kb(workbench.action.showCommands)`) から **Chat: Open Customizations** を実行して Agent Customizations エディターを開き、**Instructions** タブを選択します。
+
+1. プロジェクト指示ファイルを追加するには、**Workspace** の横にある `+` を選択し、`AGENTS.md` や `CLAUDE.md` など、ハーネスに対して提案されたプロジェクト指示ファイルを選択します。エディターがワークスペース内にファイルを作成または開きます。
+
+   リポジトリにすでにプロジェクト指示ファイルがある場合は、競合するコピーを作成せずに既存のファイルを開いてください。
+
+1. 繰り返される問題に対処するいくつかの具体的なルールを追加します。たとえば、Node.js の API プロジェクトでは次の指示を使用する場合があります。パスとテストコマンドを、リポジトリで機能するものに置き換えてください。
+
+   ⟦HK7E⟧
+
+1.ファイルを保存します。これらのプロジェクト指示ファイルにはフロントマターは必要ありません。
+
+#### ファイルを直接作成する
+
+Agent Customizations エディターの外でファイルを作成したい場合は、ハーネスでサポートされているプロジェクト指示ファイルを使用してください。以下のパスはリポジトリのルートからの相対パスです。必要に応じて不足しているフォルダーを作成してください。
+
+| ハーネス | プロジェクト指示ファイル |
+|---------|---------------------------|
+| ⟦SD5P⟧ | `.github/copilot-instructions.md` または `AGENTS.md` |
+| ⟦DSDR⟧ | `CLAUDE.md` |
+| ⟦XJ7P⟧ | `AGENTS.md` |
+| ローカル `feature(local-harness)` | `.github/copilot-instructions.md` または `AGENTS.md` |
+
+ルールを追加してファイルを保存し、以下に説明するように検証します。`AGENTS.md` は Codex 専用のファイルではなく、クロスエージェント形式です。ひとつのファイルを複数のハーネス間で共有する前に、[サポートされている形式](/docs/agents/reference/custom-instructions-reference.md#supported-formats-and-locations) を参照してください。
+
+### 指示の検証
+
+ルールが結果に影響を与える小さなタスクをテストします。最初から最後まで同じハーネスとリポジトリを使用します。
+
+1. コマンドパレット (`kb(workbench.action.showCommands)`) から **Chat: Open Customizations** を実行します。**Instructions** を選択し、ファイルがリストされていることを確認します。これは、エージェントがルールに従うかどうかではなく、検出されるかどうかを確認するものです。
+1. 指示を作成した会話のガイダンスにテストが依存しないように、新しいチャットを開始します。
+1. プロンプトでルールを繰り返さずに、小さな変更を依頼します。API の例では、プロジェクトの既存のパターンを使用してエンドポイントを追加するようエージェントに依頼します。
+1. 利用可能な場合は、応答の **References** セクションで指示ファイルを確認します。詳細が必要な場合は、[Agent Debug Logs でリクエストを検査します](/docs/agents/agent-troubleshooting/chat-debug-view.md#instructions-or-a-prompt-file-are-not-applied)。
+1. 変更内容とツールの動作を確認します。例の場合は、ハンドラーが追加された場所、データのアクセス方法、エージェントが関連するテストを実行したかどうかを確認します。
+
+結果が目標を満たしている場合は、チームが使用できるように指示ファイルをレビューしてコミットします。満たしていない場合は、ルールを追加する前に、[ファイルが検出されたか、含まれていたか、従われたかを確認してください](#troubleshoot-instructions)。
+
+前後の完全な比較とチームへの展開ワークフローについては、[Configure AI for your codebase](/docs/agents/guides/customize-copilot-guide.md) をご覧ください。
+
+## 指示の適用方法
+
+スコープとアクティベーションは異なる疑問に答えます。スコープは、ガイダンスを利用できる場所と共有者を決定します。アクティベーションは、そのガイダンスがリクエストにいつ含まれるかを決定します。
+
+| スコープ | 使用目的 |
+|-------|------------|
+| ワークスペースまたはリポジトリ | ソース管理を通じてコントリビューターと共有されるプロジェクト規約 |
+| ユーザー | ハーネスでサポートされている場所における、プロジェクト横断的な個人的好み |
+| 組織 | サポートされているエクスペリエンス向けの一元管理されたガイダンス |
+
+広範囲に適用されるルールについては、プロジェクト指示から始めます。コードベースの一部のみで必要なガイダンスについては、ターゲットを絞った指示を使用します。
+
+| アクティベーション | 動作の仕組み |
+|------------|--------------|
+| プロジェクト全体 | ハーネスはプロジェクト指示ファイルのガイダンスを含めます。 |
+| ファイルパターン | `.instructions.md` ファイルで `applyTo` を使用するか、Claude ルールファイルで `paths` を使用して、エージェントが処理するファイルに一致させます。 |
+| タスクの関連性 | ローカルセッションでは、`description` を使用して、エージェントがタスクの指示ファイルを読み込むかどうかを判断できます。これはパターンマッチングとは別です。 |
+| 手動 | 自動検出またはアクティベーションが適切でない特定のリクエストにガイダンスを添付します。 |
+
+`AGENTS.md` などの指示ファイルは、既存のエージェントにガイダンスを提供します。[カスタムエージェント](/docs/agent-customization/custom-agents.md) を定義するものではありません。コーディング規約やプロジェクトのコンテキストではなく、再利用可能な多段階のワークフローについては、[agent skill](/docs/agent-customization/agent-skills.md) を検討してください。ワークフローを自分で作成する前に、[Customization Marketplace で既存のスキルを探してください](/docs/agent-customization/agent-skills.md#install-a-skill-from-the-customization-marketplace-preview)。リポジトリ固有のコマンドと規約は、プロジェクト指示に維持してください。
+
+## 特定のファイルやタスクへの指示の適用
+
+プロジェクト全体のルールはメインの指示ファイルに維持します。たとえば、テストにアプリケーションコードとは異なる規約が必要な場合などには、ターゲットを絞ったガイダンスを追加します。次の例では、Python のテストルールを `tests` ディレクトリにスコープしています。
+
+対象のハーネスを選択した状態で Agent Customizations エディターから始めます。以下のハーネスの手順に従ってから、パスとルールをプロジェクトに合わせて調整します。
+
+⟦GQF3⟧
+⟦H2QD⟧ または Local" %}
+
+1. コマンドパレット (`kb(workbench.action.showCommands)`) から **Chat: Open Customizations** を実行し、**Instructions** を選択します。
+1. **Workspace** の横にある `+` ボタンを選択し、`AGENTS.md` などのプロジェクト全体のファイルではなく、新しい指示ファイルを作成するアクションを選択します。
+1. プロンプトが表示されたら `.github/instructions` を選択し、ファイル名として `python-tests` と入力します。
+1. 生成されたファイルに、次のフロントマターと指示を追加します。
+
+指示を適用するファイルを指定するには `applyTo` を使用します。
+
+⟦TTP8⟧
+
+このパターンは `tests/test_api.py` および `tests/unit/test_api.py` に一致しますが、`src/api.py` には一致しません。`.github/instructions` ディレクトリではなく、ワークスペースまたはプロジェクトのルートからの相対パスになります。
+
+ファイルを直接作成する場合は、`.github/instructions/python-tests.instructions.md` として保存してください。異なる言語、フォルダー、またはタスクに適用されるガイダンスには、個別の `.instructions.md` ファイルを使用します。
+
+ローカルセッション `feature(local-harness)` では、タスクベースの検出のために `'Use when creating or updating Python tests.'` などの `description` を追加することもできます。説明は `applyTo` に対する追加の制限ではありません。エージェントはパターンマッチングとは別に、関連性に基づいてファイルを読み込むことができます。
+
+⟦VMM9⟧
+⟦VT8X⟧
+
+1. **Claude** ハーネスを選択した状態で Agent Customizations エディターを開き、**Instructions** を選択します。
+1. **Workspace** の横にある `+` ボタンを選択し、プロジェクト全体の `CLAUDE.md` ファイルではなく、新しいルールファイルを作成するアクションを選択します。
+1. プロンプトが表示されたら `.claude/rules` を選択し、ファイル名として `python-tests` と入力します。
+1. 生成されたファイルに、次のフロントマターと指示を追加します。
+
+ルールが適用されるファイルパターンをリストするには `paths` を使用します。パターンはプロジェクトのルートからの相対パスです。
+
+⟦SSWS⟧
+
+このルールは、ネストされたディレクトリを含め、`tests` 配下の Python ファイルを対象としています。`paths` がない場合、ルールは全般的に適用されます。
+
+ファイルを直接作成する場合は、`.claude/rules/python-tests.md` として保存してください。異なる言語、フォルダー、またはタスクに適用されるガイダンスには、個別のルールファイルを使用します。
+
+⟦JW2P⟧
+⟦BQ58⟧
+
+ネストされた指示については、**Codex** ハーネスを選択した状態で Agent Customizations エディターの **Overview** セクションを使用してファイルをリクエストします。
+
+⟦SC6Z⟧
+
+使用する前に、生成されたファイルを確認してください。Codex は `applyTo` や `paths` パターンではなくディレクトリの場所を使用し、これらのファイルに YAML フロントマターは必要ありません。プロジェクト全体の指示はリポジトリのルートにある `AGENTS.md` に維持し、ターゲットを絞ったガイダンスは該当するディレクトリに維持します。
+
+たとえば、`tests/AGENTS.md` には以下が含まれます。
+
+⟦K42Q⟧
+
+`tests` を作業ディレクトリとして新しい Codex セッションを開始します。Codex は、リポジトリのルートからそのディレクトリまでのパスに沿って指示を読み込みます。エディターでテストファイルを開いても、セッションの作業ディレクトリは変更されません。
+
+ファイルを直接作成する場合は、例を `tests/AGENTS.md` として保存してください。
+
+⟦KGH8⟧
+⟦NJ5Q⟧
+
+ファイルを作成した後:
+
+1. ファイルを保存し、同じハーネスで新しいチャットを開始します。
+1. 一致するディレクトリでテストを追加または更新するようにエージェントに依頼します。
+1. [インクルージョンと動作の検証](#verify-your-instructions)を行います。テストが命名規則とフィクスチャ規約に従っていること、およびエージェントがテストコマンドを実行していることを確認します。
+
+追加のパターンとネストされたファイルの動作については、[instruction activation](/docs/agents/reference/custom-instructions-reference.md#discovery-and-activation) を参照してください。
+
+### 1回のリクエストへの指示の添付
+
+1回限りの要件については、共有ルールを作成するのではなく、プロンプトにガイダンスを記述します。
+
+1回のリクエストで既存の指示ファイルを再利用するには、チャット入力で **Add Context** (`+` アイコン) を選択し、リクエストを送信する前にファイルを選択します。
+
+## 効果的な指示の記述
+
+リポジトリ内のすべてを説明するのではなく、エージェントがプロジェクト固有の決定を下すのに役立つルールを記述します。
+
+| 記述すべきではないこと | 記述すべきこと |
+|------------------|-------|
+| 良いテストを書いてください。 | `tests/conftest.py` のフィクスチャを再利用し、テストを変更した後に `python -m pytest <test-file>` を実行してください。 |
+| アーキテクチャに従ってください。 | HTTP ハンドラーを独立してテスト可能な状態に保つため、データベースアクセスは `src/repositories` 内に維持してください。 |
+| スタイルに従ってください。 | エラー文字列を返すのではなく、`src/errors.ts` の既存のエラー型を使用してください。 |
+
+* **ルールを簡潔に保つ。** 各要件に対して短いステートメントを使用し、自明ではない制約については説明します。
+* **実行可能な詳細を優先する。** エージェントが使用すべきコマンド、ディレクトリ、ライブラリ、または既存の例を指定します。
+* **不要なコンテキストを避ける。** フォーマッターやリンターによって強制されるルールを重複させないでください。プロジェクト全体のファイルから特化したガイダンスを移動します。
+* **コードと一緒に指示を保守する。** ソース管理を通じて変更をレビューし、コマンド、アーキテクチャ、または依存関係が変更されたときにルールを更新します。
+* **サポートドキュメントを慎重に参照する。** 相対パスと `/` 区切り文字を使用した Markdown リンクを使用します。リンクは、ドキュメントの内容がモデルに確実に届くことを保証するものではありません。[referenced-file behavior](/docs/agents/reference/custom-instructions-reference.md#reference-other-files) を確認してください。
+
+### 競合する指示の解決
+
+個人的なガイダンス、リポジトリのガイダンス、組織のガイダンスの間で共有要件を一貫させます。普遍的な優先順位順序に依存しないでください。[組み合わせ規則はハーネスによって異なります](/docs/agents/reference/custom-instructions-reference.md#combine-instruction-sources)。
+
+個人的な指示で1つのライブラリが要求され、リポジトリで別のライブラリが要求されている場合は、競合する個人的なルールを削除するか絞り込みます。補正するためにもう1つのルールを追加しないでください。競合を解決した後に、新しいチャットで同じ代表的なタスクを繰り返します。
+
+## プロジェクトおよび個人的な指示の管理
+
+Agent Customizations エディターの **Instructions** に戻って、既存の指示を見つけて編集します。個人的な指示を追加するには、**User** の隣にある `+` を選択します。ハーネスでサポートされている名前と保存場所のプロンプトに従い、ファイルを保存し、そのハーネスを使用した新しいチャットで検証します。
+
+プロジェクト間で個人的な好みを適用するには、ユーザースコープを使用します。チームが求めている場合を除き、個人の応答の好みを共有プロジェクトファイルに入れないでください。場所と同期の制限については、[user instructions](/docs/agents/reference/custom-instructions-reference.md#user-instructions) を参照してください。
+
+また、関連するエージェント、スキル、またはツールとともに、[agent plugin](/docs/agent-customization/agent-plugins.md#what-plugins-provide) 内のルールコンポーネントとして指示を配布することもできます。サポートは、選択したハーネスとプラグインの形式によって異なります。クライアント間でバンドルを共有する前に、[plugin compatibility](/docs/agent-customization/agent-plugins.md#cross-tool-compatibility) を確認してください。
+
+<a name="sync-local-agent-instructions-across-devices"></a>
+
+## 指示の形式と設定
+
+以下を調べるには [Custom instructions reference](/docs/agents/reference/custom-instructions-reference.md) を使用します。
+
+* [ファイル形式、場所、フロントマター](/docs/agents/reference/custom-instructions-reference.md#supported-formats-and-locations)
+* [検出、パターン、およびネストされた指示](/docs/agents/reference/custom-instructions-reference.md#discovery-and-activation)
+* [個人的な指示と設定の同期](/docs/agents/reference/custom-instructions-reference.md#user-instructions)
+* [組織の指示](/docs/agents/reference/custom-instructions-reference.md#organization-instructions)
+* [指示と生成されたコンテンツの設定](/docs/agents/reference/custom-instructions-reference.md#settings)
+
+## 指示のトラブルシューティング
+
+ガイダンスを変更する前に、失敗のステージを特定します。
+
+| 観察される内容 | 確認すべき内容 |
+|------------------|---------------|
+| ファイルが Customizations エディターにリストされない。 | 選択したハーネス、ファイル名、サポートされている場所、およびセッションが変更内容を含むフォルダーを使用しているかどうかを確認します。 |
+| ファイルは検出されたが、タスクに含まれない。 | フロントマターのエラーとアクティベーション条件を確認します。一致するファイルをテストするか、手動で指示を添付します。ローカルの場合は、該当する [discovery settings](/docs/agents/reference/custom-instructions-reference.md#local-harness-settings) を確認します。 |
+| ファイルは含まれているが、結果がそれに従わない。 | 矛盾しているルールやあいまいなルールがないか確認します。1つのルールを明確にし、新しいチャットでタスクを繰り返して、実際の変更点とツールの動作を比較します。 |
+
+利用可能な場合の応答の **References** セクションは、コンプライアンスではなく包含の確認に役立ちます。詳細な証拠については、[instruction diagnostics](/docs/agents/agent-troubleshooting/chat-debug-view.md#instructions-or-a-prompt-file-are-not-applied) に従ってください。問題を再現する前にログ記録を準備します。
+
+## 関連リソース
+
+* 測定された作成、検証、共有ワークフローについては、[Configure AI for your codebase](/docs/agents/guides/customize-copilot-guide.md) をご覧ください。
+* 構文とハーネス固有の動作については、[Custom instructions reference](/docs/agents/reference/custom-instructions-reference.md) をご覧ください。
+* 指示、スキル、その他のカスタマイズの中から選択するための [Agent customization concepts](/docs/agents/concepts/customization.md) をご覧ください。

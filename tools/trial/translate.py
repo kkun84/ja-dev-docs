@@ -7,6 +7,7 @@
 """
 
 import argparse
+import random
 import json
 import os
 import re
@@ -23,16 +24,13 @@ SOURCES = {
     "github": "https://raw.githubusercontent.com/github/docs/main/{path}",
 }
 
-INSTRUCTIONS = """\
+INSTRUCTIONS_TEMPLATE = """\
 You translate English software documentation written in Markdown into Japanese.
 
 Output only the translated Markdown. Do not add explanations, notes, or code fences around the output.
 
 Placeholders:
-- Tokens of the form ⟦X12⟧ or ⟦X12:hint⟧ stand for content that must not be translated, such as code, URLs, and template tags.
-- Copy every placeholder exactly as it appears, including the brackets and any hint after the colon. Never translate, split, merge, or drop a placeholder.
-- The hint after the colon tells you what the placeholder stands for. For example, ⟦L3:variables.product.github⟧ stands for the product name "GitHub". Use the hint only to understand the sentence.
-- Every placeholder must appear in the output exactly as many times as in the input.
+{placeholders}
 
 Markdown structure:
 - Keep every heading, list item, table row, blockquote marker, alert marker such as [!NOTE], and blank line in the same place.
@@ -47,8 +45,36 @@ Style:
 - Write numbers and units without a space, for example 10GB.
 """
 
+PLACEHOLDER_TEXT = {
+    "seq": """\
+- Tokens of the form ⟦X12⟧ or ⟦X12:hint⟧ stand for content that must not be translated, such as code, URLs, and template tags.
+- Copy every placeholder exactly as it appears, including the brackets and any hint after the colon. Never translate, split, merge, or drop a placeholder.
+- The hint after the colon tells you what the placeholder stands for. For example, ⟦L3:variables.product.github⟧ stands for the product name "GitHub". Use the hint only to understand the sentence.
+- Every placeholder must appear in the output exactly as many times as in the input.""",
+    "rand": """\
+- Tokens of the form ⟦K7QM⟧ stand for content that must not be translated, such as code, URLs, and template tags. The four characters are an arbitrary ID with no meaning.
+- Copy every placeholder exactly as it appears, character for character. Never translate, split, merge, reorder the characters of, or drop a placeholder.
+- Every placeholder must appear in the output exactly once for each time it appears in the input.""",
+    "xml": """\
+- Self-closing tags of the form <x id="K7QM"/> stand for content that must not be translated, such as code, URLs, and template tags. The ID is arbitrary and has no meaning.
+- Copy every such tag exactly as it appears. Never translate, split, merge, change, or drop one.
+- Every tag must appear in the output exactly once for each time it appears in the input.""",
+}
+
+# 取り違えやすい文字(I、L、O、U、0、1)を除いた30文字。
+ID_ALPHABET = "ABCDEFGHJKMNPQRSTVWXYZ23456789"
+TOKEN_RE = {
+    "seq": re.compile(r"⟦[A-Z]\d+(?::[^⟧]*)?⟧"),
+    "rand": re.compile(r"⟦[^⟧\s]{1,12}⟧"),
+    "xml": re.compile(r"<x\s+id=\"[^\"]{1,12}\"\s*/>"),
+}
+
+
+def instructions(style):
+    return INSTRUCTIONS_TEMPLATE.format(placeholders=PLACEHOLDER_TEXT[style])
+
+
 FENCE_RE = re.compile(r"^(\s*)(`{3,}|~{3,})")
-PLACEHOLDER_RE = re.compile(r"⟦[A-Z]\d+(?::[^⟧]*)?⟧")
 HEADING_RE = re.compile(r"^(#{1,6})\s")
 LIST_RE = re.compile(r"^\s*(?:[-*+]|\d+\.)\s")
 TABLE_RE = re.compile(r"^\s*\|")
@@ -57,15 +83,51 @@ TABLE_RE = re.compile(r"^\s*\|")
 class Masker:
     """訳してはいけない部分を ⟦種別番号⟧ の形の目印に置き換え、あとで戻す。"""
 
-    def __init__(self):
+    def __init__(self, style="seq", seed=None):
+        self.style = style
+        self.rng = random.Random(seed)
         self.store = {}
         self.count = 0
 
     def put(self, kind, original, hint=None):
         self.count += 1
-        token = f"⟦{kind}{self.count}" + (f":{hint}" if hint else "") + "⟧"
+        if self.style == "seq":
+            token = f"⟦{kind}{self.count}" + (f":{hint}" if hint else "") + "⟧"
+        else:
+            ident = self._new_id()
+            token = f"⟦{ident}⟧" if self.style == "rand" else f'<x id="{ident}"/>'
         self.store[token] = original
         return token
+
+    def _new_id(self):
+        # どの2つのIDも2文字以上違うようにする。1文字の書き間違いを、どのIDのことか一意に決めて戻せるように。
+        while True:
+            ident = "".join(self.rng.choice(ID_ALPHABET) for _ in range(4))
+            if all(distance(ident, t) >= 2 for t in self.ids()):
+                return ident
+
+    def ids(self):
+        return [ident_of(t) for t in self.store]
+
+    def repair(self, text):
+        """存在しない目印のうち、1文字違いの目印が1つだけあるものを、その目印に直す。直した数を返す。"""
+        if self.style == "seq":
+            return text, 0
+        known = set(self.store)
+        fixed = 0
+
+        def fix(m):
+            nonlocal fixed
+            token = m.group(0)
+            if token in known:
+                return token
+            near = [t for t in known if distance(ident_of(token), ident_of(t)) <= 1]
+            if len(near) == 1:
+                fixed += 1
+                return near[0]
+            return token
+
+        return TOKEN_RE[self.style].sub(fix, text), fixed
 
     def mask(self, text):
         text = self._mask_fences(text)
@@ -110,6 +172,18 @@ class Masker:
         return text
 
 
+def ident_of(token):
+    m = re.search(r'⟦([^⟧]*)⟧|id="([^"]*)"', token)
+    return m.group(1) or m.group(2) if m else token
+
+
+def distance(a, b):
+    """同じ長さならハミング距離、違う長さなら大きい値。"""
+    if len(a) != len(b):
+        return 99
+    return sum(x != y for x, y in zip(a, b))
+
+
 def split_front_matter(text):
     m = re.match(r"\A---\n.*?\n---\n", text, flags=re.S)
     if m:
@@ -131,10 +205,10 @@ def structure(text):
     return {"headings": headings, "list_items": lists, "table_rows": tables}
 
 
-def check(source_masked, translated_masked):
+def check(source_masked, translated_masked, style="seq"):
     errors = []
-    src_tokens = PLACEHOLDER_RE.findall(source_masked)
-    out_tokens = PLACEHOLDER_RE.findall(translated_masked)
+    src_tokens = TOKEN_RE[style].findall(source_masked)
+    out_tokens = TOKEN_RE[style].findall(translated_masked)
     for token in sorted(set(src_tokens) | set(out_tokens)):
         a, b = src_tokens.count(token), out_tokens.count(token)
         if a != b:
@@ -146,14 +220,14 @@ def check(source_masked, translated_masked):
     return errors
 
 
-def call_gemini(spec, api_key, text, retries=3):
+def call_gemini(spec, api_key, text, style, retries=3):
     # specは「モデル名」か「モデル名@推論の量」。推論の量はlow、mediumなど。
     model, _, level = spec.partition("@")
     config = {"maxOutputTokens": 65536}
     if level:
         config["thinkingConfig"] = {"thinkingLevel": level}
     body = {
-        "systemInstruction": {"parts": [{"text": INSTRUCTIONS}]},
+        "systemInstruction": {"parts": [{"text": instructions(style)}]},
         "contents": [{"role": "user", "parts": [{"text": text}]}],
         "generationConfig": config,
     }
@@ -191,19 +265,21 @@ def fetch(source, path):
         return response.read().decode()
 
 
-def translate_once(spec, api_key, masked, dry_run):
+def translate_once(spec, api_key, masked, dry_run, masker):
     started = time.time()
     result = {"spec": spec}
     try:
         if dry_run:
             data = {"candidates": [{"content": {"parts": [{"text": masked}]}, "finishReason": "STOP"}]}
         else:
-            data = call_gemini(spec, api_key, masked)
+            data = call_gemini(spec, api_key, masked, masker.style)
         text, finish = response_text(data)
+        result["raw_errors"] = len(check(masked, text, masker.style))
+        text, result["repaired"] = masker.repair(text)
         result["text"] = text
         result["finish_reason"] = finish
         result["usage"] = data.get("usageMetadata")
-        result["errors"] = check(masked, text)
+        result["errors"] = check(masked, text, masker.style)
         if finish not in ("STOP", None):
             result["errors"].append(f"finish reason: {finish}")
     except Exception as e:
@@ -224,6 +300,8 @@ def main():
     parser.add_argument("--models", nargs="*", default=[], help="それぞれ単独で訳すモデル。モデル名@推論の量 の形で推論の量を指定できる")
     parser.add_argument("--pipeline", nargs="+", help="構造検査に落ちたら次へ進む順に並べたモデル。同じモデルを2回並べると訳し直しになる")
     parser.add_argument("--out", default="trial/out")
+    parser.add_argument("--styles", nargs="+", default=["seq"], choices=["seq", "rand", "xml"], help="目印の形")
+    parser.add_argument("--repeat", type=int, default=1, help="同じ条件で何回訳すか")
     parser.add_argument("--dry-run", action="store_true", help="訳さずに、退避と検査だけを確かめる")
     args = parser.parse_args()
 
@@ -238,39 +316,42 @@ def main():
     for source, path in pages:
         original = fetch(source, path)
         front, body = split_front_matter(original)
-        masker = Masker()
-        masked = masker.mask(body)
         slug = f"{source}--" + path.replace("/", "--")
 
         runs = [[m] for m in args.models]
         if args.pipeline:
             runs.append(args.pipeline)
-        for chain in runs:
-            name = "pipeline" if len(chain) > 1 else chain[0]
-            entry = {"source": source, "path": path, "model": name, "input_chars": len(body), "placeholders": masker.count, "attempts": []}
-            model_dir = out / name
-            model_dir.mkdir(parents=True, exist_ok=True)
-            started = time.time()
-            for spec in chain:
-                attempt = translate_once(spec, api_key, masked, args.dry_run)
-                entry["attempts"].append({k: v for k, v in attempt.items() if k != "text"})
-                if not args.dry_run:
-                    time.sleep(10)
-                if not attempt["errors"]:
-                    break
-            entry["errors"] = attempt["errors"]
-            entry["used"] = spec
-            text = attempt.get("text")
-            if text is not None:
-                (model_dir / (slug + ".masked.txt")).write_text(text)
-                restored = keep_trailing_newlines(body, masker.unmask(text))
-                if args.dry_run and restored != body:
-                    entry["errors"].append("dry run: unmask did not restore the source")
-                (model_dir / slug).write_text(front + restored)
-            entry["seconds"] = round(time.time() - started, 1)
-            entry["ok"] = not entry["errors"]
-            report.append(entry)
-            print(json.dumps(entry, ensure_ascii=False), flush=True)
+        for style in args.styles:
+            for rep in range(args.repeat):
+                masker = Masker(style, seed=f"{slug}/{rep}")
+                masked = masker.mask(body)
+                for chain in runs:
+                    name = "pipeline" if len(chain) > 1 else chain[0]
+                    entry = {"source": source, "path": path, "model": name, "style": style, "repeat": rep, "input_chars": len(body), "placeholders": masker.count, "attempts": []}
+                    model_dir = out / name / style
+                    model_dir.mkdir(parents=True, exist_ok=True)
+                    started = time.time()
+                    for spec in chain:
+                        attempt = translate_once(spec, api_key, masked, args.dry_run, masker)
+                        entry["attempts"].append({k: v for k, v in attempt.items() if k != "text"})
+                        if not args.dry_run:
+                            time.sleep(10)
+                        if not attempt["errors"]:
+                            break
+                    entry["errors"] = attempt["errors"]
+                    entry["used"] = spec
+                    text = attempt.get("text")
+                    if text is not None:
+                        stem = f"{slug}.{rep}"
+                        (model_dir / (stem + ".masked.txt")).write_text(text)
+                        restored = keep_trailing_newlines(body, masker.unmask(text))
+                        if args.dry_run and restored != body:
+                            entry["errors"].append("dry run: unmask did not restore the source")
+                        (model_dir / stem).write_text(front + restored)
+                    entry["seconds"] = round(time.time() - started, 1)
+                    entry["ok"] = not entry["errors"]
+                    report.append(entry)
+                    print(json.dumps(entry, ensure_ascii=False), flush=True)
 
     out.mkdir(parents=True, exist_ok=True)
     (out / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")

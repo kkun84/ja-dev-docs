@@ -1,0 +1,113 @@
+# Build with AI in VS Code
+
+Visual Studio Code では、タスクのニーズに合わせて必要なだけ AI を活用できます。入力に応じたサジェスト機能の利用、コード、テスト、デバッガーの横でのエージェントとの協業、または Agents ウィンドウでのプロジェクトを跨いだタスクの調整などを行います。作業の進捗に合わせて、これらのアプローチを組み合わせることができます。
+
+複数のプロバイダーからモデルを選択し、サポートされているアカウントまたは自身の API キーを使用して、Copilot、Claude、または Codex エージェント ハーネスで作業します。ハーネスは、モデルの周辺にあるツールやワークフローを提供します。カスタマイズやプラグインにより、エージェントを用途に合わせて調整できます。
+
+Continuity 機能を使用すると、最初からやり直すことなく、サポートされているインターフェイス間でエージェントの作業を引き継ぐことができます。GitHub 環境を通じて自身のマシンのセッションに接続するか、ローカルのホストをオンラインに保たずにクラウドセッションを利用します。
+
+## 始め方を選ぶ
+
+<div class="card-grid">
+    <a class="card" href="/docs/agents/quickstart">
+        <i class="codicon codicon-hubot" aria-hidden="true"></i>
+        <div>
+            <p><strong>Complete your first AI task</strong></p>
+            <p>New to AI coding? Build and validate a small app with recommended defaults, then review the changes.</p>
+        </div>
+    </a>
+    <a class="card" href="/docs/agents/guides/overview#experienced-agent-fast-track">
+        <i class="codicon codicon-tools" aria-hidden="true"></i>
+        <div>
+            <p><strong>Bring your AI workflow to VS Code</strong></p>
+            <p>Already use AI coding tools? Connect your account or model, choose an agent harness, and work in your own repository.</p>
+        </div>
+    </a>
+</div>
+
+* **自分のコードから始めたい場合:** [ファイルを変更せずにコードベースを探索](/docs/agents/guides/explore-a-codebase.md)してから、コードに対して説明を検証します。
+* **VS Code が初めての場合:** まず[エディターをインストールしてワークスペースを開きます](/docs/getstarted/overview.md)。
+
+<video src="images/agents-overview/build-with-ai-overview.mp4" title="Video overview of building with AI in VS Code, showing inline suggestions, collaboration alongside code, and task orchestration in the Agents window." autoplay loop controls muted></video>
+
+<a name="what-you-can-do-with-ai"></a>
+<a name="ways-to-work-with-agents"></a>
+
+## 作業方法を選ぶ
+
+タスクに応じて異なるエクスペリエンスを切り替え、[インターフェイス間でエージェントセッションを継続](#continue-across-interfaces-and-machines)して中断したところから再開します。
+
+<div class="card-grid">
+    <a class="card" href="/docs/editing/ai-powered-suggestions">
+        <i class="codicon codicon-edit" aria-hidden="true"></i>
+        <div>
+            <p><strong>Write code with assistance</strong></p>
+            <p>Get inline suggestions as you type, including suggestions for your next edit.</p>
+        </div>
+    </a>
+    <a id="work-alongside-your-code" class="card" href="/docs/agents/run/chat-view">
+        <i class="codicon codicon-comment-discussion" aria-hidden="true"></i>
+        <div>
+            <p><strong>Collaborate alongside your code</strong></p>
+            <p>Work with an agent in the Chat view, focused on the current workspace alongside your editor, terminal, tests, and debugger.</p>
+        </div>
+    </a>
+    <a id="delegate-and-manage-tasks" class="card" href="/docs/agents/run/agents-window">
+        <i class="codicon codicon-hubot" aria-hidden="true"></i>
+        <div>
+            <p><strong>Delegate and coordinate work</strong></p>
+            <p>Assign tasks and manage agent sessions across projects in the Agents window.</p>
+        </div>
+    </a>
+</div>
+
+[エージェント](/docs/agents/concepts/agents.md)は、モデルとツールを使用して関連コードの検索、変更の実行、およびチェックの実行を行います。Chat ビューと Agents ウィンドウの両方でエージェントが実行されます。目標を設定し、作業を誘導して、結果を確認します。
+
+定型作業の場合は、プロンプトを[自動化](/docs/agents/run/automations.md)として保存します。スケジュールに従ってローカルで実行するか、コンピュータの電源がオフの間も継続するスケジュールまたはイベントトリガーによるリポジトリ作業のために、クラウド自動化 `feature(cloud-automations)` を使用します。定期的な作業を有効にする前に、手動実行を確認してください。
+
+特定の編集を行うには、コードから離れることなく[インラインチャット](/docs/chat/inline-chat.md)を使用します。特定のタスクの機能を比較するには、[AI 機能チートシート](/docs/agents/reference/ai-features-cheat-sheet.md#choose-a-feature)を使用します。
+
+## モデル、エージェント、およびツールを選ぶ
+
+初めてのエージェントタスクでは、すべてのオプションを設定せずに[クイックスタートを使用します](/docs/agents/quickstart.md)。ニーズの変化に応じて、以下の選択肢を調整できます。
+
+| 選択 | オプション |
+|--------|---------|
+| **Models** | GitHub Copilot を通じて[複数のプロバイダーのモデル](/docs/agent-customization/language-models.md)を選択するか、独自の[API キー (BYOK)](/docs/agent-customization/language-models.md#bring-your-own-language-model-key)や、サポートされているローカルモデルを使用します。 |
+| **Agent harnesses** | [ツールとワークフロー](/docs/agents/run/agent-harnesses.md#compare-agent-harnesses)に基づいて、Copilot、Claude、または Codex から選択します。 |
+| **Access and billing** | 既存の GitHub Copilot プラン、サポートされているプロバイダーのアカウント、または API キーを使用します。[ハーネスの要件](/docs/agents/run/agent-harnesses.md#requirements-and-setup)を確認してください。 |
+| **Customization** | [プラグイン](/docs/agent-customization/agent-plugins.md)、[プロジェクト手順](/docs/agents/guides/customize-copilot-guide.md)、および[スキル](/docs/agent-customization/agent-skills.md)を使用してエージェントをカスタマイズします。[Model Context Protocol (MCP) サーバー](/docs/agent-customization/mcp-servers.md)を介して外部ツールを接続します。 |
+
+## インターフェイスやマシンを跨いだ継続
+
+Continuity とは、最初からやり直すことなく、サポートされているインターフェイスやマシンを跨いでエージェントの作業を引き継ぐことを意味します。ワークスペースと実行環境をホスト側に維持したまま、エージェントと対話する場所を選択します。セッションのサポート内容と要件は、ハーネスや接続先によって異なります。
+
+| 作業したい場所 | ここから開始 |
+|------------------------|------------|
+| **Copilot アプリやデバイス間** | [GitHub 環境](/docs/agents/run/remote-agent-sessions.md#github-environments) `feature(github-environments)` を使用して開発マシンを登録し、VS Code、GitHub Copilot アプリ、Copilot CLI、GitHub.com、または GitHub Mobile からエージェントセッションを継続します。利用可能なアクションはクライアントによって異なります。 |
+| **マネージドクラウドコンピュート** | [クラウドセッション](/docs/agents/run/cloud-sandbox-sessions.md) `feature(cloud-sessions)` を使用すると、自分のマシンの電源を入れ続けることなく、インタラクティブなエージェント作業を行えます。既存のクラウドセッションを再度開いて会話を続行します。実行環境はクラウド環境に維持され、その可用性とライフタイムはサービスによって管理されます。 |
+| **エディターまたは Agents ウィンドウ** | VS Code で GitHub Copilot、Claude、または Codex エージェント ハーネスを使用し、[インターフェイス間でセッションを継続](/docs/agents/run/sessions/manage-sessions.md#continue-between-the-chat-view-and-agents-window)します。 |
+| **別マシンの VS Code** | [SSH](/docs/agents/run/remote-agent-sessions.md#connect-via-ssh) または[開発用トンネル](/docs/agents/run/remote-agent-sessions.md#connect-via-dev-tunnel)を介した VS Code 固有のリモート接続を使用します。開発用トンネルは、[ブラウザーベースの Agents ウィンドウ](/docs/agents/run/remote-agent-sessions.md#use-the-agents-window-in-the-browser)もサポートしています。 |
+
+自身のマシンで実行されるセッションの場合は、ホストを稼働させ、アクセス可能な状態に維持してください。クラウドセッションでは、代わりにマネージドコンピュートが使用されます。クラウドでの作業用にクラウドセッションを開始し、その後そのセッションを再度開いて続行します。
+
+自身のプライベートリポジトリを使用して、[VS Code でクラウドエージェントタスクを開始し、Copilot CLI で続行する](/docs/agents/cloud-continuity-tutorial.md)ことができます (実験的機能)。
+
+ツールが実行される場所とモデルがホストされる場所は、個別に選択できます。エージェントは、ホストされたプロバイダーにモデルリクエストを送信しながら、マシン上のファイルを編集できます。
+
+## 制御の維持
+
+AI は誤ったコードを生成したり、意図を誤解したりする可能性があります。コードベースにどのような変更を取り込むかを決定する責任は、常にユーザーにあります。
+
+* **統合前のレビュー。** エージェントは、セッションフォルダーまたはワークツリーに直接編集内容を保存できます。[差分を確認して結果を検証](/docs/agents/run/review-code-edits.md)してから、変更をコミットまたはマージしてください。
+* **アクションの制御と作業の誘導。** [権限と承認](/docs/agents/run/approvals.md)を使用して、どのアクションに確認が必要かを決定します。[リクエストの誘導や停止](/docs/chat/chat-overview.md#send-messages-while-a-request-is-running)を行うことはできますが、停止しても、完了したアクションや外部サービスへの変更は取り消されません。
+* **分離の理解。** Git ワークツリーはコードの変更を分離しますが、セキュリティ境界ではありません。エージェントが実行するターミナルコマンドに対するファイルシステムとネットワークの制限については、[プラットフォーム固有のサンドボックスオプション](/docs/agents/run/agent-sandboxing.md)を確認してください。
+
+既存のプロジェクトでエージェントを使用する前に、[推奨されるセキュリティ基準](/docs/agents/run/security.md#recommended-security-baseline)を確認してください。管理されたデバイスでは、組織が[エンタープライズ AI ポリシー](/docs/enterprise/manage-ai-settings.md)を通じて、利用可能なエージェント、モデル、およびツールを制限している場合があります。チャットにエージェントが表示されない場合は、[可用性のトラブルシューティング手順](/docs/agents/agent-troubleshooting/faq.md#agents-are-not-available-in-chat)を確認してください。
+
+キーボード、スクリーンリーダー、およびロービジョン向けのワークフローについては、[アクセシブルビューおよびその他のアクセシビリティ機能](/docs/configure/accessibility/accessibility.md#accessible-view)の使用方法を確認してください。
+
+## 次のステップ
+
+* [エージェントのベストプラクティスをプロジェクトに適用する](/docs/agents/best-practices.md)。
+* [品質、信頼性、および AI クレジットの消費量を比較する](/docs/agents/guides/optimize-usage.md)。

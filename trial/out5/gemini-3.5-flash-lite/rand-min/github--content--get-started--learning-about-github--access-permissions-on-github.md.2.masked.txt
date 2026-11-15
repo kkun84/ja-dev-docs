@@ -1,0 +1,26 @@
+## GitHubでのアクセス権限について
+
+⟦CFFA⟧
+
+ロールの仕組みは、アカウントの種類によって異なります。アカウントの詳細については、[AUTOTITLE](/get-started/learning-about-github/types-of-github-accounts)を参照してください。
+
+## パーソナルアカウント
+
+パーソナルアカウントが所有するリポジトリには、_repository owner_ と _collaborators_ という2つの権限レベルがあります。詳細については、[AUTOTITLE](/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/permission-levels-for-a-personal-account-repository)を参照してください。
+
+## 組織アカウント
+
+組織のメンバーには、_owner_⟦CQAD⟧、_billing manager_、⟦J2EZ⟧ または _member_ のロールを設定できます。ownerは組織に対する完全な管理者アクセス権を持ち、billing managerは請求設定を管理できます。⟦7KC9⟧⟦QVHY⟧ memberは、それ以外のすべてのユーザーのデフォルトのロールです。チームを使用すると、複数のメンバーのアクセス権限を一度に管理できます。詳細については、以下を参照してください。
+* [AUTOTITLE](/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization)
+* [AUTOTITLE](/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization)
+* [AUTOTITLE](/organizations/organizing-members-into-teams/about-teams)
+
+## エンタープライズアカウント
+
+エンタープライズアカウントには、エンタープライズ設定へのユーザーのアクセスを定義するさまざまな事前定義済みロールがあります。また、カスタムのエンタープライズロールを作成して、独自の細かい権限セットを定義することもできます。
+
+詳細については、GitHub Enterprise Cloudドキュメントの⟦SKCS⟧[AUTOTITLE](/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-roles-in-your-enterprise/abilities-of-roles)⟦S9YR⟧[AUTOTITLE](/admin/managing-accounts-and-repositories/managing-roles-in-your-enterprise/abilities-of-roles)⟦MVBR⟧を参照してください。
+
+## さらに読む
+
+* [AUTOTITLE](/get-started/learning-about-github/types-of-github-accounts)

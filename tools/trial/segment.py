@@ -29,6 +29,7 @@ Return a JSON object with "translations": one entry per input segment, in the sa
 
 Each fragment may contain:
 - Placeholders of the form ⟦K7QM⟧. They stand for code, URLs, and template tags. Copy each one exactly, as many times as it appears in that fragment. The four characters are an arbitrary ID with no meaning.
+- When the input has "placeholders", it maps each placeholder ID to the original content it stands for. Use it only to understand the sentence, for example to choose the right Japanese particle. Never copy those values into the output; write the placeholder instead.
 - Markdown inline syntax: **bold**, _italic_, [link text](⟦K7QM⟧), and inline HTML tags. Keep the syntax and translate the text inside it. Keep the HTML tags unchanged.
 
 Style:
@@ -106,7 +107,7 @@ def seg_errors(src, out):
     return errors
 
 
-def call(spec, api_key, segs):
+def call(spec, api_key, segs, legend=None):
     model, _, level = spec.partition("@")
     schema = {
         "type": "OBJECT",
@@ -130,7 +131,7 @@ def call(spec, api_key, segs):
         config["thinkingConfig"] = {"thinkingLevel": level}
     body = {
         "systemInstruction": {"parts": [{"text": INSTRUCTIONS}]},
-        "contents": [{"role": "user", "parts": [{"text": json.dumps({"segments": segs}, ensure_ascii=False)}]}],
+        "contents": [{"role": "user", "parts": [{"text": json.dumps({"placeholders": legend, "segments": segs} if legend else {"segments": segs}, ensure_ascii=False)}]}],
         "generationConfig": config,
     }
     request = urllib.request.Request(
@@ -157,7 +158,7 @@ def call(spec, api_key, segs):
     return {i["id"]: i["text"] for i in items if isinstance(i, dict) and "id" in i and isinstance(i.get("text"), str)}, finish, data.get("usageMetadata")
 
 
-def translate_page(segs, chain, api_key, dry_run):
+def translate_page(segs, chain, api_key, dry_run, legend=None):
     """断片を訳す。chainの順にモデルを使い、落ちた断片だけを次へ回す。"""
     done, log = {}, []
     pending = list(segs)
@@ -169,7 +170,8 @@ def translate_page(segs, chain, api_key, dry_run):
             result, finish, usage = {s["id"]: s["text"] for s in pending}, "STOP", None
         else:
             try:
-                result, finish, usage = call(spec, api_key, pending)
+                sub = {k: v for k, v in (legend or {}).items() if any(f"⟦{k}⟧" in s["text"] for s in pending)}
+                result, finish, usage = call(spec, api_key, pending, sub or None)
             except Exception as e:
                 result, finish, usage = {}, f"error: {e}"[:300], None
             time.sleep(10)
@@ -194,6 +196,7 @@ def main():
     parser.add_argument("--chain", nargs="+", required=True, help="落ちた断片を次へ回す順に並べたモデル")
     parser.add_argument("--repeat", type=int, default=1)
     parser.add_argument("--out", default="trial/seg")
+    parser.add_argument("--legend", action="store_true", help="変数を展開せずに目印にし、目印が何を表すかを訳す文の外で渡す")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -208,13 +211,18 @@ def main():
 
     for source, path in pages:
         front, body = t.split_front_matter(t.fetch(source, path))
-        body = t.expand_variables(source, body, cache.setdefault(source, {}))
+        if not args.legend:
+            body = t.expand_variables(source, body, cache.setdefault(source, {}))
         slug = f"{source}--" + path.replace("/", "--")
         for rep in range(args.repeat):
             masker = t.Masker("rand", seed=f"{slug}/{rep}")
             masked = masker.mask(body)
             parts, segs = segment(masked)
-            done, log, left = translate_page(segs, args.chain, api_key, args.dry_run)
+            legend = None
+            if args.legend:
+                # 目印が表す中身。変数は値(製品名など)に展開したものを、それ以外は原文の記法のまま渡す。
+                legend = {t.ident_of(k): t.expand_variables(source, v, cache.setdefault(source, {})) for k, v in masker.store.items()}
+            done, log, left = translate_page(segs, args.chain, api_key, args.dry_run, legend)
             text = "".join(done.get(p["id"], p["text"]) if isinstance(p, dict) else p for p in parts)
             entry = {"path": path, "repeat": rep, "segments": len(segs), "left_in_english": left, "steps": log}
             if args.dry_run and masker.unmask(text) != body:

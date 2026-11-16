@@ -12,7 +12,7 @@ Return a JSON object with "translations": one entry per input segment, in the sa
 Each fragment may contain:
 - Placeholders of the form ⟦K7QM⟧. They stand for code, URLs, product names, and template tags. Copy each one exactly, as many times as it appears in that fragment. The four characters are an arbitrary ID with no meaning.
 - When the input has "placeholders", it maps each placeholder ID to the content it stands for. Use it only to understand the sentence, for example to choose the right Japanese particle. Never copy those values into the output; write the placeholder instead.
-- Markdown inline syntax: **bold**, _italic_, [link text](⟦K7QM⟧), and inline HTML tags. Keep the syntax and translate the text inside it. Keep the HTML tags unchanged.
+- Markdown inline syntax: **bold**, _italic_, [link text](⟦K7QM⟧), and inline HTML tags. Keep the syntax and translate the text inside it, including link text that is the title of another page. Keep the HTML tags unchanged.
 
 Style:
 - Use polite form (です・ます調). For steps, end sentences with 〜します. Use 〜してください only for warnings or required actions.
@@ -43,9 +43,8 @@ export function geminiCaller(apiKey: string, fetchImpl: typeof fetch = fetch): C
       type: "OBJECT",
       properties: {
         translations: {
+          // 項目の数は指定しない。大きな数を指定すると400で拒否されることがあるため。数は受け取った後に検査する。
           type: "ARRAY",
-          minItems: segments.length,
-          maxItems: segments.length,
           items: {
             type: "OBJECT",
             properties: { id: { type: "INTEGER" }, text: { type: "STRING" } },

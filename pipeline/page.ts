@@ -4,7 +4,7 @@ import { parse as parseYaml } from "yaml";
 import { Masker, TOKEN_RE, type Masked } from "./mask.ts";
 import { prepare, assemble, maskBlocks, maskInline, hasText, type Segment, type VariableResolver } from "./segment.ts";
 import { segmentErrors, tidy } from "./check.ts";
-import { QuotaExceeded, type Caller } from "./model.ts";
+import { QuotaExceeded, type Caller, type CallResult } from "./model.ts";
 
 // フロントマターのうち、訳すキー。
 const FRONT_MATTER_KEYS = ["title", "shortTitle", "intro", "PageTitle", "MetaDescription"];
@@ -95,7 +95,7 @@ export async function translateSegments(segments: Segment[], masker: Masker, opt
     for (const s of pending) for (const m of s.text.matchAll(TOKEN_RE)) legend[m[1]!] = masker.store.get(m[1]!)?.meaning ?? "";
     const step: StepLog = { spec, sent: pending.length, failed: [], seconds: 0 };
     try {
-      const result = await opts.call(spec, pending, legend);
+      const result = await callInBatches(opts.call, spec, pending, legend);
       step.finishReason = result.finishReason;
       step.usage = result.usage;
       for (const s of pending) {
@@ -132,4 +132,35 @@ function scalar(raw: string): string | undefined {
   }
   if (/^[|>&*!\[{]/.test(v)) return undefined;
   return v.replace(/\s+#.*$/, "");
+}
+
+// 断片が多いと、モデルの出力の上限や要求の大きさの上限にかかる。1回に送る断片の数を抑え、
+// それでも要求が拒否されたら半分に分けて送り直す。文脈が切れすぎないよう、1回の上限は大きめにする。
+const BATCH = 120;
+
+async function callInBatches(call: Caller, spec: string, segments: Segment[], legend: Record<string, string>): Promise<CallResult> {
+  if (segments.length > BATCH) {
+    const results = [];
+    for (let i = 0; i < segments.length; i += BATCH) results.push(await callInBatches(call, spec, segments.slice(i, i + BATCH), legend));
+    return merge(results);
+  }
+  try {
+    return await call(spec, segments, pick(legend, segments));
+  } catch (e) {
+    if (e instanceof QuotaExceeded || segments.length < 2 || !/HTTP 400/.test(String(e))) throw e;
+    const half = Math.ceil(segments.length / 2);
+    return merge([await callInBatches(call, spec, segments.slice(0, half), legend), await callInBatches(call, spec, segments.slice(half), legend)]);
+  }
+}
+
+function pick(legend: Record<string, string>, segments: Segment[]): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const s of segments) for (const m of s.text.matchAll(TOKEN_RE)) if (m[1]! in legend) out[m[1]!] = legend[m[1]!]!;
+  return out;
+}
+
+function merge(results: CallResult[]): CallResult {
+  const translations = new Map<number, string>();
+  for (const r of results) for (const [k, v] of r.translations) translations.set(k, v);
+  return { translations, finishReason: results.map((r) => r.finishReason).find((f) => f !== "STOP") ?? "STOP", usage: results.map((r) => r.usage) };
 }

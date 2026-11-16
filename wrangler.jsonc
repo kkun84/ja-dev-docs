@@ -1,0 +1,31 @@
+// Cloudflare Workers(無料プラン)の設定。
+// 訳があるページは静的ファイルとして配信し、それ以外のURLだけをWorkerが処理する。
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ja-dev-docs",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "assets": { "directory": "./dist", "binding": "ASSETS" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ja-dev-docs",
+      // デプロイ前に `wrangler d1 create ja-dev-docs` で作ったIDに置き換える。
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    // GitHub Actionsのワークフローを起動する先。
+    "GITHUB_REPO": "kkun84/ja-dev-docs",
+    "GITHUB_WORKFLOW": "translate.yml",
+    "GITHUB_REF": "main",
+    // TurnstileのサイトキーはHTMLに出る公開の値。秘密鍵は TURNSTILE_SECRET としてシークレットに置く。
+    "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
+  }
+  // シークレット(wrangler secret put で登録):
+  //   TURNSTILE_SECRET       Turnstileの秘密鍵
+  //   GITHUB_DISPATCH_TOKEN  このリポジトリの Actions: write だけを持つ fine-grained token
+  //   QUEUE_SECRET           GitHub Actionsが順番待ちの列を読み書きするときの共有の秘密
+}

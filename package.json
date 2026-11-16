@@ -8,10 +8,20 @@
   "scripts": {
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "translate": "node pipeline/cli.ts"
+    "translate": "node pipeline/cli.ts",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro build && wrangler dev",
+    "check": "tsc --noEmit && vitest run && astro build"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^14.4.8",
+    "@astrojs/markdown-remark": "^7.3.9",
+    "@astrojs/starlight": "^0.43.1",
+    "astro": "^7.4.12",
+    "github-slugger": "^2.0.0",
     "mdast-util-to-string": "^4.0.0",
+    "remark-cjk-friendly": "^2.3.4",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",

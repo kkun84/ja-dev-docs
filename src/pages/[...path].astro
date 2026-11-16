@@ -1,0 +1,92 @@
+---
+// 訳がまだ無いページと、原文のURLの書き方の揺れ(https:// 付き、URLエンコード)を扱う。
+// 訳があるページは静的ファイルとして先に配信されるので、ここには来ない。
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import { parsePageUrl } from "../../pipeline/sources.ts";
+import { pageId } from "../lib/links.ts";
+import { env } from "../lib/runtime.ts";
+
+export const prerender = false;
+
+const raw = Astro.url.pathname.slice(1) + Astro.url.search;
+const ref = parsePageUrl(raw.replace(/^(https?):\/(?!\/)/, "$1://"));
+if (!ref) {
+  return new Response("Not found", { status: 404 });
+}
+const page = pageId(ref.source.host, ref.path);
+// 正規の形(https:// なし)以外で来たら、正規の形へ移す。
+if (decodeURIComponent(Astro.url.pathname) !== `/${page}`) {
+  return Astro.redirect(`/${page}`, 301);
+}
+const original = `https://${page}`;
+---
+
+<StarlightPage frontmatter={{ title: "まだ日本語訳がありません", pagefind: false }} hasSidebar={false}>
+  <p>
+    <a href={original}>{original}</a> の日本語訳は、まだありません。
+  </p>
+  <p>翻訳をリクエストすると、順番に機械翻訳します。訳ができると、このページが自動で日本語訳に切り替わります。数分かかります。</p>
+
+  <div id="request" data-page={page} data-sitekey={env.TURNSTILE_SITE_KEY}>
+    <div class="cf-turnstile" data-sitekey={env.TURNSTILE_SITE_KEY} data-callback="onTurnstile"></div>
+    <button type="button" disabled>翻訳をリクエストする</button>
+    <p role="status" aria-live="polite"></p>
+  </div>
+
+  <p><a href={original}>原文(英語)を読む</a></p>
+</StarlightPage>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script>
+  const root = document.getElementById("request")!;
+  const page = root.dataset.page!;
+  const button = root.querySelector("button")!;
+  const status = root.querySelector("[role=status]")!;
+  let token = "";
+
+  (window as any).onTurnstile = (t: string) => {
+    token = t;
+    button.disabled = false;
+  };
+
+  const show = (s: { state?: string; position?: number; published?: boolean; error?: string }) => {
+    if (s.published) {
+      status.textContent = "日本語訳ができました。表示を切り替えます。";
+      location.reload();
+      return true;
+    }
+    if (s.error) status.textContent = s.error;
+    else if (s.state === "queued") status.textContent = `順番待ちです(${s.position}番目)。このページを開いたまま待ってください。`;
+    else if (s.state === "translating") status.textContent = "翻訳中です。このページを開いたまま待ってください。";
+    else if (s.state === "done") status.textContent = "公開の準備をしています。";
+    else if (s.state === "failed") status.textContent = "翻訳に失敗しました。もう一度リクエストできます。";
+    return false;
+  };
+
+  let polling = 0;
+  const poll = () => {
+    if (polling) return;
+    polling = window.setInterval(async () => {
+      const s = await fetch(`/api/status?page=${encodeURIComponent(page)}`).then((r) => r.json());
+      if (show(s) || s.state === "failed") clearInterval(polling), (polling = 0);
+    }, 15000);
+  };
+
+  // すでにリクエスト済みなら、状態を見せて待つ。
+  fetch(`/api/status?page=${encodeURIComponent(page)}`)
+    .then((r) => r.json())
+    .then((s) => {
+      if (s.state && s.state !== "failed") {
+        show(s);
+        poll();
+      }
+    });
+
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    const res = await fetch("/api/request", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ page, token }) });
+    const s = await res.json();
+    if (!show(s) && res.ok) poll();
+    if (!res.ok) (window as any).turnstile?.reset();
+  });
+</script>

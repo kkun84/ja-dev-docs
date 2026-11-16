@@ -11,5 +11,5 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["pipeline"]
+  "include": ["pipeline", "src/lib/links.ts", "src/lib/links.test.ts", "src/lib/queue.ts", "src/lib/queue.test.ts"]
 }

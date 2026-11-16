@@ -67,6 +67,18 @@ describe("検査", () => {
     expect(r.markdown).toBe("訳Use コパイロット today.\n");
   });
 
+  it("要求が拒否されたら、断片を半分に分けて送り直す", async () => {
+    const sizes: number[] = [];
+    const picky: Caller = async (s, segs, legend) => {
+      sizes.push(segs.length);
+      if (segs.length > 1) throw new Error("HTTP 400: too large");
+      return fake(s, segs, legend);
+    };
+    const r = await translatePage("One two three four.\n\nFive six seven eight.\n\nNine ten eleven twelve.\n", { ...base, chain: ["a"], call: picky });
+    expect(r.untranslated).toEqual([]);
+    expect(sizes).toEqual([3, 2, 1, 1, 1]);
+  });
+
   it("日本語と英数字の間の空白を除く", async () => {
     const spaced: Caller = async (_s, segs) => ({ translations: new Map(segs.map((s) => [s.id, "これは Copilot の 10 個目の機能です。"])) });
     const r = await translatePage("This is the tenth feature of Copilot.\n", { ...base, chain: ["a"], call: spaced });

@@ -25,18 +25,16 @@ export async function expandLiquid(text: string, ctx: LiquidContext, depth = 0):
   text = trimWhitespaceControl(text);
 
   // 再利用部品は、行のどこにあっても展開する。複数行の部品は、埋め込む位置の字下げ、リストの記号の幅、引用の > に合わせる。
-  text = await replaceAsync(text, /^(.*?)\{%-?\s*data\s+reusables\.([\w.\-\/]+)\s*-?%\}/gm, async (all, before: string, path: string) => {
+  // 部品の中の部品は、部品を展開するときの再帰で展開する。本文全体を展開し直すことはしない(部品の数の累乗で遅くなるため)。
+  text = await replaceAsync(text, /\{%-?\s*data\s+reusables\.([\w.\-\/]+)\s*-?%\}/g, async (all, path: string, offset: number, whole: string) => {
     if (depth >= MAX_DEPTH) return all;
     const body = await ctx.reusable(path.replace(/\./g, "/"));
     if (body === undefined) return all;
     const expanded = (await expandLiquid(body, ctx, depth + 1)).replace(/\n+$/, "");
+    const before = whole.slice(whole.lastIndexOf("\n", offset - 1) + 1, offset);
     const pad = continuationPad(before);
-    return before + expanded.split("\n").map((line, i) => (i === 0 ? line : line ? pad + line : pad.trimEnd())).join("\n");
+    return expanded.split("\n").map((line, i) => (i === 0 ? line : line ? pad + line : pad.trimEnd())).join("\n");
   });
-  // 同じ行の2つ目以降の部品。1つ目を展開した後に残っていれば、もう一度展開する。
-  if (depth < MAX_DEPTH && /\{%-?\s*data\s+reusables\./.test(text) && text !== (text = await expandLiquid(text, ctx, depth + 1))) {
-    // 展開が進んだ。
-  }
 
   text = await evaluateIfs(text, ctx);
   // アイコンの直後に名前の文字が続く(「{% octicon %} Agents」)ときは、アイコンを除く。
@@ -155,7 +153,7 @@ async function replaceAsync(text: string, re: RegExp, fn: (...args: any[]) => Pr
   let out = "";
   const matches = [...text.matchAll(re)];
   const results: string[] = [];
-  for (const m of matches) results.push(await fn(...m));
+  for (const m of matches) results.push(await fn(...m, m.index, text));
   matches.forEach((m, i) => {
     out += text.slice(last, m.index) + results[i];
     last = m.index! + m[0].length;

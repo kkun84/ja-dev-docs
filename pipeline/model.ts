@@ -1,6 +1,11 @@
 // 翻訳モデルの呼び出し。モデルには、訳す断片と共通の指示、目印の対応表だけを送る。
 
+import { Agent, setGlobalDispatcher } from "undici";
 import type { Segment } from "./segment.ts";
+
+// 推論の長いモデルは、応答の最初のバイトが返るまでに5分を超えることがある。
+// Node.jsのfetchは既定で5分で打ち切るので、待ち時間の上限は呼び出しごとのタイムアウト(10分)だけにする。
+setGlobalDispatcher(new Agent({ headersTimeout: 0, bodyTimeout: 0 }));
 
 export const INSTRUCTIONS = `\
 You translate English software documentation into Japanese.

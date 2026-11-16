@@ -143,6 +143,12 @@ describe("検査", () => {
     expect(r.untranslated).toEqual([]);
   });
 
+  it("リンクだけの断片は、題名を英語のまま残してよい", async () => {
+    const echo: Caller = async (_s, segs) => ({ translations: new Map(segs.map((s) => [s.id, s.text])) });
+    const r = await translatePage("* [Roles in an organization](/organizations/roles)\n", { ...base, chain: ["a"], call: echo });
+    expect(r.untranslated).toEqual([]);
+  });
+
   it("英文のまま返した断片は訳し漏れとして落とす", async () => {
     const echo: Caller = async (_s, segs) => ({ translations: new Map(segs.map((s) => [s.id, s.text])) });
     const r = await translatePage("This sentence has more than four words.\n", { ...base, chain: ["a"], call: echo });

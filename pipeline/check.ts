@@ -29,7 +29,9 @@ export function segmentErrors(source: string, output: string | undefined, kind: 
 
   // 小文字で始まる語(the、andなど)が3つ以上ある文なのに日本語が無いものは、訳し漏れとみなす。
   // 製品名だけの断片(Visual Studio Code 1.147 など)は大文字で始まる語なので、英語のままでよい。
-  const words = source.replace(/⟦[^⟧]*⟧/g, " ").replace(HTML_TAG_RE, " ").match(/\b[a-z][a-z]+\b/g) ?? [];
+  // リンクだけの断片(関連ページの題名の一覧など)は、題名を英語のまま残してよい。
+  const prose = source.replace(/\[[^\]]*\]\(⟦\w+⟧\)/g, " ");
+  const words = prose.replace(/⟦[^⟧]*⟧/g, " ").replace(HTML_TAG_RE, " ").match(/\b[a-z][a-z]+\b/g) ?? [];
   if (words.length >= 3 && !JAPANESE_RE.test(output)) errors.push("untranslated");
   return errors;
 }

@@ -28,29 +28,12 @@ const rank = (v: Variant) => {
   return i < 0 ? MODEL_ORDER.length : i;
 };
 
-const HOST_LABELS: Record<string, string> = { "code.visualstudio.com": "VS Code", "docs.github.com": "GitHub Docs" };
-
-// ページが属する節。VS Codeは docs/agents のように2階層、GitHub Docsは en/copilot のように2階層までで区切る。
-export function sectionOf(id: string): string {
-  return id.split("/").slice(0, 3).join("/");
-}
-
-// サイドバー。同じ節のページだけを並べる。全ページを並べると、1ページ足すたびに全ページのHTMLが変わり、
-// サイトの大きさがページ数の2乗で増えるため。全ページの一覧は /list/ に置く。
-export function sidebar(pages: Page[], current: string) {
-  const section = sectionOf(current);
-  const host = current.split("/")[0]!;
-  const items = pages
-    .filter((p) => sectionOf(p.id) === section)
-    .sort((a, b) => a.id.localeCompare(b.id))
-    .slice(0, 200)
-    .map((p) => ({ label: p.primary.data.title, link: `/${p.id}/` }));
-  return [
-    { label: "訳したページの一覧", link: "/list/" },
-    { label: `${HOST_LABELS[host] ?? host}: ${section.split("/").slice(1).join("/")}`, items },
-  ];
-}
+// 原文のサイトごとの名前。
+export const SITES = {
+  "code.visualstudio.com": { kind: "vscode", label: "Visual Studio Code" },
+  "docs.github.com": { kind: "github", label: "GitHub Docs" },
+} as const;
 
 export function hostLabel(host: string): string {
-  return HOST_LABELS[host] ?? host;
+  return SITES[host as keyof typeof SITES]?.label ?? host;
 }

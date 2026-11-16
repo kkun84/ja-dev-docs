@@ -49,7 +49,7 @@ export function translationsLoader(dir = "content"): Loader {
           markdown = markdown.slice(h1[0].length);
           headings = headings.slice(1);
         }
-        markdown = alertsToAsides(markdown);
+        markdown = cjkUnderscoreEmphasis(alertsToAsides(markdown));
         const rendered = await renderMarkdown(markdown);
         rendered.html = rewriteHtmlLinks(rendered.html, record, pages);
         fixHeadingIds(rendered, headings);
@@ -133,4 +133,24 @@ export function alertsToAsides(markdown: string): string {
     );
   }
   return out.join("\n");
+}
+
+const CJK_CHAR = "[\\u3000-\\u30ff\\u3400-\\u9fff\\uff00-\\uffef]";
+const UNDERSCORE_EMPHASIS = new RegExp(`(?<=${CJK_CHAR})_([^_\\s][^_\\n]*?)_|_([^_\\s][^_\\n]*?)_(?=${CJK_CHAR})`, "g");
+
+// 日本語に隣接した _強調_ は、CommonMarkでは単語の途中とみなされ強調にならない(remark-cjk-friendlyも * だけを扱う)。
+// コードの外の _…_ を *…* に置き換える。訳文では、英語の _owner_ が「_所有者_と」のように日本語に挟まれるため。
+export function cjkUnderscoreEmphasis(markdown: string): string {
+  let inFence = false;
+  return markdown
+    .split("\n")
+    .map((line) => {
+      if (/^\s*(```|~~~)/.test(line)) inFence = !inFence;
+      if (inFence) return line;
+      return line
+        .split(/(`+[^`]*`+)/)
+        .map((part, i) => (i % 2 ? part : part.replace(UNDERSCORE_EMPHASIS, (_m, a?: string, b?: string) => `*${a ?? b}*`)))
+        .join("");
+    })
+    .join("\n");
 }

@@ -1,0 +1,181 @@
+/*
+ * 原文のサイトごとの見た目。ヘッダーの中の目印(.site-vscode、.site-github)で切り替える。
+ * 配色と文字は原文のサイトに寄せる。ロゴや製品のアイコンは使わない。
+ */
+
+/* --- Visual Studio Code: 暗いヘッダー、青のアクセント、Segoe系の文字 --- */
+:root:has(.site-vscode) {
+  --sl-font: "Segoe WPC", "Segoe UI", -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  --sl-color-bg-nav: #2c2c32;
+  --sl-color-hairline-shade: #2c2c32;
+  --site-header-fg: #ffffff;
+  --site-header-muted: #c8c8c8;
+}
+:root[data-theme="light"]:has(.site-vscode) {
+  --sl-color-accent-low: #dcecfa;
+  --sl-color-accent: #0066b8;
+  --sl-color-accent-high: #004f8f;
+  --sl-color-white: #1e1e1e;
+  --sl-color-bg: #ffffff;
+  --sl-color-bg-sidebar: #f3f3f3;
+  --sl-color-text-accent: #0066b8;
+}
+:root[data-theme="dark"]:has(.site-vscode) {
+  --sl-color-accent-low: #0b2942;
+  --sl-color-accent: #3794ff;
+  --sl-color-accent-high: #9cdcfe;
+  --sl-color-bg: #1e1e1e;
+  --sl-color-bg-sidebar: #252526;
+  --sl-color-text-accent: #3794ff;
+}
+:root:has(.site-vscode) header.header {
+  background: #2c2c32;
+  border-bottom-color: #2c2c32;
+}
+:root:has(.site-vscode) .site-vscode :is(button, input, .sl-flex) {
+  --sl-color-white: #ffffff;
+  --sl-color-gray-2: #e0e0e0;
+}
+
+/* --- GitHub Docs: 明るいヘッダーと境界線、Primerの青、システムの文字 --- */
+:root:has(.site-github) {
+  --sl-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", "Hiragino Sans", "Noto Sans JP", Helvetica, Arial, sans-serif;
+  --sl-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --sl-text-h1: 2rem;
+}
+:root[data-theme="light"]:has(.site-github) {
+  --sl-color-accent-low: #ddf4ff;
+  --sl-color-accent: #0969da;
+  --sl-color-accent-high: #0550ae;
+  --sl-color-white: #1f2328;
+  --sl-color-gray-1: #1f2328;
+  --sl-color-gray-2: #31363c;
+  --sl-color-gray-3: #59636e;
+  --sl-color-bg: #ffffff;
+  --sl-color-bg-nav: #f6f8fa;
+  --sl-color-bg-sidebar: #ffffff;
+  --sl-color-hairline: #d1d9e0;
+  --sl-color-hairline-shade: #d1d9e0;
+  --sl-color-text-accent: #0969da;
+  --site-header-fg: #1f2328;
+  --site-header-muted: #59636e;
+}
+:root[data-theme="dark"]:has(.site-github) {
+  --sl-color-accent-low: #121d2f;
+  --sl-color-accent: #4493f8;
+  --sl-color-accent-high: #a5d6ff;
+  --sl-color-white: #f0f6fc;
+  --sl-color-gray-3: #9198a1;
+  --sl-color-bg: #0d1117;
+  --sl-color-bg-nav: #010409;
+  --sl-color-bg-sidebar: #0d1117;
+  --sl-color-hairline: #3d444d;
+  --sl-color-hairline-shade: #3d444d;
+  --sl-color-text-accent: #4493f8;
+  --site-header-fg: #f0f6fc;
+  --site-header-muted: #9198a1;
+}
+
+/* 訳がまだ無い目次の項目(原文のサイトへのリンク)。 */
+a.untranslated::after {
+  content: " ↗";
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+a.untranslated {
+  opacity: 0.8;
+}
+
+/* 本文の上の「非公式の日本語訳」の案内。 */
+.sl-banner a {
+  color: inherit;
+}
+
+/* ===== 共通: 案内の帯は控えめにする ===== */
+.sl-banner {
+  background: var(--sl-color-gray-6) !important;
+  color: var(--sl-color-gray-2) !important;
+  font-size: var(--sl-text-sm);
+}
+
+/* ===== Visual Studio Code ===== */
+/* 見出しは細め、リンクは下線なし、目次の現在地は塗らずに文字の色で示す。 */
+:root:has(.site-vscode) .sl-markdown-content :is(h1, h2, h3, h4) {
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+:root:has(.site-vscode) h1#_top {
+  font-weight: 400;
+  font-size: 2.6rem;
+}
+:root:has(.site-vscode) .sl-markdown-content a:not(:hover) {
+  text-decoration: none;
+}
+:root:has(.site-vscode) nav.sidebar a[aria-current="page"] {
+  background: transparent;
+  color: var(--sl-color-accent);
+  font-weight: 600;
+  border-inline-start: 3px solid var(--sl-color-accent);
+  border-radius: 0;
+}
+:root:has(.site-vscode) nav.sidebar .group-label .large {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+:root:has(.site-vscode) starlight-toc h2,
+:root:has(.site-vscode) mobile-starlight-toc summary {
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.75rem;
+}
+/* 暗いヘッダーの中の検索と配色の切り替え。 */
+:root:has(.site-vscode) header .site-vscode button[data-open-modal] {
+  background: #3c3c3c;
+  border-color: #3c3c3c;
+  color: #cccccc;
+}
+:root:has(.site-vscode) header .site-vscode starlight-theme-select :is(select, svg, label) {
+  color: #cccccc;
+}
+
+/* ===== GitHub Docs ===== */
+/* 見出しは太め、本文は少し小さめ、目次の現在地は左の線と薄い背景で示す。 */
+:root:has(.site-github) {
+  --sl-text-base: 1rem;
+}
+:root:has(.site-github) h1#_top {
+  font-weight: 600;
+  font-size: 2.5rem;
+}
+:root:has(.site-github) .sl-markdown-content :is(h2, h3) {
+  font-weight: 600;
+}
+:root:has(.site-github) .sl-markdown-content h2 {
+  font-size: 1.5rem;
+}
+:root:has(.site-github) .sl-markdown-content a:not(:hover) {
+  text-decoration: none;
+}
+:root:has(.site-github) nav.sidebar a[aria-current="page"] {
+  background: var(--sl-color-gray-6);
+  color: var(--sl-color-white);
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--sl-color-accent);
+  border-radius: 6px;
+}
+:root:has(.site-github) nav.sidebar .group-label .large {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+:root:has(.site-github) nav.sidebar a {
+  font-size: 0.875rem;
+}
+:root:has(.site-github) .sl-markdown-content pre,
+:root:has(.site-github) .expressive-code figure {
+  border-radius: 6px;
+}
+/* GitHub Docsの目次の先頭の製品名。 */
+nav.sidebar a.product-top {
+  font-weight: 600;
+  font-size: 1rem;
+}

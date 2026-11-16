@@ -1,0 +1,50 @@
+name: nav
+
+# 原文のサイトの目次を取り込み、サイドバーのデータ(data/nav/)を更新する。週に1回と、手で起動したときに動く。
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "43 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  nav:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Fetch sources
+        run: |
+          git clone -q --depth 1 --filter=blob:none --sparse https://github.com/microsoft/vscode-docs.git /tmp/vscode-docs
+          git -C /tmp/vscode-docs sparse-checkout set --no-cone '/docs/toc.json' '/api/toc.json' '/release-notes/*.md'
+          git clone -q --depth 1 --filter=blob:none --sparse https://github.com/github/docs.git /tmp/gh-docs
+          git -C /tmp/gh-docs sparse-checkout set content data/variables data/features
+        env:
+          GIT_LFS_SKIP_SMUDGE: "1"
+      - run: node pipeline/nav.ts --vscode /tmp/vscode-docs --github /tmp/gh-docs
+      - id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/nav
+          if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          git commit -m "原文の目次を更新"
+          git pull --rebase origin main && git push origin HEAD:main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: nav
+    if: ${{ needs.nav.outputs.changed == 'true' }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

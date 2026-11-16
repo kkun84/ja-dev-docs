@@ -1,0 +1,128 @@
+---
+// サイトの見出し。原文のサイトごとに、原文と同じ並びの上部のリンクを出す。
+// ロゴや製品のアイコンは使わず、「非公式の日本語訳」であることを常に示す。
+import Search from "@astrojs/starlight/components/Search.astro";
+import ThemeSelect from "@astrojs/starlight/components/ThemeSelect.astro";
+import { getPages } from "../lib/pages.ts";
+import { navSection, sectionTitle } from "../lib/nav.ts";
+
+const id = Astro.locals.starlightRoute.id;
+const { host } = navSection(id);
+const pages = new Set((await getPages()).map((p) => p.id));
+// 訳があればこのサイトへ、無ければ原文のサイトへ。
+const href = (page: string) => (pages.has(page) ? `/${page}/` : `https://${page}`);
+
+const site =
+  host === "code.visualstudio.com"
+    ? {
+        kind: "vscode",
+        name: "Visual Studio Code",
+        home: href("code.visualstudio.com/docs"),
+        links: [
+          ["Docs", "code.visualstudio.com/docs"],
+          ["Updates", "code.visualstudio.com/updates"],
+          ["API", "code.visualstudio.com/api"],
+        ],
+      }
+    : host === "docs.github.com"
+      ? {
+          kind: "github",
+          name: "GitHub Docs",
+          home: href("docs.github.com/en"),
+          links: [] as string[][],
+        }
+      : undefined;
+const product = sectionTitle(id);
+---
+
+<div class:list={["header", site ? `site-${site.kind}` : "site-home"]}>
+  <div class="brand">
+    {
+      site ? (
+        <>
+          <a class="name" href={site.home}>
+            {site.name}
+          </a>
+          <span class="badge" title="GitHub、Microsoftとは関係のない、非公式の機械翻訳です">
+            非公式の日本語訳
+          </span>
+          {product && <span class="product">/ {product}</span>}
+        </>
+      ) : (
+        <a class="name" href="/">
+          開発者ドキュメント日本語訳
+        </a>
+      )
+    }
+  </div>
+  {
+    site && site.links.length > 0 && (
+      <nav class="top-links" aria-label="原文のサイトの主な項目">
+        {site.links.map(([label, page]) => (
+          <a href={href(page!)}>{label}</a>
+        ))}
+      </nav>
+    )
+  }
+  <div class="tools">
+    <Search />
+    <ThemeSelect />
+  </div>
+</div>
+
+<style>
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    height: 100%;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    min-width: 0;
+    white-space: nowrap;
+  }
+  .name {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--site-header-fg, var(--sl-color-white));
+    text-decoration: none;
+  }
+  .badge {
+    font-size: 0.72rem;
+    padding: 0.05rem 0.45rem;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    color: var(--site-header-muted, var(--sl-color-gray-3));
+  }
+  .product {
+    color: var(--site-header-muted, var(--sl-color-gray-3));
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .top-links {
+    display: none;
+    gap: 1.25rem;
+  }
+  .top-links a {
+    color: var(--site-header-fg, var(--sl-color-white));
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  .top-links a:hover {
+    text-decoration: underline;
+  }
+  .tools {
+    margin-inline-start: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  @media (min-width: 50rem) {
+    .top-links {
+      display: flex;
+    }
+  }
+</style>

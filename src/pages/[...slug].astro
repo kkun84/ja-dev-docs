@@ -1,18 +1,20 @@
 ---
 // 訳があるページ。ビルド時に静的なHTMLにする。モデルごとの訳をすべて入れ、ブラウザで切り替える。
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
-import { getPages, sidebar, type Page } from "../lib/pages.ts";
+import { getPages, type Page } from "../lib/pages.ts";
+import { sidebarFor } from "../lib/nav.ts";
 import { MODEL_LABELS } from "../lib/translations-loader.ts";
 import Attribution from "../components/Attribution.astro";
 
 export async function getStaticPaths() {
   const pages = await getPages();
-  return pages.map((page) => ({ params: { slug: page.id }, props: { page, nav: sidebar(pages, page.id) } }));
+  const byId = new Map(pages.map((p) => [p.id, p]));
+  return pages.map((page) => ({ params: { slug: page.id }, props: { page, nav: sidebarFor(page.id, byId) } }));
 }
 
 interface Props {
   page: Page;
-  nav: ReturnType<typeof sidebar>;
+  nav: ReturnType<typeof sidebarFor>;
 }
 const { page, nav } = Astro.props;
 const primary = page.variants[0]!;
@@ -23,7 +25,17 @@ const html = (i: number) => {
 };
 ---
 
-<StarlightPage frontmatter={{ title: primary.data.title, description: primary.data.description }} headings={primary.rendered?.metadata?.headings ?? []} sidebar={nav}>
+<StarlightPage
+  frontmatter={{
+    title: primary.data.title,
+    description: primary.data.description,
+    banner: {
+      content: `GitHub、Microsoftとは関係のない、非公式の機械翻訳です。正確な内容は<a href="${primary.data.record.url}">原文(英語)</a>で確認してください。`,
+    },
+  }}
+  headings={primary.rendered?.metadata?.headings ?? []}
+  sidebar={nav}
+>
   {
     page.variants.length > 1 && (
       <label class="model-switch">

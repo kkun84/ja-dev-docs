@@ -17,6 +17,8 @@ export default defineConfig({
       locales: { root: { label: "日本語", lang: "ja" } },
       social: [{ icon: "github", label: "GitHub", href: "https://github.com/kkun84/ja-dev-docs" }],
       pagefind: true,
+      customCss: ["./src/styles/sites.css"],
+      components: { Header: "./src/components/Header.astro" },
     }),
   ],
 });

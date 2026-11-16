@@ -10,10 +10,6 @@ on:
         required: false
   schedule:
     - cron: "17 * * * *"
-  # 実装中の確かめ用。mainに入れる前に消す。
-  push:
-    branches: [pipeline]
-    paths: [pipeline/*.ts]
 
 permissions:
   contents: write
@@ -37,11 +33,12 @@ jobs:
       - run: npm test
       - name: Translate and publish
         env:
-          URLS: ${{ inputs.urls || (github.event_name == 'push' && 'https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github https://docs.github.com/en/get-started/learning-about-github/access-permissions-on-github') || '' }}
+          URLS: ${{ inputs.urls }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
-          SITE_URL: ${{ vars.SITE_URL }}
-          QUEUE_SECRET: ${{ secrets.QUEUE_SECRET }}
+          TURNSTILE_SITE_KEY: ${{ vars.TURNSTILE_SITE_KEY }}
+          TURNSTILE_SECRET: ${{ secrets.TURNSTILE_SECRET }}
+          DISPATCH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |

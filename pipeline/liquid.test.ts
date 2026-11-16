@@ -25,6 +25,10 @@ describe("expandLiquid", () => {
     expect(await expandLiquid("See [AUTOTITLE](/get-started/x#y). Click {% octicon \"plus\" aria-label=\"plus\" %} Add.", ctx)).toBe("See [About X](/get-started/x#y). Click Add.");
   });
 
+  it("太字の中のアイコンを除いても、太字が崩れない", async () => {
+    expect(await expandLiquid("Click **{% octicon \"agent\" aria-label=\"x\" %} Agents** tab.", ctx)).toBe("Click **Agents** tab.");
+  });
+
   it("raw の中は展開しない", async () => {
     expect(await expandLiquid("{% raw %}{% ifversion fpt %}{{ x }}{% endraw %}", ctx)).toBe("{% ifversion fpt %}{{ x }}");
   });

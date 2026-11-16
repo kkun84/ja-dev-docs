@@ -1,6 +1,6 @@
 ---
 // 開き方の説明。サイトのURLは設定から作る。
-const site = (Astro.site?.origin ?? "https://ja.example.com").replace(/\/$/, "");
+const site = (Astro.site?.origin ?? "https://ja.keke.works").replace(/\/$/, "");
 const host = new URL(site).host;
 const bookmarklet = `javascript:location.href='${site}/'+location.href.replace(/^https?:\\/\\//,'')`;
 ---

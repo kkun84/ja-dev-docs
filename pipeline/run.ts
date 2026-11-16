@@ -1,23 +1,25 @@
 // GitHub Actionsで動かす翻訳の本体。
 //
-// 1. 訳すページを決める。入力のURLがあればそれを、無ければWorkerの順番待ちの列から受け取る。
+// 1. 訳すページを決める。入力のURLがあればそれを、無ければD1の順番待ちの列から取り出す。
 // 2. 訳して content/ に書き、コミットしてpushする。
 // 3. Cloudflareの設定があれば、サイトをビルドしてデプロイする。
-// 4. Workerに結果を知らせる。訳せなかったページは、無料枠の上限のときだけ列に戻す。
+// 4. 列に結果を書く。訳せなかったページは、無料枠の上限のときだけ列に戻す。
 // 列が空になるか、時間の上限まで繰り返す。
 
 import { execFileSync } from "node:child_process";
 import { parsePageUrl } from "./sources.ts";
 import { geminiCaller } from "./model.ts";
 import { DEFAULT_CHAIN, loadGlossaries, translateOne } from "./job.ts";
+import { wranglerD1 } from "./d1.ts";
+import { takeNext, finish } from "../src/lib/queue.ts";
 
 const env = process.env;
 const apiKey = env.GEMINI_API_KEY;
 if (!apiKey) throw new Error("GEMINI_API_KEY is not set");
 const opts = { chain: DEFAULT_CHAIN, call: geminiCaller(apiKey), out: "content" };
 const glossaries = await loadGlossaries();
-const queue = env.SITE_URL && env.QUEUE_SECRET ? { site: env.SITE_URL.replace(/\/$/, ""), secret: env.QUEUE_SECRET } : undefined;
 const canDeploy = Boolean(env.CLOUDFLARE_API_TOKEN && env.CLOUDFLARE_ACCOUNT_ID);
+const db = canDeploy ? wranglerD1() : undefined;
 const deadline = Date.now() + 45 * 60_000;
 let manual = (env.URLS ?? "").split(/\s+/).filter(Boolean);
 
@@ -29,7 +31,7 @@ interface Result {
 }
 
 while (Date.now() < deadline) {
-  const pages = manual.length ? manual.splice(0) : queue ? await next(5) : [];
+  const pages = manual.length ? manual.splice(0) : db ? await takeNext(db, 5).catch((e) => (console.error(`queue: ${e}`), [])) : [];
   if (!pages.length) break;
   const results: Result[] = [];
   let quota = false;
@@ -54,23 +56,8 @@ while (Date.now() < deadline) {
     }
   }
   publish();
-  if (queue) await finish(results);
+  if (db) for (const r of results) await finish(db, r.page, r.ok, r.error, r.retry);
   if (quota) break;
-}
-
-async function next(limit: number): Promise<string[]> {
-  const res = await fetch(`${queue!.site}/api/queue/next?limit=${limit}`, { method: "POST", headers: { authorization: `Bearer ${queue!.secret}` } });
-  if (!res.ok) throw new Error(`queue/next: HTTP ${res.status}`);
-  return ((await res.json()) as { pages: string[] }).pages;
-}
-
-async function finish(results: Result[]) {
-  const res = await fetch(`${queue!.site}/api/queue/finish`, {
-    method: "POST",
-    headers: { authorization: `Bearer ${queue!.secret}`, "content-type": "application/json" },
-    body: JSON.stringify({ results }),
-  });
-  if (!res.ok) throw new Error(`queue/finish: HTTP ${res.status}`);
 }
 
 function publish() {
@@ -85,6 +72,6 @@ function publish() {
   git("push", "origin", `HEAD:${env.GITHUB_REF_NAME ?? "main"}`);
   if (canDeploy) {
     execFileSync("npm", ["run", "build"], { stdio: "inherit" });
-    execFileSync("npx", ["wrangler", "deploy"], { stdio: "inherit" });
+    execFileSync("bash", ["scripts/deploy.sh"], { stdio: "inherit" });
   }
 }

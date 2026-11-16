@@ -5,7 +5,7 @@ import cloudflare from "@astrojs/cloudflare";
 import remarkCjkFriendly from "remark-cjk-friendly";
 
 export default defineConfig({
-  site: process.env.SITE_URL ?? "https://ja.example.com",
+  site: process.env.SITE_URL ?? "https://ja.keke.works",
   // 画像の変換はしない(Cloudflare Imagesを使わない)。ビルド時の事前描画はNodeで行う(読み込み処理がファイルを読むため)。
   adapter: cloudflare({ imageService: "passthrough", prerenderEnvironment: "node" }),
   markdown: {

@@ -33,7 +33,8 @@ export async function expandLiquid(text: string, ctx: LiquidContext, depth = 0):
   });
 
   text = await evaluateIfs(text, ctx);
-  text = text.replace(/[ \t]?\{%-?\s*octicon\s[^%]*-?%\}/g, "");
+  // アイコンを除く。前後の両方に空白があれば1つ残し、片方だけなら残さない(**{% octicon %} Agents** が ** Agents** にならないように)。
+  text = text.replace(/([ \t]?)\{%-?\s*octicon\s[^%]*-?%\}([ \t]?)/g, (_, a: string, b: string) => (a && b ? " " : ""));
   text = await replaceAsync(text, /\[AUTOTITLE\]\(([^)\s#]+)(#[^)\s]*)?\)/g, async (all, path: string, anchor = "") => {
     const title = await ctx.title(path);
     return title ? `[${title}](${path}${anchor})` : all;

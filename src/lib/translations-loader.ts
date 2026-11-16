@@ -48,7 +48,7 @@ export function translationsLoader(dir = "content"): Loader {
           markdown = markdown.slice(h1[0].length);
           headings = headings.slice(1);
         }
-        markdown = rewriteLinks(markdown, record, pages);
+        markdown = alertsToAsides(rewriteLinks(markdown, record, pages));
         const rendered = await renderMarkdown(markdown);
         fixHeadingIds(rendered, headings);
         store.set({
@@ -97,4 +97,38 @@ function fixHeadingIds(rendered: { html: string; metadata?: { headings?: { depth
     return `<h${level}${attrs} id="${next}"`;
   });
   for (const h of rendered.metadata?.headings ?? []) h.slug = map.get(h.slug) ?? h.slug;
+}
+
+const ASIDE: Record<string, [string, string]> = {
+  NOTE: ["note", "メモ"],
+  TIP: ["tip", "ヒント"],
+  IMPORTANT: ["note", "重要"],
+  WARNING: ["caution", "警告"],
+  CAUTION: ["danger", "注意"],
+};
+
+// GitHubのアラート(> [!NOTE])を、Starlightの補足と同じHTMLにする。リストの中の字下げにも対応する。
+// 中身はMarkdownのまま残すため、前後に空行を入れる。
+export function alertsToAsides(markdown: string): string {
+  const lines = markdown.split("\n");
+  const out: string[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    const m = /^([ \t]*)>[ \t]?\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\][ \t]*$/.exec(lines[i]!);
+    if (!m) {
+      out.push(lines[i]!);
+      continue;
+    }
+    const indent = m[1]!;
+    const [variant, title] = ASIDE[m[2]!]!;
+    const body: string[] = [];
+    while (i + 1 < lines.length && lines[i + 1]!.startsWith(indent + ">")) body.push(indent + lines[++i]!.slice(indent.length + 1).replace(/^[ \t]/, ""));
+    out.push(
+      `${indent}<aside aria-label="${title}" class="starlight-aside starlight-aside--${variant}"><p class="starlight-aside__title" aria-hidden="true">${title}</p><div class="starlight-aside__content">`,
+      "",
+      ...body,
+      "",
+      `${indent}</div></aside>`,
+    );
+  }
+  return out.join("\n");
 }

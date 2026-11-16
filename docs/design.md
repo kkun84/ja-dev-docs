@@ -70,15 +70,15 @@ AstroのドキュメントテーマStarlightを使います。
 
 ## URL
 
-このサイトは、持っているドメインのサブドメイン(例: `ja.<ドメイン>`)で公開します。このサイトのURLは、原文のURLを、このサイトのドメインの後ろにそのまま付けた形にします。
+このサイトは、持っているドメインのサブドメイン`ja.keke.works`で公開します。`keke.works`はCloudflareのDNSにあるので、WorkerのCustom Domainで証明書も自動で発行されます。このサイトのURLは、原文のURLを、このサイトのドメインの後ろにそのまま付けた形にします。
 
 ```
 原文:     https://code.visualstudio.com/docs/editor/codebasics
-日本語訳: https://ja.<ドメイン>/https://code.visualstudio.com/docs/editor/codebasics
+日本語訳: https://ja.keke.works/https://code.visualstudio.com/docs/editor/codebasics
 ```
 
 - 読者は、原文のURLをコピーし、このサイトのドメインの後ろに貼るだけで日本語訳を開けます。
-- `https://`を省いた形(`https://ja.<ドメイン>/code.visualstudio.com/...`)も受け付けます。こちらを正規のURLとし、`https://`付きの形からはリダイレクトします。
+- `https://`を省いた形(`https://ja.keke.works/code.visualstudio.com/...`)も受け付けます。こちらを正規のURLとし、`https://`付きの形からはリダイレクトします。
 - URLエンコードされた形(`https%3A%2F%2Fcode.visualstudio.com%2F...`)も受け付けます。Chromeのサイト内検索のショートカットから開くと、この形になるためです。
 - GitHub Docsの`/en/`などの言語の部分は取り除きます。バージョンの部分(`/enterprise-cloud@latest/`など)は残し、そのバージョンの本文として訳します。
 
@@ -86,10 +86,10 @@ AstroのドキュメントテーマStarlightを使います。
 
 サイトに、次の2つの設定方法を載せます。
 
-- Chromeのサイト内検索のショートカット。URLを`https://ja.<ドメイン>/%s`、ショートカットを`ja`にして登録します。読者は、アドレスバーに`ja`と入力してTabキーを押し、原文のURLを貼ってEnterキーを押せば、日本語訳を開けます。
-- ブックマークレット。`javascript:location.href='https://ja.<ドメイン>/'+location.href`をブックマークとして登録します。原文のページを開いた状態でこのブックマークを押せば、日本語訳を開けます。iPhoneのSafariでも使えます。
+- Chromeのサイト内検索のショートカット。URLを`https://ja.keke.works/%s`、ショートカットを`ja`にして登録します。読者は、アドレスバーに`ja`と入力してTabキーを押し、原文のURLを貼ってEnterキーを押せば、日本語訳を開けます。
+- ブックマークレット。`javascript:location.href='https://ja.keke.works/'+location.href.replace(/^https?:\/\//,'')`をブックマークとして登録します。原文のページを開いた状態でこのブックマークを押せば、日本語訳を開けます。iPhoneのSafariでも使えます。
 
-原文のホスト名の後ろにこのサイトのドメインを足す形(`code.visualstudio.com.ja.<ドメイン>`)は採りません。アドレスバーでURLの途中を書き換える必要があり、貼り付けや入力の手間が増えるためです。
+原文のホスト名の後ろにこのサイトのドメインを足す形(`code.visualstudio.com.ja.keke.works`)は採りません。アドレスバーでURLの途中を書き換える必要があり、貼り付けや入力の手間が増えるためです。
 
 ## ページの表示
 
@@ -123,7 +123,7 @@ Workerがその場でページを返します。
 翻訳は、順番待ちの列から自動で順に行います。
 
 1. 読者が翻訳リクエストのボタンを押すと、WorkerがD1の順番待ちの列に記録します。同じページへのリクエストはまとめ、件数を数えます。
-2. 記録と同時に、WorkerがGitHub Actionsのワークフローを毎回起動します。実行中かどうかはWorkerでは判定しません。同時に走らせないことは、Actionsの`concurrency`で保証します。実行中のジョブがあれば、新しいジョブはその終了を待ってから始まり、列を最初から確かめ直します。実行中のジョブが列の確認を終えた直後に入ったリクエストも、待っているジョブが拾います。
+2. 記録と同時に、WorkerがGitHub Actionsのワークフローを毎回起動します。ActionsはwranglerでD1を直接読み書きします。Workerに列を操作するAPIを置かないので、共有の秘密が要りません。実行中かどうかはWorkerでは判定しません。同時に走らせないことは、Actionsの`concurrency`で保証します。実行中のジョブがあれば、新しいジョブはその終了を待ってから始まり、列を最初から確かめ直します。実行中のジョブが列の確認を終えた直後に入ったリクエストも、待っているジョブが拾います。
 3. Actionsは、リクエストの多い順、同数なら古い順に、列が空になるまで訳します。無料枠の1分あたりの上限を守ります。各ページはGemini 3.5 Flash-Liteで訳し、構造検査に落ちたら1回だけ訳し直します。それでも落ちたら、Gemini 3.8 Flashを推論の量`low`で使って訳します。Flash-Liteがその日の上限に達したら、残りの列はPLaMo 3 Translate 8BでActionsのCPUを使って訳し続けます。こちらは遅いので、読者の待ち時間は長くなります。Flash-Liteの訳は、上限が戻った後に追加します。
 4. リクエストを契機にした起動とは別に、Actionsの`schedule`で1時間ごとにもワークフローを起動します。列が空なら、すぐに終わります。この起動が、上限が戻った後に、上限で後回しにしたFlash-Liteの訳と、追加の訳を進めます。
 5. 訳し終えたら構造検査を通し、訳文をコミットし、サイトをビルドして公開します。
@@ -245,12 +245,11 @@ Workerがその場でページを返します。
 
 ## 次の作業
 
-1. AstroとStarlightで、サイトの雛形を作ります。
-2. URLの受け付け、未翻訳ページのリクエストボタン、D1の順番待ちの列を作ります。
-3. 試訳のスクリプトを、翻訳のワークフローに組み込みます。
-4. PLaMo 3 Translate 8BをActionsのCPUで試訳し、速度を測ります。
+1. Cloudflareの準備をします。APIトークン、Turnstileのウィジェット、ワークフローを起動するGitHubのトークンを作り、GitHubのシークレットに登録します。手順はREADMEにあります。
+2. `ja.keke.works`に初めてデプロイし、リクエストから公開までを通しで確かめます。
+3. PLaMo 3 Translate 8BをActionsのCPUで試訳し、速度を測ります。
+4. 「この訳が読みやすい」の投票を作ります。
 
 ## 未決事項
 
-- 使うドメインの名前と、サブドメインの名前
 - 翻訳文のライセンス

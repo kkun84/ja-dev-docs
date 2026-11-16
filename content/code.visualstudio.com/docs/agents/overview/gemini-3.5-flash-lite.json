@@ -1,0 +1,405 @@
+{
+  "url": "https://code.visualstudio.com/docs/agents/overview",
+  "repo": "microsoft/vscode-docs",
+  "file": "docs/agents/overview.md",
+  "commit": "2e15f50c0c949bb41e6d15447224a2f5389d9bd6",
+  "translatedAt": "2026-11-16T17:35:53.735Z",
+  "model": "gemini-3.5-flash-lite",
+  "chain": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash@low"
+  ],
+  "segments": 60,
+  "segmentsByModel": {
+    "gemini-3.5-flash-lite": 60
+  },
+  "untranslated": [],
+  "headings": [
+    "Build with AI in VS Code",
+    "Choose where to start",
+    "Choose how you work",
+    "Choose your models, agents, and tools",
+    "Continue across interfaces and machines",
+    "Stay in control",
+    "Next steps"
+  ],
+  "unresolvedLiquid": [],
+  "steps": [
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 60,
+      "failed": [
+        {
+          "id": 1,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 2,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 3,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 4,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 5,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 6,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 7,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 8,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 9,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 10,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 11,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 12,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 13,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 14,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 15,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 16,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 17,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 18,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 19,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 20,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 21,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 22,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 23,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 24,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 25,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 26,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 27,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 28,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 29,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 30,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 31,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 32,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 33,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 34,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 35,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 36,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 37,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 38,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 39,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 40,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 41,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 42,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 43,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 44,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 45,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 46,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 47,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 48,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 49,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 50,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 51,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 52,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 53,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 54,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 55,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 56,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 57,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 58,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 59,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 60,
+          "errors": [
+            "request"
+          ]
+        }
+      ],
+      "seconds": 325.741,
+      "error": "request: HTTP 503"
+    },
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 60,
+      "failed": [],
+      "finishReason": "STOP",
+      "seconds": 16.471
+    }
+  ]
+}

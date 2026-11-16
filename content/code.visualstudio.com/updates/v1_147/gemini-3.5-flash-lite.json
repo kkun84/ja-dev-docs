@@ -3,7 +3,7 @@
   "repo": "microsoft/vscode-docs",
   "file": "release-notes/v1_147.md",
   "commit": "dd1989203e511052ddb9892294ddff4e6b49d403",
-  "translatedAt": "2026-11-16T00:15:05.543Z",
+  "translatedAt": "2026-11-16T00:18:56.263Z",
   "model": "gemini-3.5-flash-lite",
   "chain": [
     "gemini-3.5-flash-lite",
@@ -12,11 +12,9 @@
   ],
   "segments": 30,
   "segmentsByModel": {
-    "gemini-3.5-flash-lite": 29
+    "gemini-3.5-flash-lite": 30
   },
-  "untranslated": [
-    29
-  ],
+  "untranslated": [],
   "headings": [
     "Visual Studio Code 1.147 <!-- %IF INSIDERS % (Insiders) %ENDIF % -->",
     "November 12, 2026",
@@ -28,44 +26,9 @@
     {
       "spec": "gemini-3.5-flash-lite",
       "sent": 30,
-      "failed": [
-        {
-          "id": 29,
-          "errors": [
-            "untranslated"
-          ]
-        }
-      ],
+      "failed": [],
       "finishReason": "STOP",
-      "seconds": 4.985
-    },
-    {
-      "spec": "gemini-3.5-flash-lite",
-      "sent": 1,
-      "failed": [
-        {
-          "id": 29,
-          "errors": [
-            "untranslated"
-          ]
-        }
-      ],
-      "finishReason": "STOP",
-      "seconds": 1.322
-    },
-    {
-      "spec": "gemini-3.8-flash@low",
-      "sent": 1,
-      "failed": [
-        {
-          "id": 29,
-          "errors": [
-            "untranslated"
-          ]
-        }
-      ],
-      "finishReason": "STOP",
-      "seconds": 13.363
+      "seconds": 4.595
     }
   ]
 }

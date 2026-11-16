@@ -3,7 +3,7 @@
   "repo": "microsoft/vscode-docs",
   "file": "docs/agent-customization/custom-instructions.md",
   "commit": "dd1989203e511052ddb9892294ddff4e6b49d403",
-  "translatedAt": "2026-11-16T00:14:48.942Z",
+  "translatedAt": "2026-11-16T00:18:07.685Z",
   "model": "gemini-3.5-flash-lite",
   "chain": [
     "gemini-3.5-flash-lite",
@@ -38,7 +38,7 @@
       "sent": 131,
       "failed": [],
       "finishReason": "STOP",
-      "seconds": 12.181
+      "seconds": 43.996
     }
   ]
 }

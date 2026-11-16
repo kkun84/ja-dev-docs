@@ -3,7 +3,7 @@
   "repo": "microsoft/vscode-docs",
   "file": "docs/agents/overview.md",
   "commit": "dd1989203e511052ddb9892294ddff4e6b49d403",
-  "translatedAt": "2026-11-16T00:14:27.373Z",
+  "translatedAt": "2026-11-16T00:17:53.911Z",
   "model": "gemini-3.5-flash-lite",
   "chain": [
     "gemini-3.5-flash-lite",
@@ -29,9 +29,23 @@
     {
       "spec": "gemini-3.5-flash-lite",
       "sent": 60,
+      "failed": [
+        {
+          "id": 28,
+          "errors": [
+            "placeholder"
+          ]
+        }
+      ],
+      "finishReason": "STOP",
+      "seconds": 8.45
+    },
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 1,
       "failed": [],
       "finishReason": "STOP",
-      "seconds": 17.169
+      "seconds": 0.792
     }
   ]
 }

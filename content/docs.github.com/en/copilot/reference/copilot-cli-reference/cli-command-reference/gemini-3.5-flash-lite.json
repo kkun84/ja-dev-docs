@@ -1,0 +1,164 @@
+{
+  "url": "https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference",
+  "repo": "github/docs",
+  "file": "content/copilot/reference/copilot-cli-reference/cli-command-reference.md",
+  "commit": "84bdf4c88dcbd2402b0a2b3ab537c5a104e23a6a",
+  "translatedAt": "2026-11-16T19:42:11.863Z",
+  "model": "gemini-3.5-flash-lite",
+  "chain": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash@low"
+  ],
+  "segments": 1914,
+  "segmentsByModel": {
+    "gemini-3.5-flash-lite": 1914
+  },
+  "untranslated": [],
+  "headings": [
+    "Command-line commands",
+    "copilot login options",
+    "Using copilot completion",
+    "Usage examples",
+    "Managing plugins non-interactively",
+    "Using copilot config",
+    "Using copilot instruction",
+    "Using copilot lsp",
+    "Importing memories",
+    "Using copilot workflow run",
+    "Using copilot sandbox ca",
+    "The sessions sidebar",
+    "Session status indicators",
+    "Sessions sidebar settings",
+    "Global shortcuts in the interactive interface",
+    "Timeline shortcuts in the interactive interface",
+    "Tasks dialog shortcuts",
+    "Restoring an interrupted session",
+    "Session picker shortcuts",
+    "Pre-conversation environment picker",
+    "Sidebar and sessions tab shortcuts",
+    "Diff mode shortcuts",
+    "Navigation shortcuts in the interactive interface",
+    "Slash commands in the interactive interface",
+    "Collecting and sharing debug logs",
+    "Command-line options",
+    "Plan-then-autopilot",
+    "Enterprise-managed sandbox floor",
+    "Restricting the allow-all options",
+    "What disable turns off",
+    "Unrecognized values",
+    "Where the setting can come from",
+    "How the restriction behaves when the policy cannot be confirmed",
+    "Supported models",
+    "Tool availability values",
+    "Shell tools",
+    "File operation tools",
+    "Agent and task delegation tools",
+    "Other tools",
+    "Tool permission patterns",
+    "Environment variables",
+    "Configuration file settings",
+    "Project initialization for Copilot",
+    "Custom instructions locations",
+    "Custom instructions imports",
+    "Hooks reference",
+    "MCP server configuration",
+    "copilot mcp subcommand",
+    "Transport types",
+    "Local server configuration fields",
+    "Tool snapshot caching",
+    "Private npm registry",
+    "Remote server configuration fields",
+    "OAuth re-authentication",
+    "Account-derived WorkIQ",
+    "Headless OAuth (client_credentials grant)",
+    "Filter mapping",
+    "Built-in MCP servers",
+    "GitHub MCP server tools",
+    "Resource discovery",
+    "MCP server naming",
+    "MCP tool name sanitization",
+    "MCP server trust levels",
+    "MCP server loading priority",
+    "Enterprise MCP allowlist",
+    "Migrating from .vscode/mcp.json",
+    "Stdio server output",
+    "Skills reference",
+    "Skill frontmatter fields",
+    "Skill locations",
+    "Managing skills non-interactively",
+    "Commands (alternative skill format)",
+    "Extension modes",
+    "Custom agents reference",
+    "Built-in agents",
+    "Custom agent frontmatter fields",
+    "Custom agent locations",
+    "Repository custom instructions for subagents",
+    "Agent communication",
+    "Relation labels in list_agents",
+    "Scoped listing",
+    "Scoped messaging",
+    "Subagent limits",
+    "Sidekick agents",
+    "Sidekick triggers",
+    "Sidekick configuration fields",
+    "Permission approval responses",
+    "Parent-domain URL approvals",
+    "Security",
+    "Plan mode",
+    "Command safety analysis",
+    "Environment variable denylist",
+    "web_fetch SSRF protection",
+    "Sandbox tool directory grants",
+    "OpenTelemetry monitoring",
+    "Further reading"
+  ],
+  "unresolvedLiquid": [],
+  "steps": [
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 1914,
+      "failed": [
+        {
+          "id": 630,
+          "errors": [
+            "placeholder"
+          ]
+        },
+        {
+          "id": 650,
+          "errors": [
+            "placeholder"
+          ]
+        },
+        {
+          "id": 658,
+          "errors": [
+            "placeholder"
+          ]
+        },
+        {
+          "id": 915,
+          "errors": [
+            "placeholder"
+          ]
+        },
+        {
+          "id": 1078,
+          "errors": [
+            "untranslated"
+          ]
+        }
+      ],
+      "finishReason": "STOP",
+      "seconds": 1323.105
+    },
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 5,
+      "failed": [],
+      "finishReason": "STOP",
+      "seconds": 10.786
+    }
+  ]
+}

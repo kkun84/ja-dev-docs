@@ -1,0 +1,35 @@
+{
+  "url": "https://docs.github.com/en/get-started/learning-about-github/access-permissions-on-github",
+  "repo": "github/docs",
+  "file": "content/get-started/learning-about-github/access-permissions-on-github.md",
+  "commit": "84bdf4c88dcbd2402b0a2b3ab537c5a104e23a6a",
+  "translatedAt": "2026-11-16T18:03:02.716Z",
+  "model": "gemini-3.5-flash-lite",
+  "chain": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash@low"
+  ],
+  "segments": 18,
+  "segmentsByModel": {
+    "gemini-3.5-flash-lite": 18
+  },
+  "untranslated": [],
+  "headings": [
+    "About access permissions on GitHub",
+    "Personal accounts",
+    "Organization accounts",
+    "Enterprise accounts",
+    "Further reading"
+  ],
+  "unresolvedLiquid": [],
+  "steps": [
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 18,
+      "failed": [],
+      "finishReason": "STOP",
+      "seconds": 37.69
+    }
+  ]
+}

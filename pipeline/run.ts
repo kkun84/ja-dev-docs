@@ -9,7 +9,7 @@
 // 翻訳モデルの呼び出し回数は、D1に1日分を数え、無料枠の上限の手前で止める。
 
 import { execFileSync } from "node:child_process";
-import { appendFileSync } from "node:fs";
+import { appendFileSync, existsSync } from "node:fs";
 import { parsePageUrl } from "./sources.ts";
 import { geminiCaller, QuotaExceeded, type Caller } from "./model.ts";
 import { DEFAULT_CHAIN, loadGlossaries, translateOne, PageFailed } from "./job.ts";
@@ -72,6 +72,7 @@ try {
 
 function commitAndPush() {
   const git = (...args: string[]) => execFileSync("git", args, { stdio: "inherit" });
+  if (!existsSync("content")) return;
   git("add", "content");
   try {
     execFileSync("git", ["diff", "--cached", "--quiet"]);

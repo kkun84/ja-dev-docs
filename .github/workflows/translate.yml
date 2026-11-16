@@ -44,7 +44,7 @@ jobs:
       - id: run
         name: Translate
         env:
-          URLS: ${{ inputs.urls || (github.event_name == 'push' && 'https://code.visualstudio.com/docs/agents/overview https://code.visualstudio.com/docs/agent-customization/custom-instructions https://code.visualstudio.com/updates/v1_147 https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github https://docs.github.com/en/get-started/learning-about-github/access-permissions-on-github https://code.visualstudio.com/docs/editing/codebasics https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax') || '' }}
+          URLS: ${{ inputs.urls || (github.event_name == 'push' && 'https://code.visualstudio.com/docs/agents/overview https://docs.github.com/en/get-started/learning-about-github/access-permissions-on-github') || '' }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
           # 列(D1)の読み書きにだけ使う。

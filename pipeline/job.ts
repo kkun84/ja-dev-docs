@@ -60,6 +60,12 @@ export async function translateOne(ref: PageRef, opts: JobOptions, glossaries: R
   if (failedRatio > MAX_UNTRANSLATED_RATIO) {
     const apiTrouble = result.steps.some((s) => s.error);
     const quota = result.steps.some((s) => s.error === "quota");
+    // ログで原因が分かるよう、段ごとに、送った数、落ちた数、落ちた理由の内訳、APIのエラーの種類を出す。
+    for (const st of result.steps) {
+      const reasons: Record<string, number> = {};
+      for (const f of st.failed) for (const e of f.errors) reasons[e] = (reasons[e] ?? 0) + 1;
+      console.error(`  ${st.spec}: sent ${st.sent}, failed ${st.failed.length}, ${st.seconds}s, ${st.error ?? "ok"}, ${JSON.stringify(reasons)}`);
+    }
     throw new PageFailed(quota ? "quota" : `${result.untranslated.length} of ${result.segments} segments untranslated`, apiTrouble);
   }
 

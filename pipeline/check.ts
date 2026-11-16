@@ -12,9 +12,10 @@ export function segmentErrors(source: string, output: string | undefined): strin
   if (!same(tokensIn(source), tokensIn(output))) errors.push("placeholder");
   if (!same(tags(source), tags(output))) errors.push("html tag");
   if (/⟦|⟧/.test(output.replace(/⟦[^⟧\s]{1,12}⟧/g, ""))) errors.push("broken placeholder");
-  // 4語以上の英文なのに日本語が無いものは、訳し漏れとみなす。
-  const words = source.replace(/⟦[^⟧]*⟧/g, " ").replace(HTML_TAG_RE, " ").match(/[A-Za-z]{2,}/g) ?? [];
-  if (words.length >= 4 && !JAPANESE_RE.test(output)) errors.push("untranslated");
+  // 小文字で始まる語(the、andなど)が3つ以上ある文なのに日本語が無いものは、訳し漏れとみなす。
+  // 製品名だけの断片(Visual Studio Code 1.147 など)は大文字で始まる語なので、英語のままでよい。
+  const words = source.replace(/⟦[^⟧]*⟧/g, " ").replace(HTML_TAG_RE, " ").match(/\b[a-z][a-z]+\b/g) ?? [];
+  if (words.length >= 3 && !JAPANESE_RE.test(output)) errors.push("untranslated");
   return errors;
 }
 

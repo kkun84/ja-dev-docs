@@ -9,6 +9,8 @@ import { dirname, join } from "node:path";
 import { parseArgs } from "node:util";
 import { parse as parseYaml } from "yaml";
 import { parsePageUrl, rawUrl, loadVariables, httpFetcher, type PageRef } from "./sources.ts";
+import { expandLiquid } from "./liquid.ts";
+import { githubContext } from "./github.ts";
 import { translatePage } from "./page.ts";
 import { geminiCaller, sleep } from "./model.ts";
 
@@ -56,9 +58,14 @@ async function translateOne(ref: PageRef) {
     }
   }
   if (!file || text === undefined) throw new Error("source file not found");
+  const pinned = { ...source, branch: commit ?? source.branch };
+  if (source.host === "docs.github.com") {
+    const fm = /^---\n[\s\S]*?\n---\n/.exec(text)?.[0] ?? "";
+    text = fm + (await expandLiquid(text.slice(fm.length), githubContext(pinned)));
+  }
 
   const paths = [...text.matchAll(/\{%-?\s*data\s+variables\.([\w.\-]+)/g)].map((m) => m[1]!);
-  const variables = await loadVariables({ ...source, branch: commit ?? source.branch }, paths);
+  const variables = await loadVariables(pinned, paths);
   const model = chain[0]!.split("@")[0]!;
   const started = new Date();
   const result = await translatePage(text, {
@@ -102,3 +109,4 @@ async function latestCommit(repo: string, branch: string): Promise<string | unde
   if (!res.ok) return undefined;
   return ((await res.json()) as { sha: string }).sha;
 }
+

@@ -73,6 +73,12 @@ describe("検査", () => {
     expect(r.markdown).toBe("これはCopilotの10個目の機能です。\n");
   });
 
+  it("製品名だけの断片は英語のままでよい", async () => {
+    const echo: Caller = async (_s, segs) => ({ translations: new Map(segs.map((s) => [s.id, s.text])) });
+    const r = await translatePage("Visual Studio Code 1.147 (Insiders)\n", { ...base, chain: ["a"], call: echo });
+    expect(r.untranslated).toEqual([]);
+  });
+
   it("英文のまま返した断片は訳し漏れとして落とす", async () => {
     const echo: Caller = async (_s, segs) => ({ translations: new Map(segs.map((s) => [s.id, s.text])) });
     const r = await translatePage("This sentence has more than four words.\n", { ...base, chain: ["a"], call: echo });

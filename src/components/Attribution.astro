@@ -1,0 +1,37 @@
+---
+import type { Variant } from "../lib/pages.ts";
+import { MODEL_LABELS } from "../lib/translations-loader.ts";
+
+interface Props {
+  variant: Variant;
+}
+const { record, title } = Astro.props.variant.data;
+const host = new URL(record.url).hostname;
+const license =
+  host === "docs.github.com"
+    ? { name: "CC BY 4.0", url: "https://creativecommons.org/licenses/by/4.0/", author: "GitHub, Inc. and contributors" }
+    : { name: "CC BY 3.0 US", url: "https://creativecommons.org/licenses/by/3.0/us/", author: "Microsoft Corporation and contributors" };
+const date = record.translatedAt.slice(0, 10);
+---
+
+<aside class="attribution">
+  <p>
+    このページは、<a href={record.url}>{record.url}</a> を日本語に機械翻訳したものです。
+    原著者は {license.author}、ライセンスは <a href={license.url}>{license.name}</a> です。
+  </p>
+  <p>
+    翻訳: {MODEL_LABELS[record.model] ?? record.model}、{date}。原文のコミット:
+    {record.commit ? <a href={`https://github.com/${record.repo}/blob/${record.commit}/${record.file}`}>{record.commit.slice(0, 7)}</a> : "不明"}。
+    GitHubおよびMicrosoftとは関係のない、非公式の翻訳です。誤りがありうるので、正確な内容は原文を確認してください。
+  </p>
+</aside>
+
+<style>
+  .attribution {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+  }
+</style>

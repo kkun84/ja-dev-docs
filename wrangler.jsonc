@@ -1,0 +1,33 @@
+// Cloudflare Workers(無料プラン)の設定。
+// 訳があるページは静的ファイルとして配信し、それ以外のURLだけをWorkerが処理する。
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ja-dev-docs",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  // ja.keke.works で公開する。keke.works はCloudflareのDNSにあるので、証明書もCloudflareが発行する。
+  "routes": [{ "pattern": "ja.keke.works", "custom_domain": true }],
+  "workers_dev": false,
+  "assets": { "directory": "./dist", "binding": "ASSETS" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ja-dev-docs",
+      // database_id を書かないと、初回のデプロイでwranglerが自動で作る。
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    // GitHub Actionsのワークフローを起動する先。
+    "GITHUB_REPO": "kkun84/ja-dev-docs",
+    "GITHUB_WORKFLOW": "translate.yml",
+    "GITHUB_REF": "main",
+    // TurnstileのサイトキーはHTMLに出る公開の値。デプロイ時に --var で本物に置き換える。
+    // ここの値はCloudflareが用意しているテスト用のキー。
+    "TURNSTILE_SITE_KEY": "1x00000000000000000000AA"
+  }
+  // シークレット(scripts/deploy.sh がGitHubのシークレットから登録する):
+  //   TURNSTILE_SECRET       Turnstileの秘密鍵
+  //   GITHUB_DISPATCH_TOKEN  このリポジトリの Actions: write だけを持つ fine-grained token
+}

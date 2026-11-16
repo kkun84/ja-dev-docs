@@ -1,0 +1,44 @@
+{
+  "url": "https://code.visualstudio.com/docs/agent-customization/custom-instructions",
+  "repo": "microsoft/vscode-docs",
+  "file": "docs/agent-customization/custom-instructions.md",
+  "commit": "dd1989203e511052ddb9892294ddff4e6b49d403",
+  "translatedAt": "2026-11-16T00:18:07.685Z",
+  "model": "gemini-3.5-flash-lite",
+  "chain": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash@low"
+  ],
+  "segments": 131,
+  "segmentsByModel": {
+    "gemini-3.5-flash-lite": 131
+  },
+  "untranslated": [],
+  "headings": [
+    "Use custom instructions in VS Code",
+    "Get started with project instructions",
+    "Create project instructions",
+    "Create the file directly",
+    "Verify your instructions",
+    "How instructions apply",
+    "Apply instructions to specific files or tasks",
+    "Attach instructions to one request",
+    "Write effective instructions",
+    "Resolve conflicting instructions",
+    "Manage project and personal instructions",
+    "Instruction formats and settings",
+    "Troubleshoot instructions",
+    "Related resources"
+  ],
+  "reusables": [],
+  "steps": [
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 131,
+      "failed": [],
+      "finishReason": "STOP",
+      "seconds": 43.996
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 # ja-dev-docs
 
-GitHub DocsとVS Codeのドキュメントを、原文の構成どおりにまるごと日本語化したサイトを作るプロジェクトです。
+VS CodeとGitHubの公式ドキュメントのページを、日本語で読めるようにするサイトのプロジェクトです。
 
-VS Codeの週次リリースやagent周辺の機能、GitHub Docsの比較的新しい機能は、日本語がなかったり、公式日本語版で表やコードブロックなどの書式が大きく崩れていたりする。その穴を、日本人読者向けに埋めたい、というのがこのプロジェクトの動機です。公式のGitHub Docs日本語版は機械翻訳のため使いません。
+原文のURLの先頭を書き換えると、そのページの日本語訳を開けます。日本語訳がまだ無いページは、リクエストすると自動で訳されます。
 
-翻訳作業やサイトの実装は、このリポジトリの設計とは別に、安価な一括処理で進める想定です。まずは構成と方針を固めています。
+設計は[`docs/design.md`](docs/design.md)にあります。サイトのコードと訳文も、このリポジトリに置きます。
 
 ## 原文
 
@@ -13,5 +13,38 @@ VS Codeの週次リリースやagent周辺の機能、GitHub Docsの比較的新
 
 ## このリポジトリの中身
 
-- [`docs/site-structure.md`](docs/site-structure.md) — サイト構成案（目的、対象範囲、同期方針、URL、分量見積もり、ホスティング比較、ライセンス）
-- `docs/` — その他の構成案や方針メモ
+- [`docs/design.md`](docs/design.md) — 設計の正本
+- `docs/` — 2026-11-11に書いた設計メモ。`docs/design.md`と食い違う箇所では、`docs/design.md`を優先します
+- `pipeline/` — 翻訳。原文を取得し、骨組みを保ったまま文の断片だけをモデルで訳し、検査して `content/` に書く
+- `content/` — 訳文。`<ホスト>/<パス>/<モデル>.md` が訳文、同じ名前の `.json` がその記録
+- `data/glossary.yml` — 製品名などの変数を、訳文でどう書くかの決まり
+- `src/` — サイト(AstroとStarlight)。訳があるページは静的に、無いページとAPIはCloudflare Workersで動く
+- `migrations/` — D1の順番待ちの列
+- `.github/workflows/translate.yml` — 列から取り出して訳し、デプロイする
+
+## 開発
+
+```sh
+npm ci
+npm test            # 翻訳とリンク書き換えのテスト
+npm run build       # サイトのビルド
+npm run preview     # ビルドしてローカルのWorkerで動かす(.dev.vars にテスト用のシークレットを書く)
+GEMINI_API_KEY=... node pipeline/cli.ts https://code.visualstudio.com/docs/editing/codebasics
+```
+
+## 公開の準備
+
+GitHubのリポジトリの設定に、次を登録します。
+
+| 種類 | 名前 | 中身 |
+| --- | --- | --- |
+| シークレット | `GEMINI_API_KEY` | Google AI StudioのAPIキー(登録済み) |
+| シークレット | `CLOUDFLARE_API_TOKEN` | CloudflareのAPIトークン。Workers ScriptsとD1とWorkers Routesの編集、ゾーン`keke.works`のDNSの編集 |
+| シークレット | `CLOUDFLARE_ACCOUNT_ID` | CloudflareのアカウントID |
+| 変数 | `TURNSTILE_SITE_KEY` | `ja.keke.works`用のTurnstileのサイトキー |
+| シークレット | `TURNSTILE_SECRET` | 同じウィジェットの秘密鍵 |
+| シークレット | `DISPATCH_TOKEN` | このリポジトリだけに Actions の Read and write を持つ fine-grained token。Workerがワークフローを起動するのに使う |
+
+登録したら、Actionsの`translate`を、訳すページのURLを入れて手で起動します。訳してビルドし、`ja.keke.works`にデプロイし、D1のデータベースも作ります。
+
+費用: Cloudflare Workersの無料プランでは、上限を超えると課金されずにエラーになります。アカウントがWorkers Paidプランの場合は、超過分が課金されるので注意してください。

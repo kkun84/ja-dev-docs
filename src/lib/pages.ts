@@ -30,14 +30,27 @@ const rank = (v: Variant) => {
 
 const HOST_LABELS: Record<string, string> = { "code.visualstudio.com": "VS Code", "docs.github.com": "GitHub Docs" };
 
-// サイドバー。訳があるページだけを、原文のサイトごとに並べる。
-export function sidebar(pages: Page[]) {
-  const groups = new Map<string, { label: string; link: string }[]>();
-  for (const p of [...pages].sort((a, b) => a.id.localeCompare(b.id))) {
-    const host = p.id.split("/")[0]!;
-    const items = groups.get(host) ?? [];
-    items.push({ label: p.primary.data.title, link: `/${p.id}/` });
-    groups.set(host, items);
-  }
-  return [...groups].map(([host, items]) => ({ label: HOST_LABELS[host] ?? host, items }));
+// ページが属する節。VS Codeは docs/agents のように2階層、GitHub Docsは en/copilot のように2階層までで区切る。
+export function sectionOf(id: string): string {
+  return id.split("/").slice(0, 3).join("/");
+}
+
+// サイドバー。同じ節のページだけを並べる。全ページを並べると、1ページ足すたびに全ページのHTMLが変わり、
+// サイトの大きさがページ数の2乗で増えるため。全ページの一覧は /list/ に置く。
+export function sidebar(pages: Page[], current: string) {
+  const section = sectionOf(current);
+  const host = current.split("/")[0]!;
+  const items = pages
+    .filter((p) => sectionOf(p.id) === section)
+    .sort((a, b) => a.id.localeCompare(b.id))
+    .slice(0, 200)
+    .map((p) => ({ label: p.primary.data.title, link: `/${p.id}/` }));
+  return [
+    { label: "訳したページの一覧", link: "/list/" },
+    { label: `${HOST_LABELS[host] ?? host}: ${section.split("/").slice(1).join("/")}`, items },
+  ];
+}
+
+export function hostLabel(host: string): string {
+  return HOST_LABELS[host] ?? host;
 }

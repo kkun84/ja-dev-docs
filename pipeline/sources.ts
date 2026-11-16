@@ -6,7 +6,9 @@ export interface Source {
   host: string;
   repo: string;
   branch: string;
-  // URLのパスから、候補になるリポジトリ内のファイルを返す。先に見つかったものを使う。
+  // URLのパスを、このサイトでのページの名前に正規化する。受け付けないURLは undefined。
+  canonical(path: string): string | undefined;
+  // 正規化したパスから、候補になるリポジトリ内のファイルを返す。先に見つかったものを使う。
   candidates(path: string): string[];
 }
 
@@ -15,20 +17,30 @@ export const SOURCES: Record<string, Source> = {
     host: "code.visualstudio.com",
     repo: "microsoft/vscode-docs",
     branch: "main",
+    canonical(path) {
+      // リリースノートは、リポジトリの release-notes/v1_147 とサイトの updates/v1_147 を同じページとして扱う。
+      return path.replace(/^release-notes\//, "updates/").replace(/\.md$/, "");
+    },
     candidates(path) {
-      const p = trim(path);
-      const updates = /^updates\/(v\d+_\d+)$/.exec(p);
+      const updates = /^updates\/(v\d+_\d+)$/.exec(path);
       if (updates) return [`release-notes/${updates[1]}.md`];
-      return [`${p}.md`, `${p}/index.md`];
+      return [`${path}.md`, `${path}/index.md`];
     },
   },
   "docs.github.com": {
     host: "docs.github.com",
     repo: "github/docs",
     branch: "main",
+    canonical(path) {
+      // 言語は en に揃える。版は github.com(free-pro-team)だけを受け付ける。
+      // Enterpriseの版は本文の条件分岐が違うので、今は訳さない。
+      let p = path.replace(/^en(\/|$)/, "");
+      if (/^enterprise-(server|cloud)@/.test(p)) return undefined;
+      p = p.replace(/^free-pro-team@latest(\/|$)/, "");
+      return p ? `en/${p}` : "en";
+    },
     candidates(path) {
-      // 言語の /en/ と、バージョン(enterprise-cloud@latest など)を除く。
-      const p = trim(path).replace(/^en(\/|$)/, "").replace(/^(enterprise-server@[\d.]+|enterprise-cloud@latest|free-pro-team@latest)(\/|$)/, "");
+      const p = path.replace(/^en(\/|$)/, "");
       return p ? [`content/${p}.md`, `content/${p}/index.md`] : ["content/index.md"];
     },
   },
@@ -36,24 +48,32 @@ export const SOURCES: Record<string, Source> = {
 
 export interface PageRef {
   source: Source;
-  // URLのパス。先頭と末尾の / を除いたもの。翻訳ファイルの置き場所にも使う。
+  // 正規化したURLのパス。先頭と末尾の / は無い。ページの名前と、翻訳ファイルの置き場所に使う。
   path: string;
 }
 
-// 原文のURL(https:// の有無、URLエンコードを問わない)を解釈する。
+// パスに使ってよい文字。. や .. だけの区間は認めない(原文のリポジトリの外や、content/ の外を指させないため)。
+const SAFE_PATH_RE = /^[A-Za-z0-9@_-][A-Za-z0-9@._-]*(\/[A-Za-z0-9@_-][A-Za-z0-9@._-]*)*$/;
+const MAX_PATH_LENGTH = 300;
+
+// 原文のURL(https:// の有無、URLエンコードを問わない)を解釈し、ページの名前に正規化する。
+// 同じページを別の名前で列に入れられないよう、表記の揺れはここで1つにまとめる。
 export function parsePageUrl(input: string): PageRef | undefined {
   let s = input.trim();
-  if (/^https?%3A/i.test(s)) s = decodeURIComponent(s);
-  if (!/^https?:\/\//.test(s)) s = "https://" + s;
-  let url: URL;
   try {
-    url = new URL(s);
+    if (/^https?%3A/i.test(s)) s = decodeURIComponent(s);
+    if (!/^https?:\/\//.test(s)) s = "https://" + s;
+    const url = new URL(s);
+    const source = SOURCES[url.hostname];
+    if (!source) return undefined;
+    const raw = trim(decodeURIComponent(url.pathname));
+    if (raw.length > MAX_PATH_LENGTH || (raw && !SAFE_PATH_RE.test(raw)) || raw.split("/").some((seg) => /^\.+$/.test(seg))) return undefined;
+    const path = source.canonical(raw);
+    return path === undefined ? undefined : { source, path };
   } catch {
+    // 不正な % などで解釈できないURL。
     return undefined;
   }
-  const source = SOURCES[url.hostname];
-  if (!source) return undefined;
-  return { source, path: trim(decodeURIComponent(url.pathname)) };
 }
 
 function trim(p: string): string {

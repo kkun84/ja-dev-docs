@@ -1,11 +1,10 @@
 // Cloudflare Workers(無料プラン)の設定。
-// 訳があるページは静的ファイルとして配信し、それ以外のURLだけをWorkerが処理する。
+// 訳があるページは静的ファイルとして配信し、それ以外のURLだけをWorker(worker/index.ts)が処理する。
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "ja-dev-docs",
   "compatibility_date": "2026-11-01",
-  "compatibility_flags": ["nodejs_compat"],
-  "main": "@astrojs/cloudflare/entrypoints/server",
+  "main": "worker/index.ts",
   // ja.keke.works で公開する。keke.works はCloudflareのDNSにあるので、証明書もCloudflareが発行する。
   "routes": [{ "pattern": "ja.keke.works", "custom_domain": true }],
   "workers_dev": false,
@@ -14,10 +13,12 @@
     {
       "binding": "DB",
       "database_name": "ja-dev-docs",
-      // database_id を書かないと、初回のデプロイでwranglerが自動で作る。
+      // database_id は書かない。wranglerが名前でデータベースを引く。初回は scripts/deploy.sh が作る。
       "migrations_dir": "migrations"
     }
   ],
+  // 同じIPからのリクエストは、1分に5回まで。
+  "ratelimits": [{ "name": "REQUEST_LIMITER", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } }],
   "vars": {
     // GitHub Actionsのワークフローを起動する先。
     "GITHUB_REPO": "kkun84/ja-dev-docs",

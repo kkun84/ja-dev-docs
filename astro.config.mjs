@@ -1,13 +1,11 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
-import cloudflare from "@astrojs/cloudflare";
 import remarkCjkFriendly from "remark-cjk-friendly";
 
+// サイトは静的に出力する。訳が無いページとAPIは、Astroとは別の小さなWorker(worker/index.ts)が扱う。
 export default defineConfig({
   site: process.env.SITE_URL ?? "https://ja.keke.works",
-  // 画像の変換はしない(Cloudflare Imagesを使わない)。ビルド時の事前描画はNodeで行う(読み込み処理がファイルを読むため)。
-  adapter: cloudflare({ imageService: "passthrough", prerenderEnvironment: "node" }),
   markdown: {
     // 日本語に隣接した ** や _ も強調として扱う。
     remarkPlugins: [remarkCjkFriendly],

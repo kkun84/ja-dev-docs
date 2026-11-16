@@ -14,7 +14,8 @@ const base = { seed: "test", variables, glossary: {} };
 
 const nothing: Caller = async () => ({ translations: new Map() });
 // 断片の文頭に「訳」を付けるだけの偽の翻訳。目印やHTMLタグは保つ。
-const fake: Caller = async (_spec, segments) => ({ translations: new Map(segments.map((s) => [s.id, "訳" + s.text])) });
+// HTMLの行では、先頭のタグの後ろに付ける(本物の訳も、先頭のタグはそのまま残す)。
+const fake: Caller = async (_spec, segments) => ({ translations: new Map(segments.map((s) => [s.id, s.text.replace(/^((?:<[^>]+>)*)/, "$1訳")])) });
 
 function shape(markdown: string): string[] {
   const body = markdown.replace(/^---\n[\s\S]*?\n---\n/, "");
@@ -42,6 +43,57 @@ describe.each(fixtures)("%s", (name) => {
     const r = await translatePage(text, { ...base, chain: ["x"], call: fake });
     expect(r.untranslated).toEqual([]);
     expect(shape(r.markdown)).toEqual(shape(text));
+  });
+});
+
+describe("モデルの出力を信用しない", () => {
+  it.each([
+    ["引用になる", "This is a sentence with words.\n", "> これは文です。"],
+    ["リストになる", "This is a sentence with words.\n", "1. Foo これは文です。"],
+    ["リンクを足す", "This is a sentence with words.\n", "これは[文](javascript:alert(1))です。"],
+    ["閉じていないタグを足す", "This is a sentence with words.\n", "これは<img src=x onerror=alert(1) 文です。"],
+    ["表のセルに | を足す", "| a |\n| - |\n| This is the cell text. |\n", "これは | セルです。"],
+  ])("%s訳は採らない", async (_name, src, out) => {
+    const bad: Caller = async (s, segs, l) => {
+      const good = await fake(s, segs, l);
+      for (const seg of segs) if (/sentence|cell/.test(seg.text)) good.translations.set(seg.id, out);
+      return good;
+    };
+    const r = await translatePage(src, { ...base, chain: ["a"], call: bad });
+    expect(r.untranslated.length).toBe(1);
+  });
+});
+
+describe("組み立て", () => {
+  it("Setext見出しの下線を残す", async () => {
+    const r = await translatePage("Getting started here\n====\n\nBody text.\n", { ...base, chain: ["a"], call: fake });
+    expect(r.markdown).toBe("訳Getting started here\n====\n\n訳Body text.\n");
+  });
+
+  it("<pre> の中は訳さない", async () => {
+    const r = await translatePage("<div>\n<p>Some text here.</p>\n<pre>\nkeep this line\n</pre>\n</div>\n", { ...base, chain: ["a"], call: fake });
+    expect(r.markdown).toBe("<div>\n<p>訳Some text here.</p>\n<pre>\nkeep this line\n</pre>\n</div>\n");
+  });
+
+  it("硬い改行を保つ", async () => {
+    const r = await translatePage("> First line  \n> second line\n", { ...base, chain: ["a"], call: fake });
+    expect(r.markdown).toBe("> 訳First line  \n> second line\n");
+  });
+
+  it("裸のURLの前後の空白を残す", async () => {
+    const spaced: Caller = async (_s, segs) => ({ translations: new Map(segs.map((s) => [s.id, `詳細は${s.text.match(/⟦\w+⟧/)![0]}を参照してください。`])) });
+    const r = await translatePage("See https://example.com/docs for the details.\n", { ...base, chain: ["a"], call: spaced });
+    expect(r.markdown).toBe("詳細は https://example.com/docs を参照してください。\n");
+  });
+
+  it("kb() を既定のキー割り当てにする", async () => {
+    const r = await translatePage("Press kb(workbench.action.showCommands) to open it.\n", {
+      ...base,
+      keybinding: () => ({ win: "Ctrl+Shift+P", mac: "⇧⌘P" }),
+      chain: ["a"],
+      call: fake,
+    });
+    expect(r.markdown).toBe('訳Press <kbd title="macOS: ⇧⌘P">Ctrl+Shift+P</kbd> to open it.\n');
   });
 });
 

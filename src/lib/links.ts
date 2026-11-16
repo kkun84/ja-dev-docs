@@ -1,7 +1,8 @@
 // 訳文の中のリンクを書き換える。
 //
-// リンク先に訳があれば、このサイトの訳のページへ。無ければ原文のサイトへ。
-// 画像は原文のリポジトリから読む。
+// 描画したHTMLの a、img、video、source の属性だけを書き換える。Markdownの文字列に正規表現をかけると、
+// コードブロックの中の handlers[name](event) のような文字までリンクとして書き換えてしまうため。
+// リンク先に訳があれば、このサイトの訳のページへ。無ければ原文のサイトへ。画像は原文のサイトから読む。
 
 import { posix } from "node:path";
 
@@ -15,34 +16,38 @@ export interface PageRecord {
 // このサイトでのページの場所。原文のURLから https:// を除いたもの。
 export const pageId = (host: string, path: string) => (path ? `${host}/${path}` : host);
 
-export function rewriteLinks(markdown: string, record: PageRecord, translated: Set<string>): string {
-  const rewrite = (href: string, image: boolean) => resolveHref(href, record, translated, image);
-  return markdown
-    .replace(/(!?)\[((?:[^\[\]]|\[[^\]]*\])*)\]\((<[^>]*>|[^)\s]+)((?:\s+"[^"]*")?)\)/g, (all, bang: string, text: string, href: string, title: string) => {
-      const target = href.replace(/^<|>$/g, "");
-      return `${bang}[${text}](${rewrite(target, bang === "!")}${title})`;
-    })
-    .replace(/\b(href|src)="([^"]+)"/g, (_, attr: string, href: string) => `${attr}="${rewrite(href, attr === "src")}"`);
+const TAG_RE = /<(a|img|video|source|audio)\b[^>]*>/gi;
+const ATTR_RE = /\b(href|src|poster)=("([^"]*)"|'([^']*)')/gi;
+
+export function rewriteHtmlLinks(html: string, record: PageRecord, translated: Set<string>): string {
+  return html.replace(TAG_RE, (tag, name: string) =>
+    tag.replace(ATTR_RE, (_all, attr: string, _q, dq?: string, sq?: string) => {
+      const value = decodeEntities(dq ?? sq ?? "");
+      const media = name.toLowerCase() !== "a";
+      return `${attr}="${encodeEntities(resolveHref(value, record, translated, media))}"`;
+    }),
+  );
 }
 
-export function resolveHref(href: string, record: PageRecord, translated: Set<string>, image = false): string {
-  if (/^(#|mailto:|data:)/.test(href)) return href;
+export function resolveHref(href: string, record: PageRecord, translated: Set<string>, media = false): string {
+  if (!href || href.startsWith("#")) return href;
+  // http(s) 以外のスキーム(mailto:、vscode:、command: など)はそのまま。
+  if (/^[a-z][a-z0-9+.-]*:/i.test(href) && !/^https?:/i.test(href)) return href;
+  if (href.startsWith("//")) href = "https:" + href;
   const [pathPart, hash = ""] = splitHash(href);
   const source = new URL(record.url);
 
-  if (/^https?:\/\//.test(pathPart)) {
+  if (/^https?:\/\//i.test(pathPart)) {
     const u = new URL(pathPart);
     const id = pageId(u.hostname, u.pathname.replace(/^\/+|\/+$/g, ""));
     return translated.has(id) ? `/${id}${hash}` : href;
   }
 
   if (source.hostname === "code.visualstudio.com") {
-    // VS Codeの原文は、リポジトリ内のMarkdownファイルを相対パスか / 始まりで指す。
-    const repoPath = pathPart.startsWith("/") ? pathPart.slice(1) : posix.normalize(posix.join(posix.dirname(record.file), pathPart));
-    if (image || !/\.md$/.test(repoPath) && /\.\w{2,5}$/.test(repoPath)) {
-      return `https://raw.githubusercontent.com/${record.repo}/${record.commit ?? "main"}/${repoPath}`;
-    }
-    let urlPath = repoPath.replace(/\.md$/, "").replace(/\/index$/, "").replace(/^release-notes\//, "updates/");
+    // VS Codeの原文は、リポジトリ内のファイルを相対パスか / 始まりで指す。
+    const repoPath = pathPart.startsWith("/") ? posix.normalize(pathPart.slice(1)) : posix.normalize(posix.join(posix.dirname(record.file), pathPart));
+    if (media || (!/\.md$/.test(repoPath) && /\.\w{2,5}$/.test(repoPath))) return vscodeAsset(repoPath);
+    const urlPath = repoPath.replace(/\.md$/, "").replace(/\/index$/, "").replace(/^release-notes\//, "updates/");
     const id = pageId(source.hostname, urlPath);
     return translated.has(id) ? `/${id}${hash}` : `https://code.visualstudio.com/${urlPath}${hash}`;
   }
@@ -58,7 +63,25 @@ export function resolveHref(href: string, record: PageRecord, translated: Set<st
   return href;
 }
 
+// VS Codeの画像と動画は、原文のリポジトリではGit LFSに入っていて、raw.githubusercontent.com からは取れない。
+// 原文のサイトが配信している場所に対応させる。docs/agents/images/x/y.png は /assets/docs/agents/x/y.png、
+// release-notes/images/1_147/y.png は /assets/updates/1_147/y.png になる。
+function vscodeAsset(repoPath: string): string {
+  const m = /^(.*?)\/images\/(.+)$/.exec(repoPath);
+  if (!m) return `https://code.visualstudio.com/${repoPath}`;
+  const dir = m[1]!.replace(/^release-notes$/, "updates");
+  return `https://code.visualstudio.com/assets/${dir}/${m[2]}`;
+}
+
 function splitHash(href: string): [string, string?] {
   const i = href.indexOf("#");
   return i < 0 ? [href] : [href.slice(0, i), href.slice(i)];
+}
+
+function decodeEntities(s: string): string {
+  return s.replace(/&#x([0-9a-f]+);/gi, (_, h: string) => String.fromCodePoint(parseInt(h, 16))).replace(/&#(\d+);/g, (_, d: string) => String.fromCodePoint(Number(d))).replace(/&quot;/g, '"').replace(/&amp;/g, "&");
+}
+
+function encodeEntities(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 }

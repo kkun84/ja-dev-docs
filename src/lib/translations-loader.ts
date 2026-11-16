@@ -6,7 +6,7 @@ import type { Loader } from "astro/loaders";
 import { readdir, readFile } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 import GithubSlugger from "github-slugger";
-import { rewriteLinks, type PageRecord } from "./links.ts";
+import { rewriteHtmlLinks, type PageRecord } from "./links.ts";
 
 export interface TranslationRecord extends PageRecord {
   model: string;
@@ -32,7 +32,8 @@ export function translationsLoader(dir = "content"): Loader {
     name: "translations",
     async load({ store, renderMarkdown, logger }) {
       store.clear();
-      const files = (await readdir(dir, { recursive: true })).filter((f) => f.endsWith(".json")).map((f) => join(dir, f));
+      const all = await readdir(dir, { recursive: true }).catch(() => [] as string[]);
+      const files = all.filter((f) => f.endsWith(".json")).map((f) => join(dir, f));
       const pages = new Set(files.map((f) => pageOf(dir, f)));
       for (const json of files) {
         const record = JSON.parse(await readFile(json, "utf8")) as TranslationRecord;
@@ -48,8 +49,9 @@ export function translationsLoader(dir = "content"): Loader {
           markdown = markdown.slice(h1[0].length);
           headings = headings.slice(1);
         }
-        markdown = alertsToAsides(rewriteLinks(markdown, record, pages));
+        markdown = alertsToAsides(markdown);
         const rendered = await renderMarkdown(markdown);
+        rendered.html = rewriteHtmlLinks(rendered.html, record, pages);
         fixHeadingIds(rendered, headings);
         store.set({
           id: `${page}/${record.model}`,

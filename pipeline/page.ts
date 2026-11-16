@@ -2,7 +2,7 @@
 
 import { parse as parseYaml } from "yaml";
 import { Masker, TOKEN_RE, type Masked } from "./mask.ts";
-import { prepare, assemble, maskBlocks, maskInline, hasText, type Segment, type VariableResolver } from "./segment.ts";
+import { prepare, assemble, maskBlocks, maskInline, hasText, type Segment, type SegmentKind, type VariableResolver, type Keybinding } from "./segment.ts";
 import { segmentErrors, tidy } from "./check.ts";
 import { QuotaExceeded, type Caller, type CallResult } from "./model.ts";
 
@@ -26,6 +26,8 @@ export interface PageResult {
   // 断片ごとに、どのモデルの訳を使ったか。訳せず原文のまま残した断片は含まない。
   usedModel: Record<number, string>;
   untranslated: number[];
+  // いちばん多くの断片を訳したモデル。ファイル名と帰属表示に使う。
+  primaryModel?: string;
   steps: StepLog[];
 }
 
@@ -36,14 +38,17 @@ export interface TranslateOptions {
   variables: VariableResolver;
   // 変数ごとの訳語。書いていない変数は値(英語)のまま。
   glossary: Record<string, string>;
+  keybinding?: (command: string) => Keybinding | undefined;
 }
 
 export async function translatePage(text: string, opts: TranslateOptions): Promise<PageResult> {
   const masker = new Masker(opts.seed);
   const fm = /^---\n([\s\S]*?)\n---\n/.exec(text);
   const body = fm ? text.slice(fm[0].length) : text;
-  const prep = prepare(body, masker, opts.variables);
+  const prepOpts = { variables: opts.variables, keybinding: opts.keybinding };
+  const prep = prepare(body, masker, prepOpts);
   const segments = [...prep.segments];
+  const kinds = new Map(prep.kinds);
 
   // フロントマターはLiquidを含み、厳密なYAMLでないことがあるので、1行の「キー: 値」だけを行単位で扱う。
   const fmLines = fm ? fm[1]!.split("\n") : [];
@@ -53,14 +58,20 @@ export async function translatePage(text: string, opts: TranslateOptions): Promi
     if (!m || !FRONT_MATTER_KEYS.includes(m[1]!)) return;
     const value = scalar(m[2]!);
     if (value === undefined || !hasText(value)) return;
-    const seg = { id: segments.length + 1, text: maskInline(maskBlocks(value, masker, opts.variables), masker) };
+    const seg = { id: segments.length + 1, text: maskInline(maskBlocks(value, masker, prepOpts), masker) };
     segments.push(seg);
+    kinds.set(seg.id, "front");
     fmSegments.set(index, seg);
   });
 
-  const { done, usedModel, steps } = await translateSegments(segments, masker, opts);
+  const { done, usedModel, steps } = await translateSegments(segments, masker, { ...opts, kinds });
 
   const render = (m: Masked) => {
+    if (m.kind === "kbd") {
+      const command = /kb\(([\w.\-]+)\)/.exec(m.original)![1]!;
+      const k = opts.keybinding?.(command);
+      return k ? `<kbd title="macOS: ${k.mac}">${k.win}</kbd>` : `\`${command}\``;
+    }
     if (m.kind !== "variable") return m.original;
     const path = /variables\.([\w.\-]+)/.exec(m.original)![1]!;
     return opts.glossary[path] ?? m.meaning;
@@ -78,12 +89,13 @@ export async function translatePage(text: string, opts: TranslateOptions): Promi
     segments: segments.length,
     usedModel: Object.fromEntries(usedModel),
     untranslated: segments.filter((s) => !done.has(s.id)).map((s) => s.id),
+    primaryModel: mostCommon(Object.values(Object.fromEntries(usedModel))),
     steps,
   };
 }
 
 // chainの順にモデルを使い、検査に落ちた断片だけを次へ回す。
-export async function translateSegments(segments: Segment[], masker: Masker, opts: Pick<TranslateOptions, "chain" | "call">) {
+export async function translateSegments(segments: Segment[], masker: Masker, opts: Pick<TranslateOptions, "chain" | "call"> & { kinds?: Map<number, SegmentKind> }) {
   const done = new Map<number, string>();
   const usedModel = new Map<number, string>();
   const steps: StepLog[] = [];
@@ -100,8 +112,8 @@ export async function translateSegments(segments: Segment[], masker: Masker, opt
       step.usage = result.usage;
       for (const s of pending) {
         let out = result.translations.get(s.id);
-        if (out !== undefined) out = tidy(masker.repair(out));
-        const errors = segmentErrors(s.text, out);
+        if (out !== undefined) out = tidy(masker.repair(out), bareUrls(s.text, masker));
+        const errors = segmentErrors(s.text, out, opts.kinds?.get(s.id));
         if (errors.length) step.failed.push({ id: s.id, errors });
         else {
           done.set(s.id, out!);
@@ -109,7 +121,8 @@ export async function translateSegments(segments: Segment[], masker: Masker, opt
         }
       }
     } catch (e) {
-      step.error = String(e).slice(0, 500);
+      // 公開リポジトリに記録が残るので、APIの応答の本文は書かず、種類と状態コードだけを書く。
+      step.error = e instanceof QuotaExceeded ? "quota" : `request: ${/HTTP \d+/.exec(String(e))?.[0] ?? "failed"}`;
       step.failed = pending.map((s) => ({ id: s.id, errors: [e instanceof QuotaExceeded ? "quota" : "request"] }));
     }
     step.seconds = (Date.now() - started) / 1000;
@@ -163,4 +176,14 @@ function merge(results: CallResult[]): CallResult {
   const translations = new Map<number, string>();
   for (const r of results) for (const [k, v] of r.translations) translations.set(k, v);
   return { translations, finishReason: results.map((r) => r.finishReason).find((f) => f !== "STOP") ?? "STOP", usage: results.map((r) => r.usage) };
+}
+
+function bareUrls(text: string, masker: Masker): Set<string> {
+  return new Set([...text.matchAll(TOKEN_RE)].map((m) => m[1]!).filter((id) => masker.store.get(id)?.kind === "bareurl"));
+}
+
+function mostCommon(values: string[]): string | undefined {
+  const counts = new Map<string, number>();
+  for (const v of values) counts.set(v, (counts.get(v) ?? 0) + 1);
+  return [...counts].sort((a, b) => b[1] - a[1])[0]?.[0];
 }

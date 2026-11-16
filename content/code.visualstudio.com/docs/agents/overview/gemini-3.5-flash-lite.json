@@ -1,0 +1,37 @@
+{
+  "url": "https://code.visualstudio.com/docs/agents/overview",
+  "repo": "microsoft/vscode-docs",
+  "file": "docs/agents/overview.md",
+  "commit": "dd1989203e511052ddb9892294ddff4e6b49d403",
+  "translatedAt": "2026-11-16T00:14:27.373Z",
+  "model": "gemini-3.5-flash-lite",
+  "chain": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash@low"
+  ],
+  "segments": 60,
+  "segmentsByModel": {
+    "gemini-3.5-flash-lite": 60
+  },
+  "untranslated": [],
+  "headings": [
+    "Build with AI in VS Code",
+    "Choose where to start",
+    "Choose how you work",
+    "Choose your models, agents, and tools",
+    "Continue across interfaces and machines",
+    "Stay in control",
+    "Next steps"
+  ],
+  "reusables": [],
+  "steps": [
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 60,
+      "failed": [],
+      "finishReason": "STOP",
+      "seconds": 17.169
+    }
+  ]
+}

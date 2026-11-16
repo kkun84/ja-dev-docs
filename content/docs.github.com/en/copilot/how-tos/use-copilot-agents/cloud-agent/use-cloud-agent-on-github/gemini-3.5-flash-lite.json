@@ -1,0 +1,63 @@
+{
+  "url": "https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github",
+  "repo": "github/docs",
+  "file": "content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md",
+  "commit": "d59b2631959db46d71ca5f7748ec04311c6d0870",
+  "translatedAt": "2026-11-16T00:15:30.384Z",
+  "model": "gemini-3.5-flash-lite",
+  "chain": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash@low"
+  ],
+  "segments": 130,
+  "segmentsByModel": {
+    "gemini-3.5-flash-lite": 130
+  },
+  "untranslated": [],
+  "headings": [
+    "Introduction",
+    "Starting a Copilot in the cloud session",
+    "Starting Copilot from within a file, issue, or pull request",
+    "Starting a session with Copilot cloud agent",
+    "Starting a session from the agents tab or panel",
+    "Starting a session from the dashboard",
+    "Starting from Copilot Chat",
+    "Assigning an issue to Copilot",
+    "Seeding a new repository",
+    "Fixing a failing GitHub Actions workflow run",
+    "Continuing work on a pull request",
+    "Asking Copilot to make changes",
+    "Delegating review comments",
+    "Tracking and continuing a session",
+    "Resolving merge conflicts",
+    "Running Copilot automatically with automations",
+    "Managing GitHub Actions workflow runs",
+    "Giving feedback on Copilot's work",
+    "Further reading"
+  ],
+  "reusables": [
+    "reusables.gated-features.copilot-in-the-cloud",
+    "reusables.copilot.environment-picker",
+    "reusables.copilot.open-agents-panel-or-page",
+    "reusables.copilot.cloud-agent.new-agent-task-form-instructions",
+    "reusables.copilot.optional-select-custom-agent-dotcom",
+    "reusables.repositories.navigate-to-repo",
+    "reusables.repositories.sidebar-issues",
+    "reusables.copilot.optional-select-copilot-cloud-agent-model",
+    "reusables.repositories.create_new",
+    "reusables.repositories.owner-drop-down",
+    "reusables.repositories.create-repo",
+    "reusables.copilot.cloud-agent.write-access-required",
+    "reusables.copilot.cloud-agent-workflow-run-approval-default"
+  ],
+  "steps": [
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 130,
+      "failed": [],
+      "finishReason": "STOP",
+      "seconds": 13.057
+    }
+  ]
+}

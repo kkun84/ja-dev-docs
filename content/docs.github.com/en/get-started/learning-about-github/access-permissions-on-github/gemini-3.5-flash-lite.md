@@ -1,0 +1,45 @@
+---
+title: "GitHubでのアクセス権限"
+redirect_from:
+  - /articles/needs-to-be-written-what-can-the-different-types-of-org-team-permissions-do
+  - /articles/what-are-the-different-types-of-team-permissions
+  - /articles/what-are-the-different-access-permissions
+  - /articles/access-permissions-on-github
+  - /github/getting-started-with-github/access-permissions-on-github
+  - /github/getting-started-with-github/learning-about-github/access-permissions-on-github
+intro: "ロールを使用すると、アカウントやリソースへのアクセス権を持つユーザーと、各ユーザーのアクセスレベルを制御できます。"
+versions:
+  fpt: '*'
+  ghes: '*'
+  ghec: '*'
+shortTitle: "アクセス権限"
+category:
+  - Explore GitHub plans and features
+---
+
+## GitHubのアクセス権限について
+
+{% data reusables.organizations.about-roles %}
+
+ロールの動作はアカウントの種類によって異なります。アカウントの詳細については、[AUTOTITLE](/get-started/learning-about-github/types-of-github-accounts)を参照してください。
+
+## 個人アカウント
+
+個人アカウントが所有するリポジトリには、_リポジトリオーナー_と_コラボレーター_の2つの権限レベルがあります。詳細については、[AUTOTITLE](/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/permission-levels-for-a-personal-account-repository)を参照してください。
+
+## 組織アカウント
+
+組織のメンバーには、_オーナー_{% ifversion fpt or ghec %}、_請求マネージャー_、{% endif %}または_メンバー_のロールを割り当てることができます。オーナーは組織に対する完全な管理者アクセス権を持ち{% ifversion fpt or ghec %}、請求マネージャーは請求設定を管理できます{% endif %}。それ以外のユーザーのデフォルトのロールはメンバーです。チームを使用すると、複数のメンバーのアクセス権限を一度に管理できます。詳細については、以下を参照してください。
+* [AUTOTITLE](/organizations/managing-peoples-access-to-your-organization-with-roles/roles-in-an-organization)
+* [AUTOTITLE](/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization)
+* [AUTOTITLE](/organizations/organizing-members-into-teams/about-teams)
+
+## エンタープライズアカウント
+
+エンタープライズアカウントには、エンタープライズ設定へのユーザーのアクセスを定義するさまざまな事前定義ロールがあります。また、カスタムのエンタープライズロールを作成して、独自の細かい権限セットを定義することもできます。
+
+詳細については、{% ifversion fpt %}GitHub Enterprise Cloudドキュメントの[AUTOTITLE](/enterprise-cloud@latest/admin/managing-accounts-and-repositories/managing-roles-in-your-enterprise/abilities-of-roles){% else %}[AUTOTITLE](/admin/managing-accounts-and-repositories/managing-roles-in-your-enterprise/abilities-of-roles){% endif %}を参照してください。
+
+## 参考資料
+
+* [AUTOTITLE](/get-started/learning-about-github/types-of-github-accounts)

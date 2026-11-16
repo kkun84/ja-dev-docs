@@ -18,9 +18,11 @@ VS CodeとGitHubの公式ドキュメントのページを、日本語で読め�
 - `pipeline/` — 翻訳。原文を取得し、骨組みを保ったまま文の断片だけをモデルで訳し、検査して `content/` に書く
 - `content/` — 訳文。`<ホスト>/<パス>/<モデル>.md` が訳文、同じ名前の `.json` がその記録
 - `data/glossary.yml` — 製品名などの変数を、訳文でどう書くかの決まり
-- `src/` — サイト(AstroとStarlight)。訳があるページは静的に、無いページとAPIはCloudflare Workersで動く
-- `migrations/` — D1の順番待ちの列
-- `.github/workflows/translate.yml` — 列から取り出して訳し、デプロイする
+- `src/` — サイト(AstroとStarlight)。静的に出力する
+- `worker/` — 訳が無いページの画面と、翻訳リクエストのAPI。Cloudflare Workersで動く
+- `migrations/` — D1の順番待ちの列と、翻訳モデルの呼び出し回数
+- `.github/workflows/translate.yml` — 列から取り出して訳し、コミットする
+- `.github/workflows/deploy.yml` — ビルドしてデプロイし、公開待ちのページを公開済みにする
 
 ## 開発
 
@@ -28,7 +30,7 @@ VS CodeとGitHubの公式ドキュメントのページを、日本語で読め�
 npm ci
 npm test            # 翻訳とリンク書き換えのテスト
 npm run build       # サイトのビルド
-npm run preview     # ビルドしてローカルのWorkerで動かす(.dev.vars にテスト用のシークレットを書く)
+npm run preview     # ビルドしてローカルのWorkerで動かす(先に npx wrangler d1 migrations apply ja-dev-docs --local)
 GEMINI_API_KEY=... node pipeline/cli.ts https://code.visualstudio.com/docs/editing/codebasics
 ```
 
@@ -45,6 +47,9 @@ GitHubのリポジトリの設定に、次を登録します。
 | シークレット | `TURNSTILE_SECRET` | 同じウィジェットの秘密鍵 |
 | シークレット | `DISPATCH_TOKEN` | このリポジトリだけに Actions の Read and write を持つ fine-grained token。Workerがワークフローを起動するのに使う |
 
-登録したら、Actionsの`translate`を、訳すページのURLを入れて手で起動します。訳してビルドし、`ja.keke.works`にデプロイし、D1のデータベースも作ります。
+登録したら、Actionsの`deploy`を手で起動します。D1のデータベースを作り、`ja.keke.works`にデプロイします。その後は、訳が無いページのリクエストで翻訳が動きます。
 
-費用: Cloudflare Workersの無料プランでは、上限を超えると課金されずにエラーになります。アカウントがWorkers Paidプランの場合は、超過分が課金されるので注意してください。
+費用について:
+
+- Cloudflare Workersの無料プランでは、上限を超えると課金されずにエラーになります。アカウントがWorkers Paidプランの場合は、超過分が課金されるので注意してください。
+- GeminiのAPIキーのプロジェクトには、課金(支払い方法)を設定しないでください。無料枠を超えると、課金されずにエラーになります。翻訳ジョブも1日の呼び出し回数を数え、無料枠の手前で止めます。

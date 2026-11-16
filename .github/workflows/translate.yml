@@ -2,6 +2,7 @@ name: translate
 
 # 翻訳リクエストの列を処理する。Workerがリクエストのたびに起動し、1時間ごとにも起動する。
 # 1時間ごとの起動は、無料枠の上限で後回しにしたページを、上限が戻った後に訳すため。
+# 1回の実行で訳すのは最大5ページ。訳したら公開し、列に残っていれば次の実行を起動する。
 on:
   workflow_dispatch:
     inputs:
@@ -12,7 +13,7 @@ on:
     - cron: "17 * * * *"
 
 permissions:
-  contents: write
+  contents: read
 
 # 同時に走らせない。実行中に起動されたものは、終わるのを待ってから列を確かめ直す。
 concurrency:
@@ -23,6 +24,11 @@ jobs:
   translate:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    permissions:
+      contents: write
+    outputs:
+      publish: ${{ steps.run.outputs.publish }}
+      more: ${{ steps.run.outputs.more }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -31,17 +37,34 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      - name: Translate and publish
+      - id: run
+        name: Translate
         env:
           URLS: ${{ inputs.urls }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
-          TURNSTILE_SITE_KEY: ${{ vars.TURNSTILE_SITE_KEY }}
-          TURNSTILE_SECRET: ${{ secrets.TURNSTILE_SECRET }}
-          DISPATCH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
+          # 列(D1)の読み書きにだけ使う。
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           node pipeline/run.ts
+
+  deploy:
+    needs: translate
+    if: ${{ needs.translate.outputs.publish == 'true' }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+
+  # 列にまだ残っていれば、次の実行を起動する。
+  continue:
+    needs: [translate, deploy]
+    if: ${{ always() && needs.translate.outputs.more == 'true' && needs.deploy.result != 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - run: gh workflow run translate.yml --repo "$GITHUB_REPOSITORY" --ref main
+        env:
+          GH_TOKEN: ${{ github.token }}

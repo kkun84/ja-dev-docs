@@ -15,7 +15,6 @@
     "check": "tsc --noEmit && vitest run && astro build"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^14.4.8",
     "@astrojs/markdown-remark": "^7.3.9",
     "@astrojs/starlight": "^0.43.1",
     "astro": "^7.4.12",
@@ -25,6 +24,7 @@
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
+    "undici": "^8.12.4",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.2.0",
     "yaml": "^2.9.1"

@@ -2,8 +2,8 @@
   "url": "https://docs.github.com/en/get-started/learning-about-github/access-permissions-on-github",
   "repo": "github/docs",
   "file": "content/get-started/learning-about-github/access-permissions-on-github.md",
-  "commit": "d59b2631959db46d71ca5f7748ec04311c6d0870",
-  "translatedAt": "2026-11-16T00:26:35.743Z",
+  "commit": "84bdf4c88dcbd2402b0a2b3ab537c5a104e23a6a",
+  "translatedAt": "2026-11-16T18:03:02.716Z",
   "model": "gemini-3.5-flash-lite",
   "chain": [
     "gemini-3.5-flash-lite",
@@ -12,8 +12,7 @@
   ],
   "segments": 18,
   "segmentsByModel": {
-    "gemini-3.5-flash-lite": 16,
-    "gemini-3.8-flash": 2
+    "gemini-3.5-flash-lite": 18
   },
   "untranslated": [],
   "headings": [
@@ -23,54 +22,14 @@
     "Enterprise accounts",
     "Further reading"
   ],
-  "reusables": [],
+  "unresolvedLiquid": [],
   "steps": [
     {
       "spec": "gemini-3.5-flash-lite",
       "sent": 18,
-      "failed": [
-        {
-          "id": 8,
-          "errors": [
-            "untranslated"
-          ]
-        },
-        {
-          "id": 9,
-          "errors": [
-            "untranslated"
-          ]
-        }
-      ],
-      "finishReason": "STOP",
-      "seconds": 1.868
-    },
-    {
-      "spec": "gemini-3.5-flash-lite",
-      "sent": 2,
-      "failed": [
-        {
-          "id": 8,
-          "errors": [
-            "untranslated"
-          ]
-        },
-        {
-          "id": 9,
-          "errors": [
-            "untranslated"
-          ]
-        }
-      ],
-      "finishReason": "STOP",
-      "seconds": 0.913
-    },
-    {
-      "spec": "gemini-3.8-flash@low",
-      "sent": 2,
       "failed": [],
       "finishReason": "STOP",
-      "seconds": 54.752
+      "seconds": 37.69
     }
   ]
 }

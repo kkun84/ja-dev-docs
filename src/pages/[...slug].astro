@@ -1,17 +1,13 @@
 ---
 // 訳があるページ。ビルド時に静的なHTMLにする。モデルごとの訳をすべて入れ、ブラウザで切り替える。
 import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
-import { render } from "astro:content";
 import { getPages, sidebar, type Page } from "../lib/pages.ts";
 import { MODEL_LABELS } from "../lib/translations-loader.ts";
 import Attribution from "../components/Attribution.astro";
 
-export const prerender = true;
-
 export async function getStaticPaths() {
   const pages = await getPages();
-  const nav = sidebar(pages);
-  return pages.map((page) => ({ params: { slug: page.id }, props: { page, nav } }));
+  return pages.map((page) => ({ params: { slug: page.id }, props: { page, nav: sidebar(pages, page.id) } }));
 }
 
 interface Props {
@@ -19,17 +15,21 @@ interface Props {
   nav: ReturnType<typeof sidebar>;
 }
 const { page, nav } = Astro.props;
-const rendered = await Promise.all(page.variants.map(async (v) => ({ v, ...(await render(v)) })));
-const primary = rendered[0]!;
+const primary = page.variants[0]!;
+// 見出しのIDが重複しないよう、既定以外の訳では id を data-id に退避する。切り替えたときにスクリプトで入れ替える。
+const html = (i: number) => {
+  const h = page.variants[i]!.rendered?.html ?? "";
+  return i === 0 ? h : h.replace(/(<h[1-6][^>]*?) id="/g, '$1 data-id="');
+};
 ---
 
-<StarlightPage frontmatter={{ title: primary.v.data.title, description: primary.v.data.description }} headings={primary.headings} sidebar={nav}>
+<StarlightPage frontmatter={{ title: primary.data.title, description: primary.data.description }} headings={primary.rendered?.metadata?.headings ?? []} sidebar={nav}>
   {
-    rendered.length > 1 && (
+    page.variants.length > 1 && (
       <label class="model-switch">
         翻訳したモデル:
         <select data-model-select>
-          {rendered.map(({ v }) => (
+          {page.variants.map((v) => (
             <option value={v.data.record.model}>{MODEL_LABELS[v.data.record.model] ?? v.data.record.model}</option>
           ))}
         </select>
@@ -37,9 +37,9 @@ const primary = rendered[0]!;
     )
   }
   {
-    rendered.map(({ v, Content }, i) => (
+    page.variants.map((v, i) => (
       <div data-model={v.data.record.model} data-pagefind-ignore={i > 0 ? "all" : undefined} hidden={i > 0}>
-        <Content />
+        <Fragment set:html={html(i)} />
         <Attribution variant={v} />
       </div>
     ))
@@ -52,7 +52,20 @@ const primary = rendered[0]!;
   const show = (model: string) => {
     const blocks = [...document.querySelectorAll<HTMLElement>("[data-model]")];
     if (!blocks.some((b) => b.dataset.model === model)) return;
-    for (const b of blocks) b.hidden = b.dataset.model !== model;
+    for (const b of blocks) {
+      const visible = b.dataset.model === model;
+      b.hidden = !visible;
+      // 見えている訳だけが見出しのIDを持つ。
+      for (const h of b.querySelectorAll<HTMLElement>(visible ? "[data-id]" : "h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]")) {
+        if (visible) {
+          h.id = h.dataset.id!;
+          delete h.dataset.id;
+        } else {
+          h.dataset.id = h.id;
+          h.removeAttribute("id");
+        }
+      }
+    }
     if (select) select.value = model;
   };
   try {

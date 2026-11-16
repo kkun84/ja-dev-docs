@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
-import { addRequest, finish, getStatus, takeNext, type D1Like } from "./queue.ts";
+import { addRequest, finish, getStatus, markPublished, reserveCall, takeNext, DAILY_NEW_PAGES, type D1Like } from "./queue.ts";
 
 // D1と同じ形で使える、メモリ上のSQLite。
 function memoryDb(): D1Like {
   const db = new DatabaseSync(":memory:");
-  db.exec(readFileSync(new URL("../../migrations/0001_requests.sql", import.meta.url), "utf8"));
+  for (const m of ["0001_requests.sql", "0002_states_and_usage.sql"]) db.exec(readFileSync(new URL(`../../migrations/${m}`, import.meta.url), "utf8"));
   return {
     prepare(sql) {
       const stmt = db.prepare(sql.replace(/\?(\d+)/g, "?"));
@@ -56,5 +56,34 @@ describe("順番待ちの列", () => {
     await takeNext(db, 1, new Date("2026-01-01T00:00:00Z"));
     expect(await takeNext(db, 1, new Date("2026-01-01T01:00:00Z"))).toEqual([]);
     expect(await takeNext(db, 1, new Date("2026-01-01T03:00:00Z"))).toEqual(["a"]);
+  });
+
+  it("訳し終えたページは公開待ちになり、デプロイ後に公開済みになる", async () => {
+    const db = memoryDb();
+    await addRequest(db, "a");
+    await takeNext(db, 1);
+    await finish(db, "a", true);
+    expect((await getStatus(db, "a"))!.state).toBe("translated");
+    expect(await takeNext(db, 1)).toEqual([]);
+    await markPublished(db);
+    expect((await getStatus(db, "a"))!.state).toBe("done");
+  });
+
+  it("1日に受け付ける新しいページの数に上限がある", async () => {
+    const db = memoryDb();
+    const now = "2026-01-01T10:00:00Z";
+    for (let i = 0; i < DAILY_NEW_PAGES; i++) expect(await addRequest(db, `p${i}`, now)).toBe(true);
+    expect(await addRequest(db, "extra", now)).toBe(false);
+    expect(await addRequest(db, "p0", now)).toBe(true);
+    expect(await addRequest(db, "extra", "2026-01-02T00:00:01Z")).toBe(true);
+  });
+
+  it("モデルの1日の呼び出し回数を数え、上限を超えたら止める", async () => {
+    const db = memoryDb();
+    const now = new Date("2026-01-01T10:00:00Z");
+    expect(await reserveCall(db, "m", 2, now)).toBe(true);
+    expect(await reserveCall(db, "m", 2, now)).toBe(true);
+    expect(await reserveCall(db, "m", 2, now)).toBe(false);
+    expect(await reserveCall(db, "m", 2, new Date("2026-01-02T10:00:00Z"))).toBe(true);
   });
 });

@@ -2,8 +2,8 @@
   "url": "https://code.visualstudio.com/updates/v1_147",
   "repo": "microsoft/vscode-docs",
   "file": "release-notes/v1_147.md",
-  "commit": "dd1989203e511052ddb9892294ddff4e6b49d403",
-  "translatedAt": "2026-11-16T00:18:56.263Z",
+  "commit": "9dc724b7639dad57bf0c0dc25fc42c2f1c5d7d2f",
+  "translatedAt": "2026-11-16T16:19:38.365Z",
   "model": "gemini-3.5-flash-lite",
   "chain": [
     "gemini-3.5-flash-lite",
@@ -21,14 +21,202 @@
     "November 11, 2026",
     "November 10, 2026"
   ],
-  "reusables": [],
+  "unresolvedLiquid": [],
   "steps": [
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 30,
+      "failed": [
+        {
+          "id": 1,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 2,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 3,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 4,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 5,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 6,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 7,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 8,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 9,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 10,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 11,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 12,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 13,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 14,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 15,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 16,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 17,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 18,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 19,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 20,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 21,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 22,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 23,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 24,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 25,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 26,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 27,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 28,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 29,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 30,
+          "errors": [
+            "request"
+          ]
+        }
+      ],
+      "seconds": 306.5,
+      "error": "request: HTTP 503"
+    },
     {
       "spec": "gemini-3.5-flash-lite",
       "sent": 30,
       "failed": [],
       "finishReason": "STOP",
-      "seconds": 4.595
+      "seconds": 4.277
     }
   ]
 }

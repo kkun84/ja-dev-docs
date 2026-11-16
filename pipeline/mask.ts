@@ -7,7 +7,7 @@
 const ID_ALPHABET = "ABCDEFGHJKMNPQRSTVWXYZ23456789";
 export const TOKEN_RE = /⟦([^⟧\s]{1,12})⟧/g;
 
-export type TokenKind = "liquid" | "variable" | "comment" | "code" | "url";
+export type TokenKind = "liquid" | "variable" | "comment" | "code" | "url" | "bareurl" | "kbd" | "break";
 
 export interface Masked {
   kind: TokenKind;

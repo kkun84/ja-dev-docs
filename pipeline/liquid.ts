@@ -22,19 +22,34 @@ export async function expandLiquid(text: string, ctx: LiquidContext, depth = 0):
     return `\u0000RAW${raws.length - 1}\u0000`;
   });
 
-  text = await replaceAsync(text, /^([ \t]*)(.*?)\{%-?\s*data\s+reusables\.([\w.\-\/]+)\s*-?%\}/gm, async (all, indent: string, before: string, path: string) => {
+  text = trimWhitespaceControl(text);
+
+  // 再利用部品は、行のどこにあっても展開する。複数行の部品は、埋め込む位置の字下げ、リストの記号の幅、引用の > に合わせる。
+  // 部品の中の部品は、部品を展開するときの再帰で展開する。本文全体を展開し直すことはしない(部品の数の累乗で遅くなるため)。
+  text = await replaceAsync(text, /\{%-?\s*data\s+reusables\.([\w.\-\/]+)\s*-?%\}/g, async (all, path: string, offset: number, whole: string) => {
     if (depth >= MAX_DEPTH) return all;
     const body = await ctx.reusable(path.replace(/\./g, "/"));
     if (body === undefined) return all;
     const expanded = (await expandLiquid(body, ctx, depth + 1)).replace(/\n+$/, "");
-    // 複数行の再利用部品は、埋め込む位置の字下げに合わせる。
-    const pad = indent + " ".repeat(listMarkerWidth(before));
-    return indent + before + expanded.replace(/\n(?=.)/g, "\n" + pad);
+    const before = whole.slice(whole.lastIndexOf("\n", offset - 1) + 1, offset);
+    const pad = continuationPad(before);
+    return expanded.split("\n").map((line, i) => (i === 0 ? line : line ? pad + line : pad.trimEnd())).join("\n");
   });
 
   text = await evaluateIfs(text, ctx);
-  // アイコンを除く。前後の両方に空白があれば1つ残し、片方だけなら残さない(**{% octicon %} Agents** が ** Agents** にならないように)。
-  text = text.replace(/([ \t]?)\{%-?\s*octicon\s[^%]*-?%\}([ \t]?)/g, (_, a: string, b: string) => (a && b ? " " : ""));
+  // アイコンの直後に名前の文字が続く(「{% octicon %} Agents」)ときは、アイコンを除く。
+  // 名前が続かない(「Click {% octicon %}, then」)ときは、アイコンが唯一の目的語なので、説明(aria-label)の文字にする。
+  // 除くときは、前後の両方に空白があれば1つ残し、片方だけなら残さない(**{% octicon %} Agents** が ** Agents** にならないように)。
+  text = text.replace(/([ \t]?)\{%-?\s*octicon\s([^%]*?)-?%\}([ \t]?)(?=(.?))/g, (_, a: string, args: string, b: string, next: string) => {
+    const label = /aria-label="([^"]+)"/.exec(args)?.[1];
+    if (label && !/[A-Za-z0-9*_`]/.test(next)) return `${a}${label}${b}`;
+    return a && b ? " " : "";
+  });
+  // ツールごとの手順の切り替え({% webui %} など)は、ツール名の見出しにして全部を並べる。
+  text = text.replace(/^([ \t]*)\{%-?\s*(\w+)\s*-?%\}[ \t]*$/gm, (all, indent: string, tag: string) => (TOOL_LABELS[tag] ? `${indent}**${TOOL_LABELS[tag]}**` : all));
+  text = text.replace(/[ \t]*\{%-?\s*end(\w+)\s*-?%\}/g, (all, tag: string) => (TOOL_LABELS[tag] || DROP_TAGS.has(tag) ? "" : all));
+  // 表示に関わらない囲みのタグは除く。
+  text = text.replace(/[ \t]*\{%-?\s*(\w+)\s*-?%\}/g, (all, tag: string) => (DROP_TAGS.has(tag) ? "" : all));
   text = await replaceAsync(text, /\[AUTOTITLE\]\(([^)\s#]+)(#[^)\s]*)?\)/g, async (all, path: string, anchor = "") => {
     const title = await ctx.title(path);
     return title ? `[${title}](${path}${anchor})` : all;
@@ -43,10 +58,38 @@ export async function expandLiquid(text: string, ctx: LiquidContext, depth = 0):
   return text.replace(/\u0000RAW(\d+)\u0000/g, (_, i: string) => raws[Number(i)]!);
 }
 
-function listMarkerWidth(before: string): number {
-  const m = /^(?:[-*+]|\d+[.)])[ \t]+/.exec(before);
-  return m ? m[0].length : 0;
+// 複数行の部品の2行目以降の頭に付けるもの。字下げ、引用の >、リストの記号の幅を合わせる。
+function continuationPad(before: string): string {
+  const m = /^((?:[ \t]*>[ \t]?)*)([ \t]*)((?:[-*+]|\d+[.)])[ \t]+)?/.exec(before)!;
+  return m[1]! + m[2]! + " ".repeat(m[3]?.length ?? 0);
 }
+
+// {%- と -%} の空白除去。Liquidと同じく、前(後ろ)の改行を含む空白を除く。表の行の間に条件分岐を書く形で使われる。
+function trimWhitespaceControl(text: string): string {
+  return text.replace(/\s*(\{%-)/g, "$1").replace(/(-%\})\s*/g, "$1");
+}
+
+const TOOL_LABELS: Record<string, string> = {
+  webui: "Web UI",
+  cli: "GitHub CLI",
+  desktop: "GitHub Desktop",
+  curl: "curl",
+  codespaces: "Codespaces",
+  vscode: "Visual Studio Code",
+  visualstudio: "Visual Studio",
+  jetbrains: "JetBrains IDEs",
+  xcode: "Xcode",
+  eclipse: "Eclipse",
+  mac: "Mac",
+  windows: "Windows",
+  linux: "Linux",
+  javascript: "JavaScript",
+  bash: "Bash",
+  powershell: "PowerShell",
+  api: "API",
+};
+
+const DROP_TAGS = new Set(["note", "tip", "warning", "danger", "caution", "rowheaders", "comment"]);
 
 const IF_TAG_RE = /\{%-?\s*(ifversion|elsif|else|endif)\b([^%]*?)-?%\}/g;
 
@@ -105,12 +148,12 @@ async function evaluate(cond: string, ctx: LiquidContext): Promise<boolean> {
 }
 
 async function replaceAsync(text: string, re: RegExp, fn: (...args: any[]) => Promise<string>): Promise<string> {
-  const parts: Promise<string>[] = [];
+  // 原文のリポジトリへの問い合わせが一度に集中しないよう、1つずつ処理する。
   let last = 0;
   let out = "";
   const matches = [...text.matchAll(re)];
-  for (const m of matches) parts.push(fn(...m));
-  const results = await Promise.all(parts);
+  const results: string[] = [];
+  for (const m of matches) results.push(await fn(...m, m.index, text));
   matches.forEach((m, i) => {
     out += text.slice(last, m.index) + results[i];
     last = m.index! + m[0].length;

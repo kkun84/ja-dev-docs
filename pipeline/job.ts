@@ -3,7 +3,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { parse as parseYaml } from "yaml";
-import { rawUrl, loadVariables, httpFetcher, type PageRef } from "./sources.ts";
+import { rawUrl, loadVariables, httpFetcher, type PageRef, type Source } from "./sources.ts";
+import type { Keybinding } from "./segment.ts";
 import { expandLiquid } from "./liquid.ts";
 import { githubContext } from "./github.ts";
 import { translatePage } from "./page.ts";
@@ -43,16 +44,32 @@ export async function translateOne(ref: PageRef, opts: JobOptions, glossaries: R
 
   const paths = [...text.matchAll(/\{%-?\s*data\s+variables\.([\w.\-]+)/g)].map((m) => m[1]!);
   const variables = await loadVariables(pinned, paths);
-  const model = chain[0]!.split("@")[0]!;
+  const keybinding = source.host === "code.visualstudio.com" ? await loadKeybindings(pinned) : undefined;
   const started = new Date();
   const result = await translatePage(text, {
     seed: `${source.host}/${ref.path}/${started.toISOString()}`,
     chain,
     call,
     variables,
+    keybinding,
     glossary: glossaries[source.host] ?? {},
   });
 
+  // 訳せなかった断片が多いページは公開しない。APIの障害やその日の上限で全部が落ちたページを、英語のまま「翻訳済み」にしないため。
+  const failedRatio = result.untranslated.length / Math.max(result.segments, 1);
+  if (failedRatio > MAX_UNTRANSLATED_RATIO) {
+    const apiTrouble = result.steps.some((s) => s.error);
+    const quota = result.steps.some((s) => s.error === "quota");
+    // ログで原因が分かるよう、段ごとに、送った数、落ちた数、落ちた理由の内訳、APIのエラーの種類を出す。
+    for (const st of result.steps) {
+      const reasons: Record<string, number> = {};
+      for (const f of st.failed) for (const e of f.errors) reasons[e] = (reasons[e] ?? 0) + 1;
+      console.error(`  ${st.spec}: sent ${st.sent}, failed ${st.failed.length}, ${st.seconds}s, ${st.error ?? "ok"}, ${JSON.stringify(reasons)}`);
+    }
+    throw new PageFailed(quota ? "quota" : `${result.untranslated.length} of ${result.segments} segments untranslated`, apiTrouble);
+  }
+
+  const model = result.primaryModel ?? chain[0]!.split("@")[0]!;
   const base = join(opts.out, source.host, ref.path || "index", model);
   await mkdir(dirname(base), { recursive: true });
   await writeFile(`${base}.md`, result.markdown);
@@ -70,12 +87,56 @@ export async function translateOne(ref: PageRef, opts: JobOptions, glossaries: R
     segmentsByModel: counts,
     untranslated: result.untranslated,
     headings: result.headings,
-    reusables: [...new Set([...text.matchAll(/\{%-?\s*data\s+(reusables\.[\w.\-\/]+)/g)].map((m) => m[1]!))],
+    // 展開できずに残ったLiquidのタグ。表示が崩れる原因になるので、気づけるように残す。
+    unresolvedLiquid: [...new Set([...text.matchAll(/\{%-?\s*(\w+)[^%\n]*%\}/g)].map((m) => m[1]!).filter((t) => t !== "data" && t !== "raw" && t !== "endraw"))],
     steps: result.steps.map(({ spec, sent, failed, finishReason, seconds, error }) => ({ spec, sent, failed, finishReason, seconds, error })),
   };
   await writeFile(`${base}.json`, JSON.stringify(record, null, 2) + "\n");
   await sleep(4000);
-  return { url: record.url, segments: record.segments, segmentsByModel: counts, untranslated: record.untranslated.length, quotaExceeded: result.steps.every((s) => s.error?.includes("quota")) };
+  return { url: record.url, model, segments: record.segments, segmentsByModel: counts, untranslated: record.untranslated.length };
+}
+
+// 未訳の断片がこの割合を超えたページは公開しない。
+const MAX_UNTRANSLATED_RATIO = 0.05;
+
+export class PageFailed extends Error {
+  // retry: APIの障害や上限が原因で、時間をおけば訳せる見込みがある。
+  readonly retry: boolean;
+  constructor(message: string, retry: boolean) {
+    super(message);
+    this.retry = retry;
+  }
+}
+
+// VS Codeの kb(コマンド) を、既定のキー割り当てに変える表。原文のリポジトリの build/keybindings から作る。
+async function loadKeybindings(source: Source): Promise<(command: string) => Keybinding | undefined> {
+  const load = async (os: string) => {
+    const text = await httpFetcher(rawUrl(source, `build/keybindings/doc.keybindings.${os}.json`));
+    const map = new Map<string, string>();
+    for (const { key, command } of (text ? JSON.parse(text) : []) as { key: string; command: string }[]) if (!map.has(command)) map.set(command, key);
+    return map;
+  };
+  const [win, mac] = await Promise.all([load("win"), load("osx")]);
+  return (command) => {
+    const w = win.get(command);
+    const m = mac.get(command);
+    return w || m ? { win: formatKeys(w ?? m!, false), mac: formatKeys(m ?? w!, true) } : undefined;
+  };
+}
+
+const MAC_SYMBOLS: Record<string, string> = { ctrl: "⌃", alt: "⌥", shift: "⇧", cmd: "⌘" };
+
+export function formatKeys(binding: string, mac: boolean): string {
+  return binding
+    .split(" ")
+    .map((chord) => {
+      const parts = chord.split("+");
+      const key = parts.pop()!;
+      const name = key.length === 1 ? key.toUpperCase() : key.charAt(0).toUpperCase() + key.slice(1);
+      if (!mac) return [...parts.map((p) => p.charAt(0).toUpperCase() + p.slice(1)), name].join("+");
+      return ["ctrl", "alt", "shift", "cmd"].filter((m) => parts.includes(m)).map((m) => MAC_SYMBOLS[m]).join("") + name;
+    })
+    .join(" ");
 }
 
 // 原文のブランチの最新コミット。訳文がどの版の原文から作られたかを記録し、同じ版の変数を使うため。

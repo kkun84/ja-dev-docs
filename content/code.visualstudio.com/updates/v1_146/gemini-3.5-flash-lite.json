@@ -1,0 +1,1235 @@
+{
+  "url": "https://code.visualstudio.com/updates/v1_146",
+  "repo": "microsoft/vscode-docs",
+  "file": "release-notes/v1_146.md",
+  "commit": "2e15f50c0c949bb41e6d15447224a2f5389d9bd6",
+  "translatedAt": "2026-11-16T18:42:59.333Z",
+  "model": "gemini-3.5-flash-lite",
+  "chain": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash@low"
+  ],
+  "segments": 193,
+  "segmentsByModel": {
+    "gemini-3.5-flash-lite": 193
+  },
+  "untranslated": [],
+  "headings": [
+    "Visual Studio Code 1.146",
+    "Release highlights",
+    "Agents",
+    "Copilot harness and deprecation of the Local harness",
+    "Inbox mode for sessions (Experimental)",
+    "Session list inline actions (Experimental)",
+    "Chat windows (Preview)",
+    "Install and manage extensions in the Agents window (Experimental)",
+    "Model comparison improvements (Preview)",
+    "Canvases improvements (Preview)",
+    "Configure computer sharing (Experimental)",
+    "Agent Host support for virtual repositories",
+    "Chat",
+    "Continue a Copilot CLI session in VS Code (Experimental)",
+    "Configurable shortcut for the background send action",
+    "MCP",
+    "Skills over MCP (Preview)",
+    "Trust and security",
+    "Improved permission prompts",
+    "Mask environment variables in the sandbox",
+    "Sandbox status in the chat input",
+    "Accessibility",
+    "Visible keyboard focus on Welcome",
+    "Editor Experience",
+    "Mermaid 12 support",
+    "Copy the address of local HTML files in the Integrated Browser",
+    "Enterprise",
+    "Copilot sessions behind enterprise proxies",
+    "Organization help links for policy restrictions",
+    "Enterprise controls for canvas extensions",
+    "Deprecated features and settings",
+    "New deprecations in this release",
+    "Upcoming deprecations",
+    "Notable fixes",
+    "Fixed overcounting in agent edit metrics",
+    "Thank you",
+    "Issue tracking",
+    "Pull requests",
+    "<!-- RELEASE_THANK_YOU_END -->"
+  ],
+  "unresolvedLiquid": [],
+  "steps": [
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 193,
+      "failed": [
+        {
+          "id": 1,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 2,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 3,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 4,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 5,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 6,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 7,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 8,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 9,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 10,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 11,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 12,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 13,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 14,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 15,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 16,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 17,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 18,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 19,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 20,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 21,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 22,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 23,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 24,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 25,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 26,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 27,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 28,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 29,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 30,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 31,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 32,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 33,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 34,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 35,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 36,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 37,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 38,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 39,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 40,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 41,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 42,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 43,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 44,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 45,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 46,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 47,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 48,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 49,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 50,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 51,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 52,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 53,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 54,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 55,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 56,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 57,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 58,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 59,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 60,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 61,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 62,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 63,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 64,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 65,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 66,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 67,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 68,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 69,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 70,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 71,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 72,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 73,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 74,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 75,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 76,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 77,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 78,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 79,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 80,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 81,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 82,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 83,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 84,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 85,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 86,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 87,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 88,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 89,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 90,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 91,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 92,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 93,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 94,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 95,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 96,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 97,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 98,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 99,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 100,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 101,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 102,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 103,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 104,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 105,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 106,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 107,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 108,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 109,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 110,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 111,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 112,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 113,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 114,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 115,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 116,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 117,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 118,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 119,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 120,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 121,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 122,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 123,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 124,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 125,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 126,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 127,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 128,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 129,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 130,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 131,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 132,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 133,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 134,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 135,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 136,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 137,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 138,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 139,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 140,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 141,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 142,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 143,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 144,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 145,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 146,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 147,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 148,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 149,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 150,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 151,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 152,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 153,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 154,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 155,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 156,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 157,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 158,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 159,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 160,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 161,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 162,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 163,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 164,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 165,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 166,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 167,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 168,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 169,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 170,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 171,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 172,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 173,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 174,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 175,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 176,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 177,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 178,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 179,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 180,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 181,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 182,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 183,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 184,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 185,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 186,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 187,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 188,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 189,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 190,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 191,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 192,
+          "errors": [
+            "request"
+          ]
+        },
+        {
+          "id": 193,
+          "errors": [
+            "request"
+          ]
+        }
+      ],
+      "seconds": 316.677,
+      "error": "request: HTTP 503"
+    },
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 193,
+      "failed": [],
+      "finishReason": "STOP",
+      "seconds": 64.107
+    }
+  ]
+}

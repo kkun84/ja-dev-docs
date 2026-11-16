@@ -1,0 +1,46 @@
+name: translate
+
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: 訳すページのURL(空白区切り)
+        required: true
+  push:
+    branches: [pipeline]
+    paths: [pipeline/*.ts, data/glossary.yml, .github/workflows/translate.yml]
+
+permissions:
+  contents: write
+
+# 翻訳は同時に走らせない。無料枠の1分あたりの上限を守るため。
+concurrency:
+  group: translate
+  cancel-in-progress: false
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Translate
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          URLS: ${{ inputs.urls || 'https://code.visualstudio.com/docs/agents/overview https://code.visualstudio.com/docs/agent-customization/custom-instructions https://code.visualstudio.com/updates/v1_147 https://docs.github.com/en/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github https://docs.github.com/en/get-started/learning-about-github/access-permissions-on-github' }}
+        run: node pipeline/cli.ts $URLS
+      - name: Commit
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content
+          git commit -m "訳文を追加 (${GITHUB_SHA::7})" || exit 0
+          git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}"

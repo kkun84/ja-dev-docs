@@ -3,7 +3,7 @@
   "repo": "github/docs",
   "file": "content/get-started/learning-about-github/access-permissions-on-github.md",
   "commit": "d59b2631959db46d71ca5f7748ec04311c6d0870",
-  "translatedAt": "2026-11-16T00:20:03.733Z",
+  "translatedAt": "2026-11-16T00:26:35.743Z",
   "model": "gemini-3.5-flash-lite",
   "chain": [
     "gemini-3.5-flash-lite",
@@ -43,7 +43,7 @@
         }
       ],
       "finishReason": "STOP",
-      "seconds": 35.573
+      "seconds": 1.868
     },
     {
       "spec": "gemini-3.5-flash-lite",
@@ -63,14 +63,14 @@
         }
       ],
       "finishReason": "STOP",
-      "seconds": 0.623
+      "seconds": 0.913
     },
     {
       "spec": "gemini-3.8-flash@low",
       "sent": 2,
       "failed": [],
       "finishReason": "STOP",
-      "seconds": 132.113
+      "seconds": 54.752
     }
   ]
 }

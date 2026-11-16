@@ -26,8 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # 翻訳のジョブがpushしたコミットも含めるため、ブランチの最新を取る。
-          ref: ${{ github.ref_name }}
+          # 翻訳のジョブがpushしたコミットも含めるため、mainの最新を取る。
+          ref: main
       - uses: actions/setup-node@v4
         with:
           node-version: 24

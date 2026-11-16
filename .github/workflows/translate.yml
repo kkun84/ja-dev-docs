@@ -11,10 +11,6 @@ on:
         required: false
   schedule:
     - cron: "17 * * * *"
-  # 実装中の確かめ用。mainに入れる前に消す。
-  push:
-    branches: [review-fixes]
-    paths: [pipeline/*.ts]
 
 permissions:
   contents: read
@@ -44,7 +40,7 @@ jobs:
       - id: run
         name: Translate
         env:
-          URLS: ${{ inputs.urls || (github.event_name == 'push' && 'https://code.visualstudio.com/docs/agents/overview https://docs.github.com/en/get-started/learning-about-github/access-permissions-on-github') || '' }}
+          URLS: ${{ inputs.urls }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
           # 列(D1)の読み書きにだけ使う。

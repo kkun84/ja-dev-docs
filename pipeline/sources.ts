@@ -6,7 +6,7 @@ export interface Source {
   host: string;
   repo: string;
   branch: string;
-  // URLのパスを、このサイトでのページの名前に正規化する。受け付けないURLは undefined。
+  // URLのパスを、このサイトでのページの名前に正規化する。受け付けないURLはundefined。
   canonical(path: string): string | undefined;
   // 正規化したパスから、候補になるリポジトリ内のファイルを返す。先に見つかったものを使う。
   candidates(path: string): string[];
@@ -18,7 +18,7 @@ export const SOURCES: Record<string, Source> = {
     repo: "microsoft/vscode-docs",
     branch: "main",
     canonical(path) {
-      // リリースノートは、リポジトリの release-notes/v1_147 とサイトの updates/v1_147 を同じページとして扱う。
+      // リリースノートは、リポジトリのrelease-notes/v1_147とサイトのupdates/v1_147を同じページとして扱う。
       return path.replace(/^release-notes\//, "updates/").replace(/\.md$/, "");
     },
     candidates(path) {
@@ -32,7 +32,7 @@ export const SOURCES: Record<string, Source> = {
     repo: "github/docs",
     branch: "main",
     canonical(path) {
-      // 言語は en に揃える。版は github.com(free-pro-team)だけを受け付ける。
+      // 言語はenに揃える。版はgithub.com(free-pro-team)だけを受け付ける。
       // Enterpriseの版は本文の条件分岐が違うので、今は訳さない。
       let p = path.replace(/^en(\/|$)/, "");
       if (/^enterprise-(server|cloud)@/.test(p)) return undefined;
@@ -101,7 +101,7 @@ export async function fetchPage(ref: PageRef, fetcher: Fetcher = httpFetcher): P
   return undefined;
 }
 
-// {% data variables.X.Y %} の値を、原文のリポジトリの data/variables/X.yml から引く。
+// {% data variables.X.Y %} の値を、原文のリポジトリのdata/variables/X.ymlから引く。
 // 値にLiquidが入っているものは、バージョンで変わるので展開しない(undefinedを返す)。
 export async function loadVariables(source: Source, paths: string[], fetcher: Fetcher = httpFetcher): Promise<(path: string) => string | undefined> {
   const files = new Map<string, unknown>();

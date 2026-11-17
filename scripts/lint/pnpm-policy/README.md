@@ -1,0 +1,32 @@
+# pnpm-policy
+
+pnpmの供給網対策の設定が、消されたり緩められたりしていないかを検査します。
+
+- 対象: `pnpm-workspace.yaml`、`package.json`、`.npmrc`、`package.json`のscriptsとlefthookとワークフローのコマンド
+- 実行: `node scripts/lint/pnpm-policy/cli.ts`
+- 実装: [rule.ts](./rule.ts)、[cli.ts](./cli.ts)
+
+## 守る設定
+
+| 設定                 | 値               | 理由                                                                          |
+| -------------------- | ---------------- | ----------------------------------------------------------------------------- |
+| `minimumReleaseAge`  | 10080以上        | 公開から7日未満の版を入れない。乗っ取られた版は数日で取り下げられることが多い |
+| `engineStrict`       | `true`           | `engines`のNode.jsとpnpmの版を強制する                                        |
+| `trustPolicy`        | `no-downgrade`   | 以前より信頼の低い方法で公開された版を拒む                                    |
+| `blockExoticSubdeps` | `true`           | 依存の依存がGitやURLから入るのを拒む                                          |
+| `allowBuilds`        | 下の表のみ`true` | インストールスクリプトを動かすパッケージを限る                                |
+
+コマンドの`--config.<key>`、`--no-frozen-lockfile`などで、設定を一時的に上書きすることも禁止します。
+
+## インストールスクリプトを許すパッケージ
+
+| パッケージ | 理由                    |
+| ---------- | ----------------------- |
+| `lefthook` | Gitのフックを入れるため |
+
+`esbuild`、`workerd`、`sharp`は`false`にしています。実行ファイルはプラットフォーム別のパッケージから入るので、インストールスクリプトを動かす必要がありません。
+
+## 経緯
+
+- インストールが通らないとき、設定を緩めて通すのは手軽ですが、供給網対策が黙って外れます。設定はコマンドの引数でも上書きできるので、引数も検査します。
+- `trustPolicy: no-downgrade`がlefthook 2.2.2を拒みました。2.2.1に留めています。

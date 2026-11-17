@@ -15,8 +15,8 @@ VS CodeとGitHubの公式ドキュメントのページを、日本語で読め�
 
 - [`docs/design.md`](docs/design.md) — 設計の正本
 - `docs/` — 2026-11-11に書いた設計メモ。`docs/design.md`と食い違う箇所では、`docs/design.md`を優先します
-- `pipeline/` — 翻訳。原文を取得し、骨組みを保ったまま文の断片だけをモデルで訳し、検査して `content/` に書く
-- `content/` — 訳文。`<ホスト>/<パス>/<モデル>.md` が訳文、同じ名前の `.json` がその記録
+- `pipeline/` — 翻訳。原文を取得し、骨組みを保ったまま文の断片だけをモデルで訳し、検査して`content/`に書く
+- `content/` — 訳文。`<ホスト>/<パス>/<モデル>.md`が訳文、同じ名前の`.json`がその記録
 - `data/glossary.yml` — 製品名などの変数を、訳文でどう書くかの決まり
 - `src/` — サイト(AstroとStarlight)。静的に出力する
 - `worker/` — 訳が無いページの画面と、翻訳リクエストのAPI。Cloudflare Workersで動く
@@ -26,26 +26,31 @@ VS CodeとGitHubの公式ドキュメントのページを、日本語で読め�
 
 ## 開発
 
+Node.js 24とpnpm 12を使います。Nixがあれば`nix develop`で揃います。
+
 ```sh
 pnpm install
-pnpm test           # 翻訳とリンク書き換えのテスト
+pnpm check          # lint、型検査、テストとカバレッジ、サイトのビルド
+pnpm test           # テストだけ
 pnpm build          # サイトのビルド
-pnpm preview        # ビルドしてローカルのWorkerで動かす(先に pnpm exec wrangler d1 migrations apply ja-dev-docs --local)
-GEMINI_API_KEY=... node pipeline/cli.ts https://code.visualstudio.com/docs/editing/codebasics
+pnpm preview        # ビルドしてローカルのWorkerで動かす(先にpnpm exec wrangler d1 migrations apply ja-dev-docs --local)
+GEMINI_API_KEY=... pnpm translate https://code.visualstudio.com/docs/editing/codebasics
 ```
+
+開発の決まりは[`AGENTS.md`](AGENTS.md)に、lintの設定の理由は[`docs/lint-history.md`](docs/lint-history.md)にあります。
 
 ## 公開の準備
 
 GitHubのリポジトリの設定に、次を登録します。
 
-| 種類 | 名前 | 中身 |
-| --- | --- | --- |
-| シークレット | `GEMINI_API_KEY` | Google AI StudioのAPIキー(登録済み) |
-| シークレット | `CLOUDFLARE_API_TOKEN` | CloudflareのAPIトークン。Workers ScriptsとD1とWorkers Routesの編集、ゾーン`keke.works`のDNSの編集 |
-| シークレット | `CLOUDFLARE_ACCOUNT_ID` | CloudflareのアカウントID |
-| 変数 | `TURNSTILE_SITE_KEY` | `ja.keke.works`用のTurnstileのサイトキー |
-| シークレット | `TURNSTILE_SECRET` | 同じウィジェットの秘密鍵 |
-| シークレット | `DISPATCH_TOKEN` | このリポジトリだけに Actions の Read and write を持つ fine-grained token。Workerがワークフローを起動するのに使う |
+| 種類         | 名前                    | 中身                                                                                                        |
+| ------------ | ----------------------- | ----------------------------------------------------------------------------------------------------------- |
+| シークレット | `GEMINI_API_KEY`        | Google AI StudioのAPIキー(登録済み)                                                                         |
+| シークレット | `CLOUDFLARE_API_TOKEN`  | CloudflareのAPIトークン。Workers ScriptsとD1とWorkers Routesの編集、ゾーン`keke.works`のDNSの編集           |
+| シークレット | `CLOUDFLARE_ACCOUNT_ID` | CloudflareのアカウントID                                                                                    |
+| 変数         | `TURNSTILE_SITE_KEY`    | `ja.keke.works`用のTurnstileのサイトキー                                                                    |
+| シークレット | `TURNSTILE_SECRET`      | 同じウィジェットの秘密鍵                                                                                    |
+| シークレット | `DISPATCH_TOKEN`        | このリポジトリだけにActionsのRead and writeを持つfine-grained token。Workerがワークフローを起動するのに使う |
 
 登録したら、Actionsの`deploy`を手で起動します。D1のデータベースを作り、`ja.keke.works`にデプロイします。その後は、訳が無いページのリクエストで翻訳が動きます。
 

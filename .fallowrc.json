@@ -1,0 +1,46 @@
+// 既定から変えた設定の理由はdocs/lint-history.mdにある。
+{
+  "$schema": "./node_modules/fallow/schema.json",
+  "entry": [],
+  // リポジトリの道具。ビルドやlintのスクリプトと、そのテスト。
+  "supportEntry": ["scripts/*.ts", "scripts/lint/*/cli.ts", "*.config.ts", "scripts/**/*.test.ts"],
+  // pipeline、worker、src、astro.config.mjsは作り直す前のコード。作り直しが済んだ層から順に消す。
+  "ignorePatterns": [".astro/**", ".wrangler/**", "pipeline/**", "worker/**", "src/**", "astro.config.mjs"],
+  // @effect/tsgoはscripts/typecheck.tsがバイナリとして呼び、@effect/language-serviceは
+  // tsconfig.jsonのプラグインとして読み込むので、fallowからは使っているように見えない。
+  // その後ろは、fallowに読ませていない作り直す前のコードが使う依存。作り直しが済んだ層から順に外す。
+  "ignoreDependencies": [
+    "@effect/language-service",
+    "@effect/tsgo",
+    "@astrojs/starlight",
+    "@types/mdast",
+    "github-slugger",
+    "mdast-util-to-string",
+    "remark-cjk-friendly",
+    "remark-gfm",
+    "remark-parse",
+    "undici",
+    "unified"
+  ],
+  // テストは、準備、実行、確認が1か所で読めることを優先し、重複を許す。
+  "duplicates": {
+    "ignore": ["**/*.test.ts"],
+    "mode": "mild",
+    "minTokens": 40,
+    "minLines": 4,
+    "ignoreDefaults": false,
+    "threshold": 0.001
+  },
+  "rules": {
+    "unused-dev-dependencies": "error",
+    "circular-dependencies": "error",
+    "boundary-violation": "error",
+    "policy-violation": "error",
+    "added-suppression": "error"
+  },
+  "health": {
+    "maxCyclomatic": 20,
+    "maxCognitive": 15,
+    "maxCrap": 0
+  }
+}

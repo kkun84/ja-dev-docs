@@ -30,10 +30,10 @@ VS Codeの週次リリースやagent周辺の機能、GitHub Docsの比較的新
 
 対象は次の2系統である。どちらも、原文のフォルダ構成とURLに沿って「まるごと」訳すことを最終形とする。公開範囲は段階的に広げる。初版は合計20ページ以内に絞り、新しい情報と書式崩壊の影響が大きいページだけを出す。
 
-| 対象 | 原文 | 最終形に含めるもの |
-| --- | --- | --- |
-| GitHub Docs | [github/docs](https://github.com/github/docs) | `content/`の記事、`data/reusables`、`data/variables`、`data/glossaries`、`data/tables`、`data/ui.yml`、GHESリリースノート（`data/release-notes`）、`assets/`の図版 |
-| VS Code docs | [microsoft/vscode-docs](https://github.com/microsoft/vscode-docs) | `docs/`、`api/`、`learn/`、`release-notes/`、`remote-release-notes/`、`remote/`、`blogs/`、`data/variables/`、各ディレクトリの画像 |
+| 対象         | 原文                                                              | 最終形に含めるもの                                                                                                                                                 |
+| ------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| GitHub Docs  | [github/docs](https://github.com/github/docs)                     | `content/`の記事、`data/reusables`、`data/variables`、`data/glossaries`、`data/tables`、`data/ui.yml`、GHESリリースノート（`data/release-notes`）、`assets/`の図版 |
+| VS Code docs | [microsoft/vscode-docs](https://github.com/microsoft/vscode-docs) | `docs/`、`api/`、`learn/`、`release-notes/`、`remote-release-notes/`、`remote/`、`blogs/`、`data/variables/`、各ディレクトリの画像                                 |
 
 次のものは「まるごと」の対象外、または判断が必要である。
 
@@ -52,28 +52,28 @@ VS Codeの週次リリースやagent周辺の機能、GitHub Docsの比較的新
 
 パスは調査時点の上流リポジトリ基準（`microsoft/vscode-docs@0cc882e`、`github/docs@7c3387d`）である。
 
-| # | 系統 | 上流パス | 内容 | 初版に入れる理由 |
-| ---: | --- | --- | --- | --- |
-| 1 | VS Code | `release-notes/v1_146.md` | Visual Studio Code 1.146（2026-11-11、最新安定版） | 週次リリースの最新情報。公式日本語も有志の全体訳も無い |
-| 2 | VS Code | `docs/agents/overview.md` | VS CodeでAI/エージェントを使う入口 | agent機能の起点。公式日本語が無い |
-| 3 | VS Code | `docs/agents/quickstart.md` | エージェントで最初のタスクを完了するクイックスタート | 初めて使う人向けの最短経路 |
-| 4 | VS Code | `docs/agents/agents-tutorial.md` | エージェント開発のチュートリアル | 実際の操作を追える導入 |
-| 5 | VS Code | `docs/agents/concepts/agents.md` | AIエージェントの概念 | 後続ページの前提になる解説 |
-| 6 | VS Code | `docs/agents/run/agents-window.md` | Agents windowの使い方 | 並行セッションやPRまでの主UI |
-| 7 | VS Code | `docs/agents/run/chat-view.md` | Chat viewの使い方 | 日常的に使うもう一つの主UI |
-| 8 | VS Code | `docs/agents/run/cloud-sandbox-sessions.md` | クラウドでエージェントセッションを実行する | GitHub側のクラウドエージェントと接続する操作 |
-| 9 | VS Code | `docs/agent-customization/overview.md` | エージェントのカスタマイズ概要 | カスタム指示・MCP・カスタムエージェントの入口 |
-| 10 | VS Code | `docs/agent-customization/custom-agents.md` | カスタムエージェント | 新しい機能領域の中核 |
-| 11 | VS Code | `docs/agent-customization/custom-instructions.md` | カスタム指示 | プロジェクト規約をエージェントに渡す基本手段 |
-| 12 | VS Code | `docs/agent-customization/mcp-servers.md` | MCPサーバーの追加と利用 | ツール拡張の基本。GitHub側のMCPページと対になる |
-| 13 | GitHub Docs | `content/copilot/concepts/agent-capabilities/about-agents/about-github-copilot-agents.md` | GitHub Copilot agentsの概要 | クラウドエージェントとエージェントモードの違いを含む概念ページ |
-| 14 | GitHub Docs | `content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md` | GitHub上でクラウドエージェントを使う | 公式日本語の書式崩壊が顕著な、Webからの主How-to |
-| 15 | GitHub Docs | `content/copilot/how-tos/use-copilot-agents/cloud-agent/start-copilot-sessions.md` | Copilotセッションの開始方法 | 開始経路（GitHub、IDE、CLI、モバイルなど）の一覧 |
-| 16 | GitHub Docs | `content/copilot/how-tos/copilot-in-your-ide/use-copilot-agents/use-cloud-agent-in-your-ide.md` | IDEからクラウドエージェントを使う | VS Codeなど、エディタ側からの委任手順 |
-| 17 | GitHub Docs | `content/copilot/how-tos/copilot-in-your-ide/use-copilot-agents/use-agent-mode.md` | IDEのエージェントモード | クラウドエージェントとは別の、ローカルで自律編集する機能 |
-| 18 | GitHub Docs | `content/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment.md` | エージェント用開発環境の構成 | 公式日本語で表やコード、`AUTOTITLE`が崩れている設定ページ |
-| 19 | GitHub Docs | `content/copilot/tutorials/cloud-agent/get-the-best-results.md` | タスクを任せるときのベストプラクティス | 使い始めの品質に直結するガイド |
-| 20 | GitHub Docs | `content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-with-mcp.md` | MCP経由でクラウドエージェントを使う | VS CodeのMCPページと対になる、新しい拡張手段 |
+|   # | 系統        | 上流パス                                                                                                               | 内容                                                 | 初版に入れる理由                                               |
+| --: | ----------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------- |
+|   1 | VS Code     | `release-notes/v1_146.md`                                                                                              | Visual Studio Code 1.146（2026-11-11、最新安定版）   | 週次リリースの最新情報。公式日本語も有志の全体訳も無い         |
+|   2 | VS Code     | `docs/agents/overview.md`                                                                                              | VS CodeでAI/エージェントを使う入口                   | agent機能の起点。公式日本語が無い                              |
+|   3 | VS Code     | `docs/agents/quickstart.md`                                                                                            | エージェントで最初のタスクを完了するクイックスタート | 初めて使う人向けの最短経路                                     |
+|   4 | VS Code     | `docs/agents/agents-tutorial.md`                                                                                       | エージェント開発のチュートリアル                     | 実際の操作を追える導入                                         |
+|   5 | VS Code     | `docs/agents/concepts/agents.md`                                                                                       | AIエージェントの概念                                 | 後続ページの前提になる解説                                     |
+|   6 | VS Code     | `docs/agents/run/agents-window.md`                                                                                     | Agents windowの使い方                                | 並行セッションやPRまでの主UI                                   |
+|   7 | VS Code     | `docs/agents/run/chat-view.md`                                                                                         | Chat viewの使い方                                    | 日常的に使うもう一つの主UI                                     |
+|   8 | VS Code     | `docs/agents/run/cloud-sandbox-sessions.md`                                                                            | クラウドでエージェントセッションを実行する           | GitHub側のクラウドエージェントと接続する操作                   |
+|   9 | VS Code     | `docs/agent-customization/overview.md`                                                                                 | エージェントのカスタマイズ概要                       | カスタム指示・MCP・カスタムエージェントの入口                  |
+|  10 | VS Code     | `docs/agent-customization/custom-agents.md`                                                                            | カスタムエージェント                                 | 新しい機能領域の中核                                           |
+|  11 | VS Code     | `docs/agent-customization/custom-instructions.md`                                                                      | カスタム指示                                         | プロジェクト規約をエージェントに渡す基本手段                   |
+|  12 | VS Code     | `docs/agent-customization/mcp-servers.md`                                                                              | MCPサーバーの追加と利用                              | ツール拡張の基本。GitHub側のMCPページと対になる                |
+|  13 | GitHub Docs | `content/copilot/concepts/agent-capabilities/about-agents/about-github-copilot-agents.md`                              | GitHub Copilot agentsの概要                          | クラウドエージェントとエージェントモードの違いを含む概念ページ |
+|  14 | GitHub Docs | `content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-on-github.md`                                  | GitHub上でクラウドエージェントを使う                 | 公式日本語の書式崩壊が顕著な、Webからの主How-to                |
+|  15 | GitHub Docs | `content/copilot/how-tos/use-copilot-agents/cloud-agent/start-copilot-sessions.md`                                     | Copilotセッションの開始方法                          | 開始経路（GitHub、IDE、CLI、モバイルなど）の一覧               |
+|  16 | GitHub Docs | `content/copilot/how-tos/copilot-in-your-ide/use-copilot-agents/use-cloud-agent-in-your-ide.md`                        | IDEからクラウドエージェントを使う                    | VS Codeなど、エディタ側からの委任手順                          |
+|  17 | GitHub Docs | `content/copilot/how-tos/copilot-in-your-ide/use-copilot-agents/use-agent-mode.md`                                     | IDEのエージェントモード                              | クラウドエージェントとは別の、ローカルで自律編集する機能       |
+|  18 | GitHub Docs | `content/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/customize-the-agent-environment.md` | エージェント用開発環境の構成                         | 公式日本語で表やコード、`AUTOTITLE`が崩れている設定ページ      |
+|  19 | GitHub Docs | `content/copilot/tutorials/cloud-agent/get-the-best-results.md`                                                        | タスクを任せるときのベストプラクティス               | 使い始めの品質に直結するガイド                                 |
+|  20 | GitHub Docs | `content/copilot/how-tos/use-copilot-agents/cloud-agent/use-cloud-agent-with-mcp.md`                                   | MCP経由でクラウドエージェントを使う                  | VS CodeのMCPページと対になる、新しい拡張手段                   |
 
 ### 次のフェーズ
 
@@ -164,13 +164,13 @@ translated: 2026-11-11
 
 公式のバージョン付きURLに合わせる。fpt（Free, Pro, & Team。github.com向け）はパスにバージョンを付けない。
 
-| 原文 | 公開URL（案） | 公式英語版の対応 |
-| --- | --- | --- |
-| `content/index.md` | `/github/` | `https://docs.github.com/en` |
-| `content/actions/foo.md`（fpt） | `/github/actions/foo` | `/en/actions/foo` |
-| 同じファイルのghec向け | `/github/enterprise-cloud@latest/actions/foo` | `/en/enterprise-cloud@latest/actions/foo` |
-| 同じファイルのGHES 3.22向け | `/github/enterprise-server@3.22/actions/foo` | `/en/enterprise-server@3.22/actions/foo` |
-| `data/release-notes/enterprise-server/...` | 公式と同様のリリースノートURL | GHESリリースノート |
+| 原文                                       | 公開URL（案）                                 | 公式英語版の対応                          |
+| ------------------------------------------ | --------------------------------------------- | ----------------------------------------- |
+| `content/index.md`                         | `/github/`                                    | `https://docs.github.com/en`              |
+| `content/actions/foo.md`（fpt）            | `/github/actions/foo`                         | `/en/actions/foo`                         |
+| 同じファイルのghec向け                     | `/github/enterprise-cloud@latest/actions/foo` | `/en/enterprise-cloud@latest/actions/foo` |
+| 同じファイルのGHES 3.22向け                | `/github/enterprise-server@3.22/actions/foo`  | `/en/enterprise-server@3.22/actions/foo`  |
+| `data/release-notes/enterprise-server/...` | 公式と同様のリリースノートURL                 | GHESリリースノート                        |
 
 調査時点の現行GHESは`3.22`、`3.21`、`3.20`、`3.19`の4本である。Deprecatedな旧バージョンは公式がアーカイブしており、初版の対象外でよい。
 
@@ -182,14 +182,14 @@ translated: 2026-11-11
 
 公式サイト（`https://code.visualstudio.com`）のパスに合わせ、先頭に`/vscode`を付ける。
 
-| 原文 | 公開URL（案） | 公式の対応 |
-| --- | --- | --- |
-| `docs/agents/foo.md` | `/vscode/docs/agents/foo` | `/docs/agents/foo` |
-| `api/...` | `/vscode/api/...` | `/api/...` |
-| `learn/...` | `/vscode/learn/...`（公式の公開パスに合わせて調整） | Learn系 |
-| `release-notes/v1_146.md` | `/vscode/updates/v1_146`など、公式の更新履歴URLに合わせる | リリースノート |
-| `blogs/2026/...` | `/vscode/blogs/2026/...` | ブログ |
-| `remote/`、`remote-release-notes/` | 公式のRemote系URLに合わせる | Remote開発の文書 |
+| 原文                               | 公開URL（案）                                             | 公式の対応         |
+| ---------------------------------- | --------------------------------------------------------- | ------------------ |
+| `docs/agents/foo.md`               | `/vscode/docs/agents/foo`                                 | `/docs/agents/foo` |
+| `api/...`                          | `/vscode/api/...`                                         | `/api/...`         |
+| `learn/...`                        | `/vscode/learn/...`（公式の公開パスに合わせて調整）       | Learn系            |
+| `release-notes/v1_146.md`          | `/vscode/updates/v1_146`など、公式の更新履歴URLに合わせる | リリースノート     |
+| `blogs/2026/...`                   | `/vscode/blogs/2026/...`                                  | ブログ             |
+| `remote/`、`remote-release-notes/` | 公式のRemote系URLに合わせる                               | Remote開発の文書   |
 
 目次は原文の`docs/toc.json`、`api/toc.json`、`learn/toc.json`を訳して使う。TOCに載っていない記事は、公式と同様に左ナビへ出さない（ページ自体は公開してよい）。
 
@@ -233,30 +233,30 @@ translated: 2026-11-11
 
 ### GitHub Docs（`content/`、3,804 Markdownファイル）
 
-| トップレベル | ファイル数 | 概算語数 | 展開後ページ数（現行全バージョン） | fptのみ | fpt+ghec |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| copilot | 568 | 426,000 | 1,143 | 565 | 1,130 |
-| code-security | 566 | 306,000 | 2,904 | 544 | 1,102 |
-| admin | 412 | 202,000 | 1,497 | 0 | 168 |
-| rest | 318 | 47,000 | 1,487 | 259 | 563 |
-| actions | 251 | 161,000 | 1,365 | 249 | 498 |
-| organizations | 162 | 54,000 | 729 | 126 | 287 |
-| repositories | 127 | 50,000 | 719 | 126 | 252 |
-| get-started | 121 | 59,000 | 596 | 120 | 228 |
-| apps | 116 | 67,000 | 550 | 114 | 230 |
-| billing | 100 | 42,000 | 355 | 91 | 190 |
-| codespaces | 96 | 57,000 | 192 | 96 | 192 |
-| issues | 88 | 35,000 | 496 | 88 | 176 |
-| authentication | 81 | 36,000 | 402 | 73 | 154 |
-| pull-requests | 79 | 38,000 | 412 | 78 | 156 |
-| migrations | 76 | 38,000 | 348 | 73 | 148 |
-| site-policy | 72 | 116,000 | 72 | 72 | 72 |
-| account-and-profile | 69 | 19,000 | 360 | 67 | 132 |
-| graphql | 62 | 10,000 | 304 | 61 | 112 |
-| desktop | 53 | 20,000 | 314 | 53 | 106 |
-| education | 53 | 20,000 | 53 | 53 | 53 |
-| その他合計 | 334 | 159,000 | 1,512 | 310 | 588 |
-| **合計** | **3,804** | **約196万** | **15,910** | **3,234** | **6,591** |
+| トップレベル        | ファイル数 |    概算語数 | 展開後ページ数（現行全バージョン） |   fptのみ |  fpt+ghec |
+| ------------------- | ---------: | ----------: | ---------------------------------: | --------: | --------: |
+| copilot             |        568 |     426,000 |                              1,143 |       565 |     1,130 |
+| code-security       |        566 |     306,000 |                              2,904 |       544 |     1,102 |
+| admin               |        412 |     202,000 |                              1,497 |         0 |       168 |
+| rest                |        318 |      47,000 |                              1,487 |       259 |       563 |
+| actions             |        251 |     161,000 |                              1,365 |       249 |       498 |
+| organizations       |        162 |      54,000 |                                729 |       126 |       287 |
+| repositories        |        127 |      50,000 |                                719 |       126 |       252 |
+| get-started         |        121 |      59,000 |                                596 |       120 |       228 |
+| apps                |        116 |      67,000 |                                550 |       114 |       230 |
+| billing             |        100 |      42,000 |                                355 |        91 |       190 |
+| codespaces          |         96 |      57,000 |                                192 |        96 |       192 |
+| issues              |         88 |      35,000 |                                496 |        88 |       176 |
+| authentication      |         81 |      36,000 |                                402 |        73 |       154 |
+| pull-requests       |         79 |      38,000 |                                412 |        78 |       156 |
+| migrations          |         76 |      38,000 |                                348 |        73 |       148 |
+| site-policy         |         72 |     116,000 |                                 72 |        72 |        72 |
+| account-and-profile |         69 |      19,000 |                                360 |        67 |       132 |
+| graphql             |         62 |      10,000 |                                304 |        61 |       112 |
+| desktop             |         53 |      20,000 |                                314 |        53 |       106 |
+| education           |         53 |      20,000 |                                 53 |        53 |        53 |
+| その他合計          |        334 |     159,000 |                              1,512 |       310 |       588 |
+| **合計**            |  **3,804** | **約196万** |                         **15,910** | **3,234** | **6,591** |
 
 「その他」には`communities`、`contributing`、`sponsors`、`pages`、`integrations`、`search-github`、`packages`、`subscriptions-and-notifications`、`webhooks`、`discussions`、`support`、`nonprofit`、`github-cli`、`github-models`などを含む。
 
@@ -276,17 +276,17 @@ GitHub Docsの各記事は、フロントマターの`versions`で公開対象�
 
 加えて`data/`側にも訳すべきファイルがある（ページ数には原則として加算しない。例外はGHESリリースノート）。
 
-| `data/` | ファイル数 | 概算語数 | 備考 |
-| --- | ---: | ---: | --- |
-| reusables | 3,434 | 180,000 | `{% data reusables.* %}`の本体。要翻訳 |
-| release-notes | 48 | 89,000 | GHESリリースノート。公開ページになる |
-| variables | 28 | 2,600 | 製品名などが中心。訳すかは方針次第 |
-| tables | 19 | 4,700 | 要翻訳 |
-| glossaries | 2 | 5,900 | 要翻訳 |
-| ui.yml | 1 | 1,500 | レイアウト文言。要翻訳 |
-| features | 280 | 0 | バージョン判定用。翻訳不要 |
-| その他 | 7 | 4,400 | `llms-txt`など |
-| **data合計** | **3,819** | **約29万** | |
+| `data/`       | ファイル数 |   概算語数 | 備考                                   |
+| ------------- | ---------: | ---------: | -------------------------------------- |
+| reusables     |      3,434 |    180,000 | `{% data reusables.* %}`の本体。要翻訳 |
+| release-notes |         48 |     89,000 | GHESリリースノート。公開ページになる   |
+| variables     |         28 |      2,600 | 製品名などが中心。訳すかは方針次第     |
+| tables        |         19 |      4,700 | 要翻訳                                 |
+| glossaries    |          2 |      5,900 | 要翻訳                                 |
+| ui.yml        |          1 |      1,500 | レイアウト文言。要翻訳                 |
+| features      |        280 |          0 | バージョン判定用。翻訳不要             |
+| その他        |          7 |      4,400 | `llms-txt`など                         |
+| **data合計**  |  **3,819** | **約29万** |                                        |
 
 図版は`assets/`に1,782ファイル（約108MiB、ほとんどがPNG）。25MiBを超えるファイルは無い。
 
@@ -294,32 +294,32 @@ GitHub Docsの翻訳量は、contentとdataを合わせて約225万語・約1,61
 
 ### VS Code docs
 
-| 領域 | Markdownファイル数 | 概算語数 | 備考 |
-| --- | ---: | ---: | --- |
-| docs/ | 372 | 614,000 | 本体。`docs/agents/`が68ファイル・約13万語で最大 |
-| release-notes/ | 158 | 770,000 | 過去分まで含めると本文量はdocs全体を超える |
-| blogs/ | 127 | 176,000 | 2016年〜2026年 |
-| api/ | 77 | 119,000 | 拡張機能API |
-| remote-release-notes/ | 63 | 21,000 | Remote開発のリリースノート |
-| learn/ | 26 | 33,000 | 学習コンテンツ |
-| remote/ | 17 | 10,000 | 主にadvanced containers |
-| templates/ | 2 | 400 | 翻訳必須ではない |
-| data/variables | 2 | 130 | 製品名変数 |
-| **合計** | **842**（変数除く） | **約174万** | バージョン展開はほぼ無い（1ファイル≒1ページ） |
+| 領域                  |  Markdownファイル数 |    概算語数 | 備考                                             |
+| --------------------- | ------------------: | ----------: | ------------------------------------------------ |
+| docs/                 |                 372 |     614,000 | 本体。`docs/agents/`が68ファイル・約13万語で最大 |
+| release-notes/        |                 158 |     770,000 | 過去分まで含めると本文量はdocs全体を超える       |
+| blogs/                |                 127 |     176,000 | 2016年〜2026年                                   |
+| api/                  |                  77 |     119,000 | 拡張機能API                                      |
+| remote-release-notes/ |                  63 |      21,000 | Remote開発のリリースノート                       |
+| learn/                |                  26 |      33,000 | 学習コンテンツ                                   |
+| remote/               |                  17 |      10,000 | 主にadvanced containers                          |
+| templates/            |                   2 |         400 | 翻訳必須ではない                                 |
+| data/variables        |                   2 |         130 | 製品名変数                                       |
+| **合計**              | **842**（変数除く） | **約174万** | バージョン展開はほぼ無い（1ファイル≒1ページ）    |
 
 `docs/`の内訳（ファイル数順、上位）: `agents` 68、`intelligentapps` 24、`languages` 24、`cpp` 23、`containers` 17、`java` 17、`python` 17、`editing` 15、`configure` 14、`csharp` 14、`remote` 13、`agent-customization` 12。
 
 画像（Git LFSのサイズ合計）は次のとおりで、全体で8,013ファイル・約1.83GBある。
 
-| 領域 | 画像ファイル数 | サイズ |
-| --- | ---: | ---: |
-| release-notes/ | 3,814 | 約904MiB |
-| docs/ | 2,925 | 約507MiB |
-| blogs/ | 716 | 約294MiB |
-| api/ | 260 | 約66MiB |
-| remote-release-notes/ | 125 | 約35MiB |
-| learn/ | 148 | 約20MiB |
-| その他 | 25 | 約2MiB |
+| 領域                  | 画像ファイル数 |   サイズ |
+| --------------------- | -------------: | -------: |
+| release-notes/        |          3,814 | 約904MiB |
+| docs/                 |          2,925 | 約507MiB |
+| blogs/                |            716 | 約294MiB |
+| api/                  |            260 |  約66MiB |
+| remote-release-notes/ |            125 |  約35MiB |
+| learn/                |            148 |  約20MiB |
+| その他                |             25 |   約2MiB |
 
 `blogs/2026/08/26/agent-host-vscode.mp4`（約153MiB）は、Cloudflare Pagesの1ファイル25MiB上限を超える。
 
@@ -327,13 +327,13 @@ GitHub Docsの翻訳量は、contentとdataを合わせて約225万語・約1,61
 
 ホスティング制限で効くのは「デプロイ1回あたりの全ファイル数」である。HTMLに加え、画像、CSS、JS、フォント、faviconなども数える。静的サイトジェネレータの共通ファイルを約80と仮定した概数は次のとおり。
 
-| 公開範囲 | 概算ファイル数 | 無料のCloudflare Pages（2万ファイル） |
-| --- | ---: | --- |
-| GitHub全バージョン + VS Code全文 + 全画像 | 約26,600 | **超過** |
-| 同上、ただしVS Codeのリリースノート・ブログ画像を除く | 約21,900 | **超過** |
-| GitHubのfpt+ghec + VS Code全文 + 全画像 | 約17,300 | 収まるが余裕は少ない |
-| GitHubのfpt+ghec + VS Code全文 + GitHub画像 + VS Codeのdocs/api/learn画像 | 約12,600 | 余裕あり |
-| GitHubのfptのみ + VS Code全文 + 全画像 | 約14,000 | 収まるが、画像サイズとmp4は別問題 |
+| 公開範囲                                                                  | 概算ファイル数 | 無料のCloudflare Pages（2万ファイル） |
+| ------------------------------------------------------------------------- | -------------: | ------------------------------------- |
+| GitHub全バージョン + VS Code全文 + 全画像                                 |       約26,600 | **超過**                              |
+| 同上、ただしVS Codeのリリースノート・ブログ画像を除く                     |       約21,900 | **超過**                              |
+| GitHubのfpt+ghec + VS Code全文 + 全画像                                   |       約17,300 | 収まるが余裕は少ない                  |
+| GitHubのfpt+ghec + VS Code全文 + GitHub画像 + VS Codeのdocs/api/learn画像 |       約12,600 | 余裕あり                              |
+| GitHubのfptのみ + VS Code全文 + 全画像                                    |       約14,000 | 収まるが、画像サイズとmp4は別問題     |
 
 ジェネレータがページごとにJSONやプレレンダリングファイルを増やすと、この数字は上ぶれる。2万の上限に対しては、コンテンツ+画像で1.5〜1.7万程度に抑えるのが安全である。
 

@@ -46,7 +46,7 @@ export interface Keybinding {
 
 export interface PrepareOptions {
   variables: VariableResolver;
-  // VS Codeの kb(コマンド) を、既定のキー割り当てにする。
+  // VS Codeのkb(コマンド) を、既定のキー割り当てにする。
   keybinding?: (command: string) => Keybinding | undefined;
 }
 

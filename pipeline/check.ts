@@ -17,7 +17,7 @@ export function segmentErrors(source: string, output: string | undefined, kind: 
   if (/⟦|⟧/.test(output.replace(/⟦[^⟧\s]{1,12}⟧/g, ""))) errors.push("broken placeholder");
   if (!same(tags(source), tags(output)) || count(source, TAG_START_RE) !== count(output, TAG_START_RE)) errors.push("html tag");
 
-  // 断片を単独で構文解析し、ブロックの種類が原文と同じかを見る。訳に「> 」や「1. 」が入ると、引用やリストに変わるため。
+  // 断片を単独で構文解析し、ブロックの種類が原文と同じかを見る。訳に「> 」や「1.」が入ると、引用やリストに変わるため。
   const src = parseMarkdown(source);
   const out = parseMarkdown(output);
   if (kind !== "front" && !same(src.children.map((c) => c.type), out.children.map((c) => c.type))) errors.push("block structure");
@@ -28,7 +28,7 @@ export function segmentErrors(source: string, output: string | undefined, kind: 
   if (urls(out).some((u) => !allowed.has(u))) errors.push("new link");
 
   // 小文字で始まる語(the、andなど)が3つ以上ある文なのに日本語が無いものは、訳し漏れとみなす。
-  // 製品名だけの断片(Visual Studio Code 1.147 など)は大文字で始まる語なので、英語のままでよい。
+  // 製品名だけの断片(Visual Studio Code 1.147など)は大文字で始まる語なので、英語のままでよい。
   // リンクだけの断片(関連ページの題名の一覧など)は、題名を英語のまま残してよい。
   const prose = source.replace(/\[[^\]]*\]\(⟦\w+⟧\)/g, " ");
   const words = prose.replace(/⟦[^⟧]*⟧/g, " ").replace(HTML_TAG_RE, " ").match(/\b[a-z][a-z]+\b/g) ?? [];

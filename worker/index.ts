@@ -101,7 +101,7 @@ async function isPublished(env: Env, id: string, base: string): Promise<boolean>
   return res.ok;
 }
 
-// 翻訳のワークフローを起動する。実行中なら、Actionsの concurrency で終わるのを待ってから始まる。
+// 翻訳のワークフローを起動する。実行中なら、Actionsのconcurrencyで終わるのを待ってから始まる。
 async function dispatch(env: Env) {
   if (!env.GITHUB_DISPATCH_TOKEN) return;
   await fetch(`https://api.github.com/repos/${env.GITHUB_REPO}/actions/workflows/${env.GITHUB_WORKFLOW}/dispatches`, {

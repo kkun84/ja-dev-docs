@@ -1,8 +1,8 @@
-// 原文のURLを受け取り、ページを訳して content/ に書き出す。
+// 原文のURLを受け取り、ページを訳してcontent/ に書き出す。
 //
 //   node pipeline/cli.ts [--chain モデル...] <URL>...
 //
-// 訳文は content/<ホスト>/<パス>/<モデル>.md、記録は同じ名前の .json に書く。
+// 訳文はcontent/<ホスト>/<パス>/<モデル>.md、記録は同じ名前の .json に書く。
 
 import { parseArgs } from "node:util";
 import { parsePageUrl } from "./sources.ts";

@@ -31,12 +31,13 @@ jobs:
       more: ${{ steps.run.outputs.more }}
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v6.1.0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm test
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
       - id: run
         name: Translate
         env:

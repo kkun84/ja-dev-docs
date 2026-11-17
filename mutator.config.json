@@ -1,0 +1,5 @@
+{
+  "runner": "vitest",
+  "include": ["pipeline/**/*.ts", "src/lib/**/*.ts"],
+  "reporters": ["text", "html", "json"]
+}

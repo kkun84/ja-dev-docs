@@ -45,6 +45,7 @@ export function translationsLoader(dir = "content"): Loader {
         const h1 = /^\s*# (.+)\n/.exec(markdown);
         let headings = record.headings;
         if (h1) {
+          // mutator-disable-next-line Regex: oxcがTypeScriptで、カッコの直後の<!--で始まる正規表現を解析できない。
           title ??= h1[1]!.replace(/<!--[\s\S]*?-->/g, "").trim();
           markdown = markdown.slice(h1[0].length);
           headings = headings.slice(1);

@@ -1,4 +1,5 @@
 node_modules/
+.mutator/
 __pycache__/
 .scratch/
 .dev.vars

@@ -27,10 +27,11 @@ VS CodeとGitHubの公式ドキュメントのページを、日本語で読め�
 ## 開発
 
 ```sh
-npm ci
-npm test            # 翻訳とリンク書き換えのテスト
-npm run build       # サイトのビルド
-npm run preview     # ビルドしてローカルのWorkerで動かす(先に npx wrangler d1 migrations apply ja-dev-docs --local)
+pnpm install
+pnpm test           # 翻訳とリンク書き換えのテスト
+pnpm build          # サイトのビルド
+pnpm preview        # ビルドしてローカルのWorkerで動かす(先に npx wrangler d1 migrations apply ja-dev-docs --local)
+pnpm mutation:diff  # mainとの差分だけミューテーションテスト。全件は pnpm mutation(数分かかる)
 GEMINI_API_KEY=... node pipeline/cli.ts https://code.visualstudio.com/docs/editing/codebasics
 ```
 

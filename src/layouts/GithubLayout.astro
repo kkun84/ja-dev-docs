@@ -1,0 +1,146 @@
+---
+// GitHub Docsの訳のページ。原文のサイトと同じく、全幅の上部の帯を縦線で区切り、その下にパンくずの帯、
+// 左端に製品の目次の列、右端に「この記事の内容」の列を置く。ロゴは使わない。
+import type { Page } from "../lib/pages.ts";
+import type { Crumb, NavNode } from "../lib/nav.ts";
+import Head from "../components/article/Head.astro";
+import Search from "../components/article/Search.astro";
+import ThemeToggle from "../components/article/ThemeToggle.astro";
+import Variants from "../components/article/Variants.astro";
+import ModelSwitch from "../components/article/ModelSwitch.astro";
+import TocSpy from "../components/article/TocSpy.astro";
+import NavList from "../components/github/NavList.astro";
+import "../styles/github.css";
+
+interface Props {
+  page: Page;
+  tree: NavNode[];
+  crumbs: Crumb[];
+  translated: Set<string>;
+}
+const { page, tree, crumbs, translated } = Astro.props;
+const { data } = page.primary;
+const headings = (page.primary.rendered?.metadata?.headings ?? []).filter((h) => h.depth === 2);
+const product = tree.length === 1 ? tree[0] : undefined;
+const items = product ? product.children : tree;
+const home = translated.has("docs.github.com/en") ? "/docs.github.com/en/" : "https://docs.github.com/en";
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <Head title={data.title} description={data.description} siteName="GitHub Docs" />
+    <link rel="preload" href="/fonts/MonaSansVF-wdth-wght-opsz.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+  <body class="ghd">
+    <a class="ghd-skip" href="#main-content">本文へ移動</a>
+    <div class="ghd-notice" role="note">
+      GitHub、Microsoftとは関係のない、非公式の機械翻訳です。正確な内容は<a href={data.record.url}>原文(英語)</a>で確認してください。
+    </div>
+    <div class="ghd-sticky">
+      <header class="ghd-header">
+        <a class="ghd-title" href={home}>
+          GitHub Docs
+        </a>
+        <span class="ghd-badge" title="GitHub、Microsoftとは関係のない、非公式の機械翻訳です">非公式の日本語訳</span>
+        <span class="ghd-version" title="訳しているのは、この版の内容です">Free, Pro, &amp; Team</span>
+        <button type="button" class="ghd-search-trigger" data-search-open>
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M7 2a5 5 0 1 1 0 10A5 5 0 0 1 7 2Zm3.6 8.6L14 14" /></svg>
+          <span>訳したページを検索</span>
+          <kbd>/</kbd>
+        </button>
+        <ThemeToggle class="ghd-cell-button ghd-theme" />
+        <a class="ghd-cell-button ghd-original" href={data.record.url}>原文(英語)</a>
+      </header>
+      <div class="ghd-subbar">
+        <button type="button" class="ghd-rail-toggle" data-rail-toggle aria-label="目次を開閉する" aria-expanded="true">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><rect x="1.75" y="2.75" width="12.5" height="10.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5" /><path d="M6 3v10" stroke="currentColor" stroke-width="1.5" /></svg>
+        </button>
+        <nav class="ghd-breadcrumbs" aria-label="パンくず">
+          <ol>
+            {
+              crumbs.map((c) => (
+                <li>{c.href ? <a href={c.href} class:list={{ untranslated: c.untranslated }}>{c.label}</a> : <span>{c.label}</span>}</li>
+              ))
+            }
+            <li><span aria-current="page">{data.title}</span></li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="ghd-body">
+      <nav class="ghd-rail" aria-label="ドキュメントの目次" data-rail>
+        {
+          product && (
+            <h2 class="ghd-product">
+              <a href={product.href} class:list={{ untranslated: product.untranslated }}>
+                {product.label}
+              </a>
+            </h2>
+          )
+        }
+        <NavList nodes={items} />
+      </nav>
+
+      <div class="ghd-main">
+        <div class="ghd-article" data-pagefind-body>
+          <div class="ghd-hero">
+            <h1 data-pagefind-meta="title">{data.title}</h1>
+            {data.description && <p class="ghd-lead">{data.description}</p>}
+            <ModelSwitch page={page} class="ghd-select" />
+          </div>
+          {
+            headings.length > 1 && (
+              <aside class="ghd-minitoc" aria-labelledby="ghd-minitoc-title" data-pagefind-ignore="all">
+                <h2 id="ghd-minitoc-title">この記事の内容</h2>
+                <ul data-toc>
+                  {headings.map((h) => (
+                    <li>
+                      <a href={`#${h.slug}`}>{h.text}</a>
+                    </li>
+                  ))}
+                </ul>
+              </aside>
+            )
+          }
+          <main id="main-content" class="ghd-content">
+            <Variants page={page} />
+          </main>
+        </div>
+        <footer class="ghd-footer">
+          <p>
+            <a href="/">開発者ドキュメント日本語訳(非公式)</a>
+            ・<a href="/list/">訳したページの一覧</a>
+            ・<a href="https://github.com/kkun84/ja-dev-docs">ソースコード</a>
+          </p>
+          <p>GitHubおよびMicrosoftとは関係のない、個人による非公式の翻訳サイトです。</p>
+        </footer>
+      </div>
+    </div>
+    <Search />
+    <TocSpy />
+    <script>
+      // 目次の列を閉じた状態をブラウザに覚えておく。
+      const body = document.body;
+      const button = document.querySelector<HTMLButtonElement>("[data-rail-toggle]")!;
+      const narrow = matchMedia("(max-width: 1011px)");
+      const render = (open: boolean) => {
+        body.classList.toggle("ghd-rail-collapsed", !open);
+        button.setAttribute("aria-expanded", String(open));
+      };
+      let open = !narrow.matches;
+      try {
+        if (!narrow.matches && localStorage.getItem("ghd-rail") === "closed") open = false;
+      } catch {}
+      render(open);
+      button.addEventListener("click", () => {
+        open = !open;
+        render(open);
+        try {
+          if (!narrow.matches) localStorage.setItem("ghd-rail", open ? "open" : "closed");
+        } catch {}
+      });
+    </script>
+  </body>
+</html>

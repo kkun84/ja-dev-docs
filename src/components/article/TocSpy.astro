@@ -1,0 +1,23 @@
+---
+// 目次([data-toc] の中のリンク)のうち、いま読んでいる見出しのリンクに aria-current を付ける。
+---
+
+<script>
+  const links = [...document.querySelectorAll<HTMLAnchorElement>("[data-toc] a[href^='#']")];
+  const update = () => {
+    let current: HTMLAnchorElement | undefined;
+    for (const a of links) {
+      const target = document.getElementById(decodeURIComponent(a.hash.slice(1)));
+      if (target && target.getBoundingClientRect().top < 140) current = a;
+    }
+    current ??= links[0];
+    for (const a of links) {
+      if (a === current) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    }
+  };
+  if (links.length) {
+    addEventListener("scroll", update, { passive: true });
+    update();
+  }
+</script>

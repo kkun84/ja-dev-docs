@@ -1,0 +1,26 @@
+---
+// 配色を「自動、ライト、ダーク」の順に切り替えるボタン。見た目は使う側のCSSで決める。
+interface Props {
+  class?: string;
+}
+---
+
+<button type="button" class:list={["theme-toggle", Astro.props.class]} data-theme-toggle aria-label="配色を切り替える">
+  <span data-label></span>
+</button>
+
+<script>
+  const LABELS: Record<string, string> = { auto: "配色: 自動", light: "配色: ライト", dark: "配色: ダーク" };
+  const ORDER = ["auto", "light", "dark"];
+  const setTheme = (window as unknown as { __setTheme: (c: string) => void }).__setTheme;
+  for (const button of document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]")) {
+    const label = button.querySelector("[data-label]")!;
+    const render = () => (label.textContent = LABELS[document.documentElement.dataset.themeChoice ?? "auto"] ?? LABELS.auto!);
+    render();
+    button.addEventListener("click", () => {
+      const now = document.documentElement.dataset.themeChoice ?? "auto";
+      setTheme(ORDER[(ORDER.indexOf(now) + 1) % ORDER.length]!);
+      render();
+    });
+  }
+</script>

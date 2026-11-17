@@ -1,0 +1,44 @@
+---
+// 訳したページの<head>。配色はStarlightのページと同じ保存先(starlight-theme)を使い、サイト内で揃える。
+interface Props {
+  title: string;
+  description?: string;
+  siteName: string;
+}
+const { title, description, siteName } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title} | {siteName}(非公式の日本語訳)</title>
+{description && <meta name="description" content={description} />}
+<link rel="canonical" href={canonical} />
+<meta property="og:title" content={title} />
+<meta property="og:type" content="article" />
+<meta property="og:locale" content="ja" />
+<meta property="og:site_name" content="開発者ドキュメント日本語訳(非公式)" />
+{description && <meta property="og:description" content={description} />}
+<script is:inline>
+  (() => {
+    let stored = "auto";
+    try {
+      stored = localStorage.getItem("starlight-theme") || "auto";
+    } catch {}
+    const media = matchMedia("(prefers-color-scheme: light)");
+    const apply = () => {
+      const theme = stored === "light" || stored === "dark" ? stored : media.matches ? "light" : "dark";
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.dataset.themeChoice = stored;
+    };
+    apply();
+    media.addEventListener("change", apply);
+    window.__setTheme = (choice) => {
+      stored = choice;
+      try {
+        localStorage.setItem("starlight-theme", choice);
+      } catch {}
+      apply();
+    };
+  })();
+</script>

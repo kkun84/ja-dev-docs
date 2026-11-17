@@ -1,101 +1,30 @@
 ---
-// 訳があるページ。ビルド時に静的なHTMLにする。モデルごとの訳をすべて入れ、ブラウザで切り替える。
-import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+// 訳があるページ。ビルド時に静的なHTMLにする。原文のサイトごとに、その見た目に寄せたレイアウトを使う。
 import { getPages, type Page } from "../lib/pages.ts";
-import { sidebarFor } from "../lib/nav.ts";
-import { MODEL_LABELS } from "../lib/translations-loader.ts";
-import Attribution from "../components/Attribution.astro";
+import { breadcrumbs, navSection, navTree } from "../lib/nav.ts";
+import VscodeLayout from "../layouts/VscodeLayout.astro";
+import GithubLayout from "../layouts/GithubLayout.astro";
 
 export async function getStaticPaths() {
   const pages = await getPages();
   const byId = new Map(pages.map((p) => [p.id, p]));
-  return pages.map((page) => ({ params: { slug: page.id }, props: { page, nav: sidebarFor(page.id, byId) } }));
+  const translated = new Set(byId.keys());
+  return pages.map((page) => ({ params: { slug: page.id }, props: { page, tree: navTree(page.id, byId), translated } }));
 }
 
 interface Props {
   page: Page;
-  nav: ReturnType<typeof sidebarFor>;
+  tree: ReturnType<typeof navTree>;
+  translated: Set<string>;
 }
-const { page, nav } = Astro.props;
-const primary = page.variants[0]!;
-// 見出しのIDが重複しないよう、既定以外の訳では id を data-id に退避する。切り替えたときにスクリプトで入れ替える。
-const html = (i: number) => {
-  const h = page.variants[i]!.rendered?.html ?? "";
-  return i === 0 ? h : h.replace(/(<h[1-6][^>]*?) id="/g, '$1 data-id="');
-};
+const { page, tree, translated } = Astro.props;
+const { host, section } = navSection(page.id);
 ---
 
-<StarlightPage
-  frontmatter={{
-    title: primary.data.title,
-    description: primary.data.description,
-    banner: {
-      content: `GitHub、Microsoftとは関係のない、非公式の機械翻訳です。正確な内容は<a href="${primary.data.record.url}">原文(英語)</a>で確認してください。`,
-    },
-  }}
-  headings={primary.rendered?.metadata?.headings ?? []}
-  sidebar={nav}
->
-  {
-    page.variants.length > 1 && (
-      <label class="model-switch">
-        翻訳したモデル:
-        <select data-model-select>
-          {page.variants.map((v) => (
-            <option value={v.data.record.model}>{MODEL_LABELS[v.data.record.model] ?? v.data.record.model}</option>
-          ))}
-        </select>
-      </label>
-    )
-  }
-  {
-    page.variants.map((v, i) => (
-      <div data-model={v.data.record.model} data-pagefind-ignore={i > 0 ? "all" : undefined} hidden={i > 0}>
-        <Fragment set:html={html(i)} />
-        <Attribution variant={v} />
-      </div>
-    ))
-  }
-</StarlightPage>
-
-<script>
-  // 読者が選んだモデルをブラウザに保存し、どのページでも同じモデルの訳を優先して見せる。
-  const select = document.querySelector<HTMLSelectElement>("[data-model-select]");
-  const show = (model: string) => {
-    const blocks = [...document.querySelectorAll<HTMLElement>("[data-model]")];
-    if (!blocks.some((b) => b.dataset.model === model)) return;
-    for (const b of blocks) {
-      const visible = b.dataset.model === model;
-      b.hidden = !visible;
-      // 見えている訳だけが見出しのIDを持つ。
-      for (const h of b.querySelectorAll<HTMLElement>(visible ? "[data-id]" : "h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]")) {
-        if (visible) {
-          h.id = h.dataset.id!;
-          delete h.dataset.id;
-        } else {
-          h.dataset.id = h.id;
-          h.removeAttribute("id");
-        }
-      }
-    }
-    if (select) select.value = model;
-  };
-  try {
-    const saved = localStorage.getItem("model");
-    if (saved) show(saved);
-  } catch {}
-  select?.addEventListener("change", () => {
-    show(select.value);
-    try {
-      localStorage.setItem("model", select.value);
-    } catch {}
-  });
-</script>
-
-<style>
-  .model-switch {
-    display: block;
-    font-size: var(--sl-text-sm);
-    margin-bottom: 1rem;
-  }
-</style>
+{
+  host === "docs.github.com" ? (
+    <GithubLayout page={page} tree={tree} crumbs={breadcrumbs(tree)} translated={translated} />
+  ) : (
+    <VscodeLayout page={page} tree={tree} section={section} translated={translated} />
+  )
+}

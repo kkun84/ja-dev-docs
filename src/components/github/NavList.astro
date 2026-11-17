@@ -1,0 +1,38 @@
+---
+// GitHub Docsの目次。最上位は点線で区切った大きめの項目で、右端の山形で開閉する。
+// 下の階層は字下げした小さめの項目で、現在のページは背景と左の丸い棒で示す。
+import type { NavNode } from "../../lib/nav.ts";
+
+interface Props {
+  nodes: NavNode[];
+  level?: number;
+}
+const { nodes, level = 1 } = Astro.props;
+const title = (n: NavNode) => (n.untranslated ? "まだ日本語訳がありません(原文のページを開きます)" : undefined);
+---
+
+<ul class:list={["ghd-nav", `ghd-nav--level-${level}`]}>
+  {
+    nodes.map((n) =>
+      n.children.length > 0 ? (
+        <li class:list={["ghd-nav-item", { "has-current": n.open && !n.current }]}>
+          <details open={n.open}>
+            <summary class="ghd-nav-label">
+              <span>{n.label}</span>
+              <svg class="ghd-chevron" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                <path fill="none" stroke="currentColor" stroke-width="1.5" d="m4 6 4 4 4-4" />
+              </svg>
+            </summary>
+            <Astro.self nodes={n.href ? [{ ...n, label: "Overview", children: [], open: false }, ...n.children] : n.children} level={level + 1} />
+          </details>
+        </li>
+      ) : (
+        <li class="ghd-nav-item">
+          <a href={n.href} aria-current={n.current ? "page" : undefined} class:list={["ghd-nav-label", { untranslated: n.untranslated }]} title={title(n)}>
+            <span>{n.label}</span>
+          </a>
+        </li>
+      ),
+    )
+  }
+</ul>

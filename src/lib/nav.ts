@@ -1,4 +1,4 @@
-// 原文のサイトと同じ目次を、Starlightのサイドバーにする。
+// 原文のサイトと同じ目次と、現在地までのパンくずを作る。
 //
 // 目次のデータは data/nav/<ホスト>.json(pipeline/nav.ts が原文のリポジトリから作る)。
 // 訳があるページはこのサイトの訳へ、無いページは原文のサイトへリンクする。本文のリンクと同じ扱い。
@@ -13,9 +13,23 @@ interface NavItem {
   children?: NavItem[];
 }
 
-type SidebarEntry =
-  | { label: string; link: string; attrs?: Record<string, string> }
-  | { label: string; items: SidebarEntry[]; collapsed?: boolean };
+export interface NavNode {
+  label: string;
+  // 見出しだけでページを持たない項目は undefined。
+  href?: string;
+  // 訳が無く、原文のサイトへリンクする。
+  untranslated: boolean;
+  current: boolean;
+  // 現在のページを子孫に持つ。
+  open: boolean;
+  children: NavNode[];
+}
+
+export interface Crumb {
+  label: string;
+  href?: string;
+  untranslated: boolean;
+}
 
 const NAVS: Record<string, Record<string, NavItem[]>> = {
   "code.visualstudio.com": vscodeNav as Record<string, NavItem[]>,
@@ -29,40 +43,46 @@ export function navSection(id: string): { host: string; section: string } {
   return { host, section };
 }
 
-export function sectionTitle(id: string): string | undefined {
+// 目次の最上位。GitHub Docsは製品が1つの項目になっているので、製品そのものを返す。
+function roots(id: string): { host: string; items: NavItem[] } {
   const { host, section } = navSection(id);
-  return host === "docs.github.com" ? NAVS[host]?.[section]?.[0]?.title : undefined;
+  return { host, items: NAVS[host]?.[section] ?? [] };
 }
 
-export function sidebarFor(id: string, pages: Map<string, Page>): SidebarEntry[] {
-  const { host, section } = navSection(id);
-  const tree = NAVS[host]?.[section];
-  if (!tree) return [];
-  // GitHub Docsは、製品の最上位の項目の中身を並べる(原文のサイトと同じく、製品名は見出しに出す)。
-  const roots = host === "docs.github.com" && tree.length === 1 && tree[0]!.children ? tree[0]!.children : tree;
-  const entries = roots.map((item) => toEntry(item, host, id, pages)).filter((e) => !("items" in e) || e.items.length > 0);
-  // GitHub Docsは、原文のサイトと同じく、目次の先頭に製品のトップページを置く。
-  if (host === "docs.github.com" && tree[0]?.path) {
-    const top = `${host}/${tree[0].path}`;
-    entries.unshift(pages.has(top) ? { label: tree[0].title, link: `/${top}/`, attrs: { class: "product-top" } } : { label: tree[0].title, link: `https://${top}`, attrs: { class: "product-top untranslated" } });
-  }
-  return entries;
-}
-
-function toEntry(item: NavItem, host: string, current: string, pages: Map<string, Page>): SidebarEntry {
-  const link = (it: NavItem, label = it.title): SidebarEntry => {
-    const id = `${host}/${it.path}`;
-    const page = pages.get(id);
-    return page
-      ? { label: page.primary.data.title, link: `/${id}/` }
-      : { label, link: `https://${id}`, attrs: { class: "untranslated", title: "まだ日本語訳がありません(原文のページを開きます)" } };
+export function navTree(id: string, pages: Map<string, Page>): NavNode[] {
+  const { host, items } = roots(id);
+  const node = (item: NavItem): NavNode => {
+    const children = (item.children ?? []).map(node).filter((c) => c.href || c.children.length > 0);
+    const page = item.path ? `${host}/${item.path}` : undefined;
+    const translated = page ? pages.get(page) : undefined;
+    return {
+      label: translated?.primary.data.title ?? item.title,
+      href: page && (translated ? `/${page}/` : `https://${page}`),
+      untranslated: !!page && !translated,
+      current: page === id,
+      open: contains(item, id, host),
+      children,
+    };
   };
-  if (!item.children?.length) return item.path ? link(item) : { label: item.title, items: [] };
-  // 中身の無い見出し(原文の目次の区切りなど)は出さない。
-  const items = item.children.map((c) => toEntry(c, host, current, pages)).filter((e) => !("items" in e) || e.items.length > 0);
-  // 目次の見出し自体がページを持つ(GitHub Docsの製品の中の節など)ときは、先頭に「概要」として置く。
-  if (item.path) items.unshift(link(item, "Overview"));
-  return { label: pages.get(`${host}/${item.path}`)?.primary.data.title ?? item.title, items, collapsed: !contains(item, current, host) };
+  return items.map(node).filter((n) => n.href || n.children.length > 0);
+}
+
+// 目次の最上位から現在のページまで。現在のページは含めない。
+export function breadcrumbs(tree: NavNode[]): Crumb[] {
+  const path: NavNode[] = [];
+  const walk = (nodes: NavNode[]): boolean => {
+    for (const n of nodes) {
+      if (n.current) return true;
+      if (n.open) {
+        path.push(n);
+        if (walk(n.children)) return true;
+        path.pop();
+      }
+    }
+    return false;
+  };
+  walk(tree);
+  return path.map(({ label, href, untranslated }) => ({ label, href, untranslated }));
 }
 
 function contains(item: NavItem, current: string, host: string): boolean {

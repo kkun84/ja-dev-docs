@@ -49,7 +49,7 @@ export function translationsLoader(dir = "content"): Loader {
           markdown = markdown.slice(h1[0].length);
           headings = headings.slice(1);
         }
-        markdown = alertsToAsides(markdown);
+        markdown = cjkUnderscoreEmphasis(alertsToCallouts(markdown));
         const rendered = await renderMarkdown(markdown);
         rendered.html = rewriteHtmlLinks(rendered.html, record, pages);
         fixHeadingIds(rendered, headings);
@@ -101,17 +101,17 @@ function fixHeadingIds(rendered: { html: string; metadata?: { headings?: { depth
   for (const h of rendered.metadata?.headings ?? []) h.slug = map.get(h.slug) ?? h.slug;
 }
 
-const ASIDE: Record<string, [string, string]> = {
-  NOTE: ["note", "メモ"],
-  TIP: ["tip", "ヒント"],
-  IMPORTANT: ["note", "重要"],
-  WARNING: ["caution", "警告"],
-  CAUTION: ["danger", "注意"],
+const CALLOUT_TITLES: Record<string, string> = {
+  NOTE: "メモ",
+  TIP: "ヒント",
+  IMPORTANT: "重要",
+  WARNING: "警告",
+  CAUTION: "注意",
 };
 
-// GitHubのアラート(> [!NOTE])を、Starlightの補足と同じHTMLにする。リストの中の字下げにも対応する。
+// GitHubのアラート(> [!NOTE])を、種類ごとに見た目を変えられるHTMLにする。リストの中の字下げにも対応する。
 // 中身はMarkdownのまま残すため、前後に空行を入れる。
-export function alertsToAsides(markdown: string): string {
+export function alertsToCallouts(markdown: string): string {
   const lines = markdown.split("\n");
   const out: string[] = [];
   for (let i = 0; i < lines.length; i++) {
@@ -121,16 +121,37 @@ export function alertsToAsides(markdown: string): string {
       continue;
     }
     const indent = m[1]!;
-    const [variant, title] = ASIDE[m[2]!]!;
+    const kind = m[2]!.toLowerCase();
+    const title = CALLOUT_TITLES[m[2]!]!;
     const body: string[] = [];
     while (i + 1 < lines.length && lines[i + 1]!.startsWith(indent + ">")) body.push(indent + lines[++i]!.slice(indent.length + 1).replace(/^[ \t]/, ""));
     out.push(
-      `${indent}<aside aria-label="${title}" class="starlight-aside starlight-aside--${variant}"><p class="starlight-aside__title" aria-hidden="true">${title}</p><div class="starlight-aside__content">`,
+      `${indent}<div class="callout callout--${kind}"><p class="callout-title">${title}</p><div class="callout-content">`,
       "",
       ...body,
       "",
-      `${indent}</div></aside>`,
+      `${indent}</div></div>`,
     );
   }
   return out.join("\n");
+}
+
+const CJK_CHAR = "[\\u3000-\\u30ff\\u3400-\\u9fff\\uff00-\\uffef]";
+const UNDERSCORE_EMPHASIS = new RegExp(`(?<=${CJK_CHAR})_([^_\\s][^_\\n]*?)_|_([^_\\s][^_\\n]*?)_(?=${CJK_CHAR})`, "g");
+
+// 日本語に隣接した _強調_ は、CommonMarkでは単語の途中とみなされ強調にならない(remark-cjk-friendlyも * だけを扱う)。
+// コードの外の _…_ を *…* に置き換える。訳文では、英語の _owner_ が「_所有者_と」のように日本語に挟まれるため。
+export function cjkUnderscoreEmphasis(markdown: string): string {
+  let inFence = false;
+  return markdown
+    .split("\n")
+    .map((line) => {
+      if (/^\s*(```|~~~)/.test(line)) inFence = !inFence;
+      if (inFence) return line;
+      return line
+        .split(/(`+[^`]*`+)/)
+        .map((part, i) => (i % 2 ? part : part.replace(UNDERSCORE_EMPHASIS, (_m, a?: string, b?: string) => `*${a ?? b}*`)))
+        .join("");
+    })
+    .join("\n");
 }

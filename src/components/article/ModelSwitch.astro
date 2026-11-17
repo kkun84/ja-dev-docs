@@ -1,0 +1,24 @@
+---
+// 翻訳したモデルの選択欄。訳が1つしか無いページでは出さない。
+import type { Page } from "../../lib/pages.ts";
+import { MODEL_LABELS } from "../../lib/translations-loader.ts";
+
+interface Props {
+  page: Page;
+  class?: string;
+}
+const { page } = Astro.props;
+---
+
+{
+  page.variants.length > 1 && (
+    <label class:list={["model-switch", Astro.props.class]} data-pagefind-ignore="all">
+      <span>翻訳したモデル</span>
+      <select data-model-select>
+        {page.variants.map((v) => (
+          <option value={v.data.record.model}>{MODEL_LABELS[v.data.record.model] ?? v.data.record.model}</option>
+        ))}
+      </select>
+    </label>
+  )
+}

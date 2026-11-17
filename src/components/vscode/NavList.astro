@@ -1,0 +1,36 @@
+---
+// VS Codeのドキュメントの目次。見出しは大文字の小さな文字で開閉でき、ページは左の線に沿って並ぶ。
+import type { NavNode } from "../../lib/nav.ts";
+
+interface Props {
+  nodes: NavNode[];
+  depth?: number;
+}
+const { nodes, depth = 0 } = Astro.props;
+---
+
+<ul class:list={["vsc-nav", `vsc-nav--depth-${depth}`]}>
+  {
+    nodes.map((n) =>
+      n.children.length > 0 ? (
+        <li>
+          <details open={n.open}>
+            <summary class="vsc-nav-area">{n.label}</summary>
+            <Astro.self nodes={n.href ? [{ ...n, label: "Overview", children: [], open: false }, ...n.children] : n.children} depth={depth + 1} />
+          </details>
+        </li>
+      ) : (
+        <li class:list={{ active: n.current }}>
+          <a
+            href={n.href}
+            aria-current={n.current ? "page" : undefined}
+            class:list={{ untranslated: n.untranslated }}
+            title={n.untranslated ? "まだ日本語訳がありません(原文のページを開きます)" : undefined}
+          >
+            {n.label}
+          </a>
+        </li>
+      ),
+    )
+  }
+</ul>

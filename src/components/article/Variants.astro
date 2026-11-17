@@ -1,0 +1,59 @@
+---
+// 訳の本文。モデルごとの訳をすべて入れ、読者が選んだモデルの訳を見せる。
+// 切り替えの選択欄(ModelSwitch)は、使う側が好きな位置に置く。
+import type { Page } from "../../lib/pages.ts";
+import Attribution from "../Attribution.astro";
+
+interface Props {
+  page: Page;
+}
+const { page } = Astro.props;
+// 見出しのIDが重複しないよう、既定以外の訳では id を data-id に退避する。切り替えたときにスクリプトで入れ替える。
+const html = (i: number) => {
+  const h = page.variants[i]!.rendered?.html ?? "";
+  return i === 0 ? h : h.replace(/(<h[1-6][^>]*?) id="/g, '$1 data-id="');
+};
+---
+
+{
+  page.variants.map((v, i) => (
+    <div class="article-body" data-model={v.data.record.model} data-pagefind-ignore={i > 0 ? "all" : undefined} hidden={i > 0}>
+      <Fragment set:html={html(i)} />
+      <Attribution variant={v} />
+    </div>
+  ))
+}
+
+<script>
+  // 読者が選んだモデルをブラウザに保存し、どのページでも同じモデルの訳を優先して見せる。
+  const select = document.querySelector<HTMLSelectElement>("[data-model-select]");
+  const show = (model: string) => {
+    const blocks = [...document.querySelectorAll<HTMLElement>("[data-model]")];
+    if (!blocks.some((b) => b.dataset.model === model)) return;
+    for (const b of blocks) {
+      const visible = b.dataset.model === model;
+      b.hidden = !visible;
+      // 見えている訳だけが見出しのIDを持つ。
+      for (const h of b.querySelectorAll<HTMLElement>(visible ? "[data-id]" : "h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]")) {
+        if (visible) {
+          h.id = h.dataset.id!;
+          delete h.dataset.id;
+        } else {
+          h.dataset.id = h.id;
+          h.removeAttribute("id");
+        }
+      }
+    }
+    if (select) select.value = model;
+  };
+  try {
+    const saved = localStorage.getItem("model");
+    if (saved) show(saved);
+  } catch {}
+  select?.addEventListener("change", () => {
+    show(select.value);
+    try {
+      localStorage.setItem("model", select.value);
+    } catch {}
+  });
+</script>

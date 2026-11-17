@@ -18,7 +18,7 @@ VS CodeとGitHubの公式ドキュメントのページを、日本語で読め�
 - `pipeline/` — 翻訳。原文を取得し、骨組みを保ったまま文の断片だけをモデルで訳し、検査して `content/` に書く
 - `content/` — 訳文。`<ホスト>/<パス>/<モデル>.md` が訳文、同じ名前の `.json` がその記録
 - `data/glossary.yml` — 製品名などの変数を、訳文でどう書くかの決まり
-- `src/` — サイト(AstroとStarlight)。静的に出力する
+- `src/` — サイト(Astro)。訳したページは原文のサイトごとのレイアウト、トップページと一覧はStarlight。静的に出力する
 - `worker/` — 訳が無いページの画面と、翻訳リクエストのAPI。Cloudflare Workersで動く
 - `migrations/` — D1の順番待ちの列と、翻訳モデルの呼び出し回数
 - `.github/workflows/translate.yml` — 列から取り出して訳し、コミットする

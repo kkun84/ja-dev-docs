@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: [src/**, worker/**, public/**, content/**, migrations/**, astro.config.mjs, wrangler.jsonc, package.json, package-lock.json, scripts/deploy.sh]
+    paths: [src/**, worker/**, public/**, content/**, data/**, migrations/**, astro.config.mjs, wrangler.jsonc, package.json, package-lock.json, scripts/deploy.sh]
 
 permissions:
   contents: read

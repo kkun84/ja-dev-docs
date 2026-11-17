@@ -1,0 +1,82 @@
+---
+// サイト内検索。Pagefindの索引(ビルド時に dist/pagefind に作られる)を引く。
+// 開くボタンは使う側が data-search-open を付けて置き、見た目も使う側のCSSで決める。
+---
+
+<dialog class="search-dialog" data-search-dialog aria-label="訳したページを検索">
+  <form method="dialog" class="search-form">
+    <input type="search" placeholder="訳したページを検索" aria-label="検索語" data-search-input autocomplete="off" />
+    <button type="submit" class="search-close">閉じる</button>
+  </form>
+  <p class="search-status" data-search-status></p>
+  <ol class="search-results" data-search-results></ol>
+</dialog>
+
+<script>
+  type Result = { url: string; meta: { title?: string }; excerpt: string };
+  type Pagefind = { search(q: string): Promise<{ results: { data(): Promise<Result> }[] }> };
+
+  const dialog = document.querySelector<HTMLDialogElement>("[data-search-dialog]")!;
+  const input = dialog.querySelector<HTMLInputElement>("[data-search-input]")!;
+  const list = dialog.querySelector<HTMLOListElement>("[data-search-results]")!;
+  const status = dialog.querySelector<HTMLParagraphElement>("[data-search-status]")!;
+  let pagefind: Promise<Pagefind> | undefined;
+  const load = () => {
+    // 索引はビルド後にしか無いので、バンドラーに解決させない。
+    const path = "/pagefind/pagefind.js";
+    pagefind ??= import(/* @vite-ignore */ path) as Promise<Pagefind>;
+    return pagefind;
+  };
+
+  const open = () => {
+    dialog.showModal();
+    input.focus();
+    void load().catch(() => (status.textContent = "検索の索引を読み込めませんでした。"));
+  };
+  for (const b of document.querySelectorAll("[data-search-open]")) b.addEventListener("click", open);
+  document.addEventListener("keydown", (e) => {
+    const typing = e.target instanceof HTMLElement && e.target.closest("input, textarea, select, [contenteditable]");
+    if ((e.key === "/" && !typing) || (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey))) {
+      e.preventDefault();
+      open();
+    }
+  });
+  // 検索欄のEscは入力を消すだけで閉じないので、閉じる操作として扱う。
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      dialog.close();
+    }
+  });
+  dialog.addEventListener("click", (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+
+  let seq = 0;
+  input.addEventListener("input", async () => {
+    const q = input.value.trim();
+    const mine = ++seq;
+    list.replaceChildren();
+    status.textContent = "";
+    if (!q) return;
+    const search = await (await load()).search(q);
+    const results = await Promise.all(search.results.slice(0, 10).map((r) => r.data()));
+    if (mine !== seq) return;
+    status.textContent = results.length ? "" : "見つかりませんでした。";
+    for (const r of results) {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = r.url;
+      const title = document.createElement("span");
+      title.className = "search-result-title";
+      title.textContent = r.meta.title ?? r.url;
+      const excerpt = document.createElement("span");
+      excerpt.className = "search-result-excerpt";
+      // excerptはPagefindが本文から作り、一致箇所だけを<mark>で囲んだもの。本文はこのサイトの訳文なので、そのまま入れる。
+      excerpt.innerHTML = r.excerpt;
+      a.append(title, excerpt);
+      li.append(a);
+      list.append(li);
+    }
+  });
+</script>

@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: [src/**, worker/**, public/**, content/**, migrations/**, astro.config.mjs, wrangler.jsonc, package.json, package-lock.json, scripts/deploy.sh]
+    paths: [src/**, worker/**, public/**, content/**, migrations/**, astro.config.mjs, wrangler.jsonc, package.json, pnpm-lock.yaml, pnpm-workspace.yaml, scripts/deploy.sh]
 
 permissions:
   contents: read
@@ -28,13 +28,14 @@ jobs:
         with:
           # 翻訳のジョブがpushしたコミットも含めるため、mainの最新を取る。
           ref: main
+      - uses: pnpm/action-setup@v6.1.0
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: npm
-      - run: npm ci
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
       # ビルドには秘密を渡さない。
-      - run: npm run build
+      - run: pnpm build
       - name: Deploy
         if: ${{ env.HAS_CLOUDFLARE == 'true' }}
         env:

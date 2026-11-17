@@ -1,0 +1,8 @@
+trustPolicy: no-downgrade
+
+blockExoticSubdeps: true
+
+allowBuilds:
+  # 実行ファイルはプラットフォーム別のパッケージから入るので、installスクリプトは動かさない。
+  esbuild: false
+  workerd: false

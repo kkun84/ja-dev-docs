@@ -5,12 +5,12 @@
 # 任意: TURNSTILE_SITE_KEY、TURNSTILE_SECRET、DISPATCH_TOKEN
 set -euo pipefail
 
-if ! npx wrangler d1 info ja-dev-docs >/dev/null 2>&1; then
-  npx wrangler d1 create ja-dev-docs
+if ! pnpm exec wrangler d1 info ja-dev-docs >/dev/null 2>&1; then
+  pnpm exec wrangler d1 create ja-dev-docs
 fi
-npx wrangler d1 migrations apply ja-dev-docs --remote
+pnpm exec wrangler d1 migrations apply ja-dev-docs --remote
 
-npx wrangler deploy ${TURNSTILE_SITE_KEY:+--var "TURNSTILE_SITE_KEY:$TURNSTILE_SITE_KEY"}
+pnpm exec wrangler deploy ${TURNSTILE_SITE_KEY:+--var "TURNSTILE_SITE_KEY:$TURNSTILE_SITE_KEY"}
 
 secrets=$(node -e '
   const s = {};
@@ -19,5 +19,5 @@ secrets=$(node -e '
   process.stdout.write(JSON.stringify(s));
 ')
 if [ "$secrets" != "{}" ]; then
-  echo "$secrets" | npx wrangler secret bulk
+  echo "$secrets" | pnpm exec wrangler secret bulk
 fi

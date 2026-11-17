@@ -2,8 +2,9 @@
   "name": "ja-dev-docs",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@12.9.0",
   "engines": {
-    "node": ">=22.18"
+    "node": ">=24"
   },
   "scripts": {
     "test": "vitest run",
@@ -33,6 +34,7 @@
     "@types/mdast": "^4.0.4",
     "@types/node": "^26.6.6",
     "typescript": "^7.0.2",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "wrangler": "4.160.0"
   }
 }

@@ -13,7 +13,7 @@ export function wranglerD1(): D1Like {
           // wranglerのコマンドは値の束縛ができないので、文字列と数値をSQLのリテラルにして埋め込む。
           const inlined = sql.replace(/\?(\d+)/g, (_, n: string) => literal(values[Number(n) - 1]));
           const exec = () => {
-            const out = execFileSync("npx", ["wrangler", "d1", "execute", DATABASE, "--remote", "--json", "--command", inlined], { encoding: "utf8" });
+            const out = execFileSync("pnpm", ["exec", "wrangler", "d1", "execute", DATABASE, "--remote", "--json", "--command", inlined], { encoding: "utf8" });
             return (JSON.parse(out) as { results: unknown[] }[])[0]?.results ?? [];
           };
           return {

@@ -68,8 +68,6 @@ export function parseMarkdown(text: string): Root {
 
 // 本文(フロントマターを除いたもの)に、ブロック全体に効く目印を置く。HTMLコメント、Liquidタグ、kb()。
 export function maskBlocks(body: string, masker: Masker, opts: PrepareOptions): string {
-  // oxcがTypeScriptで、カッコの直後にHTMLコメントの開始記号で始まる正規表現を解析できないので、この行の正規表現は変異させない。
-  // mutator-disable-next-line Regex
   body = body.replace(/<!--[\s\S]*?-->/g, (m) => masker.put("comment", m));
   body = body.replace(LIQUID_RE, (tag) => {
     const v = VARIABLE_RE.exec(tag);

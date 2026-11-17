@@ -8,8 +8,6 @@
   },
   "scripts": {
     "test": "vitest run",
-    "mutation": "mutator",
-    "mutation:diff": "mutator --since origin/main",
     "typecheck": "tsc --noEmit",
     "translate": "node pipeline/cli.ts",
     "dev": "astro dev",
@@ -33,7 +31,6 @@
     "yaml": "^2.9.1"
   },
   "devDependencies": {
-    "@mizchi/mutator": "0.2.0",
     "@types/mdast": "^4.0.4",
     "@types/node": "^26.6.6",
     "typescript": "^7.0.2",

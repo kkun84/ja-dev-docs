@@ -1,27 +1,28 @@
 // 既定から変えた設定の理由はdocs/lint-history.mdにある。
 {
   "$schema": "./node_modules/fallow/schema.json",
-  "entry": [],
+  // src/core/*.tsは、上の層が入口を足すまでの間だけ入口にする。
+  "entry": ["src/core/*.ts"],
   // リポジトリの道具。ビルドやlintのスクリプトと、そのテスト。
-  "supportEntry": ["scripts/*.ts", "scripts/lint/*/cli.ts", "*.config.ts", "scripts/**/*.test.ts"],
-  // pipeline、worker、src、astro.config.mjsは作り直す前のコード。作り直しが済んだ層から順に消す。
-  "ignorePatterns": [".astro/**", ".wrangler/**", "pipeline/**", "worker/**", "src/**", "astro.config.mjs"],
+  "supportEntry": ["scripts/*.ts", "scripts/lint/*/cli.ts", "*.config.ts", "src/**/*.test.ts", "scripts/**/*.test.ts"],
+  // pipeline、worker、src/lib、src/pages、src/components、src/content.config.ts、astro.config.mjsは作り直す前のコード。作り直しが済んだ層から順に消す。
+  "ignorePatterns": [
+    ".astro/**",
+    ".wrangler/**",
+    "pipeline/**",
+    "worker/**",
+    "src/lib/**",
+    "src/pages/**",
+    "src/components/**",
+    "src/content/**",
+    "src/content.config.ts",
+    "astro.config.mjs"
+  ],
   // @effect/tsgoはscripts/typecheck.tsがバイナリとして呼び、@effect/language-serviceは
   // tsconfig.jsonのプラグインとして読み込むので、fallowからは使っているように見えない。
   // その後ろは、fallowに読ませていない作り直す前のコードが使う依存。作り直しが済んだ層から順に外す。
-  "ignoreDependencies": [
-    "@effect/language-service",
-    "@effect/tsgo",
-    "@astrojs/starlight",
-    "@types/mdast",
-    "github-slugger",
-    "mdast-util-to-string",
-    "remark-cjk-friendly",
-    "remark-gfm",
-    "remark-parse",
-    "undici",
-    "unified"
-  ],
+  "ignoreDependencies": ["@effect/language-service", "@effect/tsgo", "@astrojs/starlight", "remark-cjk-friendly", "undici"],
+  "rulePacks": ["architecture.rules.json"],
   // テストは、準備、実行、確認が1か所で読めることを優先し、重複を許す。
   "duplicates": {
     "ignore": ["**/*.test.ts"],
@@ -30,6 +31,20 @@
     "minLines": 4,
     "ignoreDefaults": false,
     "threshold": 0.001
+  },
+  "boundaries": {
+    "zones": [
+      { "name": "unit-tests", "patterns": ["src/**/*.test.ts"] },
+      { "name": "core", "patterns": ["src/core/**"] },
+      { "name": "tooling", "patterns": ["scripts/**", "*.config.ts"] }
+    ],
+    "rules": [
+      { "from": "core", "allow": ["core"] },
+      { "from": "unit-tests", "allow": ["core", "unit-tests"] }
+    ],
+    "calls": {
+      "forbidden": [{ "from": "core", "callee": ["Date.now", "Math.random"] }]
+    }
   },
   "rules": {
     "unused-dev-dependencies": "error",

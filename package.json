@@ -20,6 +20,7 @@
   "dependencies": {
     "@astrojs/starlight": "0.42.8",
     "astro": "7.4.10",
+    "effect": "4.1.2",
     "github-slugger": "2.0.0",
     "mdast-util-to-string": "4.0.0",
     "remark-cjk-friendly": "2.3.4",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@effect/tsgo": "0.67.5",
+    "@effect/vitest": "4.1.2",
     "@types/mdast": "4.0.4",
     "@types/node": "24.19.2",
     "@vitest/coverage-v8": "5.1.0",

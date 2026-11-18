@@ -36,6 +36,14 @@ Effectのタグ付きの型は`_tag`で判別するので、この名前は避�
 
 テストは、前提を揃えるために似た準備を並べます。共通化すると、個々のテストが何を確かめているかが読みにくくなるので、重複の検出から外しました。
 
+## アーキテクチャの規則（[architecture.rules.json](../architecture.rules.json)）
+
+`ARCH-LAYER-001`は`src/core`からNode.jsの組み込みモジュールを使うことを、`ARCH-EXTERNAL-001`は`src/core`から決めた以外の外部パッケージを使うことを禁じます。
+
+vscode-ext-templateでは、`core`が使える外部パッケージは`effect`だけです。このリポジトリでは、Markdownの構文解析が翻訳の中心なので、純粋な構文解析のライブラリ(`unified`、`remark-parse`、`remark-gfm`、`mdast-util-to-string`、`github-slugger`、`yaml`)も許しました。どれも入出力をせず、同じ入力から同じ結果を返します。
+
+`src/core`のテストは、原文の写しを読むのに`node:fs`を、実行にvitestを使うので、テストファイルは除外しました。
+
 ## 型検査
 
 型検査は`tsc`ではなく`@effect/tsgo`で行います。`tsc`はEffectの診断（エラー型にbrandが無い、など）を出さないので、`tsc`が通っても`pnpm typecheck`で落ちることがあります。
@@ -46,4 +54,4 @@ Effectのタグ付きの型は`_tag`で判別するので、この名前は避�
 
 ## 作り直す前のコード
 
-`pipeline/`、`worker/`、`src/`、`astro.config.mjs`は、この道具を入れる前に書かれたコードです。Effect v4と層分けで作り直すまでの間だけ、oxlint、oxfmt、fallowの対象から外し、型検査は`tsconfig.legacy.json`で行います。作り直しが済んだ層から順に、この除外を消します。
+`pipeline/`、`worker/`、`src/lib/`、`src/pages/`、`src/components/`、`src/content.config.ts`、`astro.config.mjs`は、この道具を入れる前に書かれたコードです。Effect v4と層分けで作り直すまでの間だけ、oxlint、oxfmt、fallowの対象から外し、型検査は`tsconfig.legacy.json`で行います。作り直しが済んだ層から順に、この除外を消します。

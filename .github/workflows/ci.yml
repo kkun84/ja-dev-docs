@@ -4,6 +4,10 @@
 # .node-versionとpackage.jsonのpackageManagerに一致することを確かめる。
 #
 # Actionsはタグではなくコミットのハッシュで固定する。更新はDependabotが行う。
+#
+# 依存関係の脆弱性は、ここでは検査しない。あとから公開された勧告で、関係のない変更のCIが落ちるため。
+# 既にある依存はDependabotのアラートとセキュリティの更新に、プルリクエストで増える依存は
+# security.ymlのdependency-reviewに任せる。
 name: CI
 
 on:
@@ -39,8 +43,6 @@ jobs:
           pnpm install --frozen-lockfile
       - name: Check
         run: pnpm check
-      - name: Audit dependencies
-        run: pnpm audit --audit-level moderate
 
   nix:
     name: nix

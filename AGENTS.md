@@ -36,6 +36,7 @@ Workerは小さく保ちます。訳文やMarkdownの解析(`src/core`の`page.t
 
 - lintや型検査の警告を、抑止コメントで黙らせてはいけません。`no-suppress`が検出します。警告が誤りだと考えるなら、設定を変える理由を[docs/lint-history.md](docs/lint-history.md)に書いてから設定を直します。
 - 規則に掛かる名前を、角括弧のアクセスなど別の書き方で避けてはいけません。
+- `site/`の型は、Astroが`.astro/`に生成する型に頼ります。`pnpm lint`と`pnpm typecheck`は、先に`astro sync`で型を生成します。oxlintや型検査を直接動かすときは、先に`pnpm sync`を実行します。
 - 型検査は`pnpm typecheck`で行います。`tsc`はEffectの診断を出さないので、`tsc`が通っても完了ではありません。
 - `pnpm-workspace.yaml`の供給網対策の設定を緩めてはいけません。コマンドの引数で上書きすることも禁止です。インストールが通らないときは、緩めずに報告します。
 - 型付きのエラーを手順の中で握りつぶしてはいけません。サービスの関数はエラーをそのまま返し、列の行き先やHTTPの答えに変える場所を1か所に決めます。

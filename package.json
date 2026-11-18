@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "typecheck": "astro sync && node scripts/typecheck.ts",
-    "lint": "oxlint --type-aware --deny-warnings && oxfmt --check && fallow --fail-on-issues && rumdl check . && node scripts/lint/ja-space/cli.ts && node scripts/lint/no-suppress/cli.ts && node scripts/lint/pnpm-policy/cli.ts",
+    "typecheck": "pnpm -s sync && node scripts/typecheck.ts",
+    "lint": "pnpm -s sync && oxlint --type-aware --deny-warnings && oxfmt --check && fallow --fail-on-issues && rumdl check . && node scripts/lint/ja-space/cli.ts && node scripts/lint/no-suppress/cli.ts && node scripts/lint/pnpm-policy/cli.ts",
     "format": "oxfmt",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -16,7 +16,8 @@
     "check-env": "node scripts/check-env.ts",
     "check": "pnpm -s lint && pnpm -s typecheck && pnpm -s test:coverage && pnpm -s build && pnpm -s build:worker",
     "prepare": "lefthook install",
-    "build:worker": "node scripts/budget.ts"
+    "build:worker": "node scripts/budget.ts",
+    "sync": "astro sync"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "7.3.7",

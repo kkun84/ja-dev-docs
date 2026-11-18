@@ -148,6 +148,18 @@ const displayFrontMatter = (front: string | undefined): ReadonlyMap<string, stri
     })
   )
 
+// HTMLコメントを除く。除いた結果、前後がつながって新しいコメントの始まりができることがあるので、
+// 変わらなくなるまで繰り返し、残ったコメントの始まりも除く。
+const stripComments = (text: string): string => {
+  let current = text
+  let previous = ""
+  while (current !== previous) {
+    previous = current
+    current = current.replaceAll(/<!--[\s\S]*?-->/g, "")
+  }
+  return current.replaceAll("<!--", "")
+}
+
 /** 表示するために整えた訳文。 */
 export interface DisplayPage {
   readonly title: string | undefined
@@ -169,7 +181,7 @@ export const displayPage = (text: string, originalHeadings: ReadonlyArray<string
   const h1 = /^\s*# (.+)\n/.exec(body)
   const markdown = h1 === null ? body : body.slice(h1[0].length)
   return {
-    title: fields.get("title") ?? fields.get("PageTitle") ?? h1?.[1]?.replaceAll(/<!--[\s\S]*?-->/g, "").trim(),
+    title: fields.get("title") ?? fields.get("PageTitle") ?? (h1 === null ? undefined : stripComments(capture(h1, 1)).trim()),
     description: fields.get("intro") ?? fields.get("MetaDescription"),
     markdown: alertsToAsides(markdown),
     headings: h1 === null ? originalHeadings : originalHeadings.slice(1)

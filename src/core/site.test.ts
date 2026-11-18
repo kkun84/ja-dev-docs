@@ -119,6 +119,10 @@ describe("displayPage", () => {
     expect(page).toStrictEqual({ title: "題名", description: "説明", markdown: "\n## 節\n", headings: ["Section"] })
   })
 
+  it("題名にする見出しから、入れ子や閉じていないHTMLコメントも除く", () => {
+    expect(displayPage("# A <!<!-- x -->-- y --> B <!-- open\n", []).title).toBe("A  B  open")
+  })
+
   it("フロントマターも見出しも無ければ、題名は無い", () => {
     expect(displayPage("本文\n", []).title).toBeUndefined()
   })

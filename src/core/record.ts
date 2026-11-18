@@ -4,6 +4,7 @@
  * 訳文がどの版の原文から、どのモデルで作られたかを残す。公開リポジトリに残るので、APIの応答の本文は入れない。
  */
 import { Schema } from "effect"
+import { mostCommon, parseSpec } from "./model.ts"
 
 const StepLogSchema = Schema.Struct({
   spec: Schema.String,
@@ -90,5 +91,43 @@ export const countByModel = (usedModel: ReadonlyMap<number, string>): Readonly<R
   return counts
 }
 
+/** いちばん多くの断片を訳したモデル。1つも訳せていなければ、最初に使う指定のモデル。 */
+export const primaryModel = (usedModel: ReadonlyMap<number, string>, chain: ReadonlyArray<string>): string =>
+  mostCommon([...usedModel.values()]) ?? parseSpec(chain[0] ?? "").model
+
 /** 訳文と記録を置く場所。拡張子は付けない。`<ホスト>/<パス>/<モデル>`。 */
 export const translationPath = (host: string, path: string, model: string): string => `${host}/${path === "" ? "index" : path}/${model}`
+
+// 未訳の断片がこの割合を超えたページは公開しない。
+const MAX_UNTRANSLATED_RATIO = 0.05
+
+/** ページを公開できない理由。`retry`は、時間をおけば訳せる見込みがあること。 */
+export interface Unpublishable {
+  readonly reason: string
+  readonly retry: boolean
+}
+
+/**
+ * 訳せなかった断片が多いページを公開しないための判定。公開してよければ`undefined`。
+ *
+ * APIの障害やその日の上限で全部が落ちたページを、英語のまま「翻訳済み」にしないため。
+ */
+export const unpublishable = (steps: ReadonlyArray<StepLog>, untranslated: number, segments: number): Unpublishable | undefined => {
+  if (untranslated / Math.max(segments, 1) <= MAX_UNTRANSLATED_RATIO) {
+    return undefined
+  }
+  const quota = steps.some((step) => step.error === "quota")
+  return {
+    reason: quota ? "quota" : `${untranslated} of ${segments} segments untranslated`,
+    retry: steps.some((step) => step.error !== undefined)
+  }
+}
+
+/** 手順ごとに、送った数、落ちた数、落ちた理由の内訳を1行にする。ログで原因が分かるようにする。 */
+export const describeStep = (step: StepLog): string => {
+  const reasons: Record<string, number> = {}
+  for (const error of step.failed.flatMap((failed) => failed.errors)) {
+    reasons[error] = (reasons[error] ?? 0) + 1
+  }
+  return `${step.spec}: sent ${step.sent}, failed ${step.failed.length}, ${step.seconds}s, ${step.error ?? "ok"}, ${JSON.stringify(reasons)}`
+}

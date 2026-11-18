@@ -56,6 +56,14 @@
   ],
   "overrides": [
     {
+      "files": ["**/*.test.ts"],
+      "rules": {
+        "max-lines-per-function": "off",
+        "import/max-dependencies": "off",
+        "unicorn/consistent-function-scoping": "off"
+      }
+    },
+    {
       "files": ["scripts/**"],
       "rules": {
         "no-await-in-loop": "off",

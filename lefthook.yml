@@ -1,21 +1,25 @@
 # lefthookの設定(https://lefthook.dev/configuration/)。
 #
 # pre-commitは変更したファイルだけを整えてstageし直す。全体の検査はpre-pushで1回だけ動かす。
+# content/は翻訳のジョブが書く訳文、test/fixtures/は原文の写しなので、整えない。
 
 pre-commit:
   # 3つのjobが同じファイルを書き換えるので、直列に動かす。
   piped: true
   jobs:
     - name: format
-      glob: "**/*.{ts,mjs,astro,json,jsonc,md,mdx,yml,yaml,html,css}"
+      glob: "**/*.{ts,astro,json,jsonc,md,mdx,yml,yaml,html,css}"
+      exclude: &generated ["content/**", "test/fixtures/**"]
       run: pnpm -s exec oxfmt --no-error-on-unmatched-pattern {staged_files}
       stage_fixed: true
     - name: markdown
       glob: "**/*.md"
+      exclude: *generated
       run: pnpm -s exec rumdl check --fix {staged_files}
       stage_fixed: true
     - name: ja-space
       glob: "**/*.{md,ts,tsx,js,yml,yaml,toml,nix,json,html}"
+      exclude: *generated
       run: node scripts/lint/ja-space/cli.ts --fix {staged_files}
       stage_fixed: true
 

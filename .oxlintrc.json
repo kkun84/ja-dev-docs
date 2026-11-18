@@ -38,22 +38,7 @@
     "typescript/await-thenable": "error",
     "typescript/no-unnecessary-type-assertion": "error"
   },
-  // pipeline、worker、src/lib、src/pages、src/components、src/content.config.ts、astro.config.mjsは作り直す前のコード。
-  // 作り直しが済んだ層から順に消す。
-  "ignorePatterns": [
-    "dist",
-    "coverage",
-    ".astro",
-    ".wrangler",
-    "content",
-    "pipeline",
-    "worker",
-    "src/lib",
-    "src/pages",
-    "src/components",
-    "src/content.config.ts",
-    "astro.config.mjs"
-  ],
+  "ignorePatterns": ["dist", "dist-worker", "coverage", ".astro", ".wrangler", "content"],
   "overrides": [
     {
       "files": ["**/*.test.ts"],

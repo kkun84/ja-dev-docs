@@ -15,11 +15,14 @@ VS CodeとGitHubの公式ドキュメントのページを、日本語で読め�
 
 - [`docs/design.md`](docs/design.md) — 設計の正本
 - `docs/` — 2026-11-11に書いた設計メモ。`docs/design.md`と食い違う箇所では、`docs/design.md`を優先します
-- `pipeline/` — 翻訳。原文を取得し、骨組みを保ったまま文の断片だけをモデルで訳し、検査して`content/`に書く
+- `src/` — 翻訳、翻訳リクエストの受付、サイトの表示のコード。Effect v4で書き、層に分けています
+  - `src/core/` — 純粋な計算。原文のURLの解釈、Markdownの断片化、訳の検査、リンクの書き換え
+  - `src/services/` — 手順。1ページの翻訳、翻訳のジョブ、リクエストの受付
+  - `src/layers/` — 外部とのやりとりの実装。GitHub、Gemini、D1、ファイル、git
+  - `src/entrypoints/` — 入口。翻訳のCLIとジョブ(`node/`)、Cloudflare Worker(`worker/`)、サイトのビルド(`site/`)
+- `site/` — サイトのページと部品(AstroとStarlight)。静的に出力する
 - `content/` — 訳文。`<ホスト>/<パス>/<モデル>.md`が訳文、同じ名前の`.json`がその記録
 - `data/glossary.yml` — 製品名などの変数を、訳文でどう書くかの決まり
-- `src/` — サイト(AstroとStarlight)。静的に出力する
-- `worker/` — 訳が無いページの画面と、翻訳リクエストのAPI。Cloudflare Workersで動く
 - `migrations/` — D1の順番待ちの列と、翻訳モデルの呼び出し回数
 - `.github/workflows/translate.yml` — 列から取り出して訳し、コミットする
 - `.github/workflows/deploy.yml` — ビルドしてデプロイし、公開待ちのページを公開済みにする
@@ -30,7 +33,7 @@ Node.js 24とpnpm 12を使います。Nixがあれば`nix develop`で揃いま�
 
 ```sh
 pnpm install
-pnpm check          # lint、型検査、テストとカバレッジ、サイトのビルド
+pnpm check          # lint、型検査、テストとカバレッジ、サイトのビルド、Workerの大きさの上限
 pnpm test           # テストだけ
 pnpm build          # サイトのビルド
 pnpm preview        # ビルドしてローカルのWorkerで動かす(先にpnpm exec wrangler d1 migrations apply ja-dev-docs --local)

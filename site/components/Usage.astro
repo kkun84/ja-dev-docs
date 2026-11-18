@@ -1,0 +1,22 @@
+---
+// 開き方の説明。サイトのURLは設定から作る。
+import { usageOf } from "../../src/entrypoints/site/pages.ts"
+
+const { site, host, bookmarklet } = usageOf(Astro.site?.origin ?? "https://ja.keke.works")
+---
+
+<h2>開き方</h2>
+<ol>
+  <li>
+    <strong>URLの前に付ける</strong>: <code>{host}/</code> を原文のURLの前に付けます。
+    例: <a href={`${site}/code.visualstudio.com/docs/agents/overview`}><code>{host}/code.visualstudio.com/docs/agents/overview</code></a>
+    (<code>https://</code> は付けても付けなくても開けます)
+  </li>
+  <li>
+    <strong>Chromeのアドレスバーから</strong>: 設定の「検索エンジン」→「サイト内検索」で追加し、URLを <code>{site}/%s</code>、ショートカットを <code>ja</code> にします。アドレスバーに <code>ja</code>、スペース、原文のURLの順に入れると開けます。
+  </li>
+  <li>
+    <strong>ブックマークレット</strong>: 次のリンクをブックマークバーにドラッグします。原文のページで押すと、そのページの日本語訳を開きます。
+    <a href={bookmarklet}>日本語訳を開く</a>
+  </li>
+</ol>

@@ -1,0 +1,31 @@
+---
+// 各ページの末尾に出す、原文と翻訳の情報。
+import { attributionOf, type VariantData } from "../../src/entrypoints/site/pages.ts"
+
+interface Props {
+  variant: VariantData
+}
+const { url, license, model, date, commit } = attributionOf(Astro.props.variant)
+---
+
+<aside class="attribution">
+  <p>
+    このページは、<a href={url}>{url}</a> を日本語に機械翻訳したものです。
+    原著者は {license.author}、ライセンスは <a href={license.url}>{license.name}</a> です。
+  </p>
+  <p>
+    翻訳: {model}、{date}。原文のコミット:
+    {commit ? <a href={commit.url}>{commit.short}</a> : "不明"}。
+    GitHubおよびMicrosoftとは関係のない、非公式の翻訳です。誤りがありうるので、正確な内容は原文を確認してください。
+  </p>
+</aside>
+
+<style>
+  .attribution {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+  }
+</style>

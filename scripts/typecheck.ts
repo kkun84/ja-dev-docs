@@ -2,8 +2,7 @@ import { spawnSync } from "node:child_process"
 
 // @effect/tsgoはEffectの診断を足したtsgoを同梱している。その実在パスを
 // `get-exe-path`で取り、tsconfigを検査する。
-// tsconfig.legacy.jsonは作り直す前のコードの分。作り直しが済んだら外す。
-const PROJECTS = ["tsconfig.json", "tsconfig.legacy.json"]
+const PROJECTS = ["tsconfig.json"]
 
 const located = spawnSync("effect-tsgo", ["get-exe-path"], { encoding: "utf8", shell: process.platform === "win32" })
 const tsgo = located.stdout.trim().split("\n").at(-1) ?? ""

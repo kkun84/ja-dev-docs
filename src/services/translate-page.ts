@@ -18,7 +18,7 @@ import { expandGithubLiquid, fetchSource, loadKeybindings, loadVariables } from 
 import { translateSegments } from "./translate-segments.ts"
 
 /** 1ページを訳した結果の要約。ログに出す。 */
-export interface PageSummary {
+interface PageSummary {
   readonly url: string
   readonly model: string
   readonly segments: number

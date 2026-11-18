@@ -2,6 +2,7 @@
  * サイトの表示のための純関数。訳文を表示用に整え、ページをまとめ、サイドバーと帰属表示を作る。
  */
 import GithubSlugger from "github-slugger"
+import { rewriteHtmlLinks, type LinkOrigin } from "./links.ts"
 import { MODEL_ORDER } from "./model.ts"
 import { splitFrontMatter } from "./page.ts"
 import type { TranslationRecord } from "./record.ts"
@@ -247,3 +248,23 @@ export const sourceFileUrl = (record: Pick<TranslationRecord, "repo" | "file" | 
 
 /** 開き方の説明に載せるブックマークレット。原文のページで押すと、このサイトの日本語訳を開く。 */
 export const bookmarklet = (site: string): string => `javascript:location.href='${site}/'+location.href.replace(/^https?:\\/\\//,'')`
+
+/** 描画したHTMLの目次の1項目。 */
+export interface RenderedHeading {
+  readonly depth: number
+  readonly slug: string
+  readonly text: string
+}
+
+/**
+ * 描画した訳文のHTMLを仕上げる。リンクを書き換え、見出しのIDを原文の見出しから作ったIDにし、目次のIDも合わせる。
+ */
+export const finishRendered = (
+  rendered: { readonly html: string; readonly headings: ReadonlyArray<RenderedHeading> },
+  origin: LinkOrigin,
+  originalHeadings: ReadonlyArray<string>,
+  translated: ReadonlySet<string>
+): { readonly html: string; readonly headings: ReadonlyArray<RenderedHeading> } => {
+  const { html, renamed } = fixHeadingIds(rewriteHtmlLinks(rendered.html, origin, translated), originalHeadings)
+  return { html, headings: rendered.headings.map((heading) => ({ ...heading, slug: renamed.get(heading.slug) ?? heading.slug })) }
+}

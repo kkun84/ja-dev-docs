@@ -103,7 +103,7 @@ const resolveAbsolute = (href: string, path: string, hash: string, translated: R
 const isOtherScheme = (href: string): boolean => /^[a-z][a-z0-9+.-]*:/i.test(href) && !/^https?:/i.test(href)
 
 /** リンク先1つを書き換える。 */
-export const resolveHref = (rawHref: string, target: Target): string => {
+const resolveHref = (rawHref: string, target: Target): string => {
   // ページ内のリンクと、http(s)以外のスキーム(mailto:、vscode:、command:など)はそのまま。
   if (rawHref === "" || rawHref.startsWith("#") || isOtherScheme(rawHref)) {
     return rawHref

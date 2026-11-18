@@ -19,8 +19,7 @@ const StepLogSchema = Schema.Struct({
 /** モデルを1回(1つの指定で)使った結果。`sent`は送った断片の数、`failed`は採らなかった断片とその理由。 */
 export type StepLog = typeof StepLogSchema.Type
 
-/** 訳文1つの記録。 */
-export const TranslationRecord = Schema.Struct({
+const TranslationRecordSchema = Schema.Struct({
   /** 原文のURL。 */
   url: Schema.String,
   /** 原文のリポジトリ(`owner/name`)と、その中のファイル。 */
@@ -42,10 +41,11 @@ export const TranslationRecord = Schema.Struct({
   steps: Schema.optional(Schema.Array(StepLogSchema))
 })
 
-export type TranslationRecord = typeof TranslationRecord.Type
+/** 訳文1つの記録。 */
+export type TranslationRecord = typeof TranslationRecordSchema.Type
 
 /** 記録のJSONを読む。 */
-export const decodeRecord = Schema.decodeUnknownEffect(Schema.fromJsonString(TranslationRecord))
+export const decodeRecord = Schema.decodeUnknownEffect(Schema.fromJsonString(TranslationRecordSchema))
 
 /** 記録をJSONにする。キーの順は固定で、末尾に改行を付ける。 */
 export const encodeRecord = (record: TranslationRecord): string => {

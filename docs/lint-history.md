@@ -56,6 +56,6 @@ vscode-ext-templateでは、`core`が使える外部パッケージは`effect`�
 
 `content/`は、翻訳のジョブが書く訳文です。人が書く文章ではないので、oxfmt、rumdl、ja-spaceの対象から外しています。訳文の検査は、翻訳のときの構造検査で行います。
 
-## 作り直す前のコード
+## Workerの大きさの上限（[budgets.json](../budgets.json)）
 
-`pipeline/`、`worker/`、`src/lib/`、`src/pages/`、`src/components/`、`src/content.config.ts`、`astro.config.mjs`は、この道具を入れる前に書かれたコードです。Effect v4と層分けで作り直すまでの間だけ、oxlint、oxfmt、fallowの対象から外し、型検査は`tsconfig.legacy.json`で行います。作り直しが済んだ層から順に、この除外を消します。
+Workerのバンドルに、gzipで300KBの上限を置いています。Workerは訳文もMarkdownの解析も読み込まない設計で、いまの大きさは約190KBです。その大半はEffectです。importを1つ足しただけでMarkdownの解析がまるごと入ることがあるので、大きさで気づけるようにしました。Cloudflare Workersの無料プランの上限は、圧縮後で3MBです。

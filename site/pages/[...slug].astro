@@ -1,0 +1,105 @@
+---
+// 訳があるページ。ビルド時に静的なHTMLにする。モデルごとの訳をすべて入れ、ブラウザで切り替える。
+import { getCollection } from "astro:content"
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro"
+import Attribution from "../components/Attribution.astro"
+import { modelName, sidebarFor, toPages, variantHtml, type SitePage } from "../../src/entrypoints/site/pages.ts"
+
+export async function getStaticPaths() {
+  const pages = toPages(await getCollection("translations"))
+  return pages.map((page) => ({ params: { slug: page.id }, props: { page, nav: sidebarFor(pages, page.id) } }))
+}
+
+interface Props {
+  page: SitePage
+  nav: ReturnType<typeof sidebarFor>
+}
+const { page, nav } = Astro.props
+const { primary } = page
+---
+
+<StarlightPage
+  frontmatter={{ title: primary.data.title, description: primary.data.description }}
+  headings={[...(primary.rendered?.metadata?.headings ?? [])]}
+  sidebar={[...nav]}
+>
+  {
+    page.variants.length > 1 && (
+      <label class="model-switch">
+        翻訳したモデル:
+        <select data-model-select>
+          {page.variants.map((variant) => (
+            <option value={variant.data.record.model}>{modelName(variant.data.record.model)}</option>
+          ))}
+        </select>
+      </label>
+    )
+  }
+  {
+    page.variants.map((variant, index) => (
+      <div data-model={variant.data.record.model} data-pagefind-ignore={index > 0 ? "all" : undefined} hidden={index > 0}>
+        <Fragment set:html={variantHtml(variant, index === 0)} />
+        <Attribution variant={variant.data} />
+      </div>
+    ))
+  }
+</StarlightPage>
+
+<script>
+  // 読者が選んだモデルをブラウザに保存し、どのページでも同じモデルの訳を優先して見せる。
+  const select = document.querySelector<HTMLSelectElement>("[data-model-select]")
+  const show = (model: string) => {
+    const blocks = [...document.querySelectorAll<HTMLElement>("[data-model]")]
+    if (!blocks.some((block) => block.dataset.model === model)) {
+      return
+    }
+    for (const block of blocks) {
+      const visible = block.dataset.model === model
+      block.hidden = !visible
+      // 見えている訳だけが見出しのIDを持つ。
+      for (const heading of block.querySelectorAll<HTMLElement>(visible ? "[data-id]" : "h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]")) {
+        if (visible) {
+          heading.id = heading.dataset.id ?? ""
+          delete heading.dataset.id
+        } else {
+          heading.dataset.id = heading.id
+          heading.removeAttribute("id")
+        }
+      }
+    }
+    if (select) {
+      select.value = model
+    }
+  }
+  // プライベートブラウズなどで保存領域を使えないときは、選択を覚えないだけで、表示は続ける。
+  const remembered = (): string | null => {
+    try {
+      return localStorage.getItem("model")
+    } catch {
+      return null
+    }
+  }
+  const remember = (model: string) => {
+    try {
+      localStorage.setItem("model", model)
+    } catch {
+      // 覚えられなくても、切り替えは済んでいる。
+    }
+  }
+  const saved = remembered()
+  if (saved !== null) {
+    show(saved)
+  }
+  select?.addEventListener("change", () => {
+    show(select.value)
+    remember(select.value)
+  })
+</script>
+
+<style>
+  .model-switch {
+    display: block;
+    font-size: var(--sl-text-sm);
+    margin-bottom: 1rem;
+  }
+</style>

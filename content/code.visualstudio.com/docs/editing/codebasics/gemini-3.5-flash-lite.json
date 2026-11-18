@@ -1,0 +1,70 @@
+{
+  "url": "https://code.visualstudio.com/docs/editing/codebasics",
+  "repo": "microsoft/vscode-docs",
+  "file": "docs/editing/codebasics.md",
+  "commit": "449410e3df07db8a6a017a1a13eea9638aea755c",
+  "translatedAt": "2026-11-18T01:45:21.035Z",
+  "model": "gemini-3.5-flash-lite",
+  "chain": [
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.8-flash@low"
+  ],
+  "segments": 286,
+  "segmentsByModel": {
+    "gemini-3.5-flash-lite": 286
+  },
+  "untranslated": [],
+  "headings": [
+    "Basic editing",
+    "Keyboard shortcuts",
+    "Multiple selections (multi-cursor)",
+    "Multi-cursor modifier",
+    "Shrink/expand selection",
+    "Column (box) selection",
+    "Paste a column selection",
+    "Column Selection mode",
+    "Auto-closing brackets",
+    "Save / Auto Save",
+    "Hot Exit",
+    "Find and replace",
+    "Seed search string from selection",
+    "Find in selection",
+    "Advanced find and replace options",
+    "Multiline support and Find control resizing",
+    "Search across files",
+    "Advanced search options",
+    "Troubleshoot search performance and excessive ripgrep processes",
+    "Search and replace",
+    "Case changing in regex replace",
+    "Search Editor",
+    "Search Editor commands and arguments",
+    "Search Editor context default",
+    "Reuse last Search Editor configuration",
+    "IntelliSense",
+    "Formatting",
+    "Folding",
+    "Fold selection",
+    "Indentation",
+    "Auto-detection",
+    "File encoding support",
+    "Overtype mode",
+    "Compare files",
+    "Next steps",
+    "Common questions",
+    "Is it possible to globally search and replace?",
+    "How do I turn on word wrap?",
+    "How can I avoid placing extra cursors in word wrapped lines?",
+    "Why is search slow or consuming excessive CPU?"
+  ],
+  "unresolvedLiquid": [],
+  "steps": [
+    {
+      "spec": "gemini-3.5-flash-lite",
+      "sent": 286,
+      "failed": [],
+      "finishReason": "STOP",
+      "seconds": 36.25
+    }
+  ]
+}

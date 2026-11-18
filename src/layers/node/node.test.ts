@@ -134,6 +134,8 @@ describe("gitPublisherLayer", () => {
       mkdirSync("content")
       writeFileSync("content/a.md", "訳\n")
       writeFileSync("other.txt", "not committed\n")
+      writeFileSync("staged.txt", "staged but not committed\n")
+      git(process.cwd(), "add", "staged.txt")
       yield* publish
 
       expect(git(join(root, "remote.git"), "log", "--format=%s", "main").trim().split("\n")).toStrictEqual(["訳文を追加", "first"])

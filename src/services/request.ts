@@ -2,7 +2,7 @@ import { Effect, Option } from "effect"
 import { PUBLISHED_REPLY, statusReply, type Rejection, type StatusReply } from "../core/reply.ts"
 import { pageId, parsePageUrl, parseSitePath, type PageRef } from "../core/source.ts"
 import { BotCheck, PublishedPages, RateLimiter, RequestQueue, WorkflowDispatcher } from "./ports.ts"
-import { sourceExists } from "./source.ts"
+import { sourceExists } from "./source-file.ts"
 
 /** 翻訳リクエストの入力。読者のブラウザから来るので、どれも信用しない。 */
 export interface TranslationRequest {
@@ -15,9 +15,7 @@ export interface TranslationRequest {
 }
 
 /** リクエストへの答え。受け付けなかったときは、その理由。 */
-export type RequestReply =
-  | { readonly kind: "accepted"; readonly reply: StatusReply }
-  | { readonly kind: "rejected"; readonly reason: Rejection }
+type RequestReply = { readonly kind: "accepted"; readonly reply: StatusReply } | { readonly kind: "rejected"; readonly reason: Rejection }
 
 const idOf = (ref: PageRef): string => pageId(ref.source.host, ref.path)
 

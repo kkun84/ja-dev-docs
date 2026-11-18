@@ -1,7 +1,7 @@
 import { Cause, Clock, Effect, Option } from "effect"
 import type { Outcome } from "../core/queue.ts"
 import { parsePageUrl } from "../core/source.ts"
-import type { TranslatePageError } from "./errors.ts"
+import { describeCause, type TranslatePageError } from "./errors.ts"
 import { JobOutput, Publisher, RequestQueue } from "./ports.ts"
 import { translatePage } from "./translate-page.ts"
 
@@ -18,6 +18,7 @@ const BUDGET_MILLIS = 40 * 60_000
 // ページの間で待つ時間。無料枠の1分あたりの上限を守る。
 const PAUSE_BETWEEN_PAGES = "4 seconds"
 
+/** 1ページを訳した結果。 */
 interface PageResult {
   readonly page: string
   readonly outcome: Outcome
@@ -47,12 +48,13 @@ const translateOne = Effect.fn("translateOne")(function* (page: string, chain: R
         onNone: (): Outcome => ({ kind: "requeue", reason: "error" }),
         onSome: outcomeOf
       })
-      return Effect.logWarning(`failed: ${page}`, Cause.pretty(cause)).pipe(Effect.as(outcome))
+      return Effect.logWarning(`failed: ${page}`, describeCause(cause)).pipe(Effect.as(outcome))
     })
   )
 })
 
-const translateAll = Effect.fn("translateAll")(function* (pages: ReadonlyArray<string>, chain: ReadonlyArray<string>) {
+/** ページを順に訳し、ページごとの結果を返す。1ページが失敗しても、残りのページを続ける。 */
+export const translatePages = Effect.fn("translatePages")(function* (pages: ReadonlyArray<string>, chain: ReadonlyArray<string>) {
   const deadline = (yield* Clock.currentTimeMillis) + BUDGET_MILLIS
   const results: PageResult[] = []
   for (const page of pages) {
@@ -93,7 +95,7 @@ export const runJob = Effect.fn("runJob")(function* (options: JobOptions) {
   const manual = options.urls.length > 0
   const pages = manual ? options.urls : yield* queue.takeNext(BATCH)
 
-  const translated = yield* translateAll(pages, options.chain)
+  const translated = yield* translatePages(pages, options.chain)
   const publishing = yield* Effect.exit((yield* Publisher).publish)
   const results = afterPublish(translated, publishing._tag === "Success")
 

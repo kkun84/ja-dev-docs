@@ -1,4 +1,4 @@
-import { Schema } from "effect"
+import { Cause, Option, Schema } from "effect"
 
 /** 原文のリポジトリを読めなかった。ファイルが無い(404)ことは、エラーではなく`None`で表す。 */
 export class SourceUnavailable extends Schema.TaggedError<SourceUnavailable, { readonly brand: unique symbol }>()("SourceUnavailable", {
@@ -58,3 +58,17 @@ export class BotCheckNotConfigured extends Schema.TaggedError<BotCheckNotConfigu
 
 /** 1ページの翻訳が型付きで失敗する理由。 */
 export type TranslatePageError = SourceUnavailable | SourceNotFound | StoreFailed | PageNotPublishable
+
+const hasTag = (error: unknown): error is { readonly _tag: string } =>
+  typeof error === "object" && error !== null && "_tag" in error && typeof error._tag === "string"
+
+/**
+ * 失敗の理由を、ログに出す1つの文字列にする。
+ *
+ * 型付きのエラーは、種類と中身を出す。想定外の欠陥は、スタックトレースを含めて出す。
+ */
+export const describeCause = (cause: Cause.Cause<unknown>): string =>
+  Option.match(Cause.findErrorOption(cause), {
+    onNone: () => Cause.pretty(cause),
+    onSome: (error) => (hasTag(error) ? `${error._tag}: ${JSON.stringify(error)}` : Cause.pretty(cause))
+  })

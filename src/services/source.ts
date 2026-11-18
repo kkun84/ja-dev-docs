@@ -7,9 +7,10 @@ import { pageId, type PageRef, type Source } from "../core/source.ts"
 import { variableFile, variableFilePath, variablePaths, variableResolver } from "../core/variables.ts"
 import { SourceNotFound } from "./errors.ts"
 import { SourceRepository } from "./ports.ts"
+import { readFirst } from "./source-file.ts"
 
 /** 取得した原文。 */
-export interface FetchedSource {
+interface FetchedSource {
   /** 原文のリポジトリの中のファイル。 */
   readonly file: string
   readonly text: string
@@ -18,18 +19,6 @@ export interface FetchedSource {
   /** 原文と、原文が参照するファイルを読む版。コミットが分かればコミット、分からなければブランチ。 */
   readonly revision: string
 }
-
-/** 候補のファイルを順に読み、最初に見つかったものを返す。 */
-const readFirst = Effect.fn("readFirst")(function* (repo: string, revision: string, files: ReadonlyArray<string>) {
-  const repository = yield* SourceRepository
-  for (const file of files) {
-    const text = yield* repository.read(repo, revision, file)
-    if (Option.isSome(text)) {
-      return Option.some({ file, text: text.value })
-    }
-  }
-  return Option.none<{ readonly file: string; readonly text: string }>()
-})
 
 /** ページの原文を、原文のリポジトリの最新のコミットから取得する。 */
 export const fetchSource = Effect.fn("fetchSource")(function* (ref: PageRef) {
@@ -42,11 +31,6 @@ export const fetchSource = Effect.fn("fetchSource")(function* (ref: PageRef) {
   }
   const fetched: FetchedSource = { ...found.value, commit: Option.getOrUndefined(commit), revision }
   return fetched
-})
-
-/** ページの原文が、原文のリポジトリにあるか。打ち間違いのURLを列に入れないために確かめる。 */
-export const sourceExists = Effect.fn("sourceExists")(function* (ref: PageRef) {
-  return Option.isSome(yield* readFirst(ref.source.repo, ref.source.branch, ref.source.candidates(ref.path)))
 })
 
 // Liquidの展開に足りない値を、原文のリポジトリから取得して足す。

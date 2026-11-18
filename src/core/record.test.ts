@@ -1,6 +1,15 @@
 import { describe, expect, it } from "@effect/vitest"
 import { Effect, Exit } from "effect"
-import { countByModel, decodeRecord, encodeRecord, translationPath, type TranslationRecord } from "./record.ts"
+import {
+  countByModel,
+  decodeRecord,
+  describeStep,
+  encodeRecord,
+  primaryModel,
+  translationPath,
+  unpublishable,
+  type TranslationRecord
+} from "./record.ts"
 
 const record: TranslationRecord = {
   url: "https://code.visualstudio.com/docs/a",
@@ -79,5 +88,42 @@ describe("translationPath", () => {
   it("ホスト、パス、モデルの順に並べる。パスが無いページはindexに置く", () => {
     expect(translationPath("docs.github.com", "en/copilot", "m")).toBe("docs.github.com/en/copilot/m")
     expect(translationPath("docs.github.com", "", "m")).toBe("docs.github.com/index/m")
+  })
+})
+
+describe("primaryModel", () => {
+  it("いちばん多くの断片を訳したモデルを返す。1つも訳せていなければ、最初の指定のモデル", () => {
+    expect(
+      primaryModel(
+        new Map([
+          [1, "a"],
+          [2, "b"],
+          [3, "b"]
+        ]),
+        ["a"]
+      )
+    ).toBe("b")
+    expect(primaryModel(new Map(), ["gemini-3.8-flash@low"])).toBe("gemini-3.8-flash")
+    expect(primaryModel(new Map(), [])).toBe("")
+  })
+})
+
+describe("unpublishable", () => {
+  const step = (error?: string) => ({ spec: "a", sent: 10, failed: [{ id: 1, errors: ["request", "request"] }], seconds: 1, error })
+
+  it("未訳の断片が5%以下なら公開してよい", () => {
+    expect(unpublishable([], 1, 20)).toBeUndefined()
+    expect(unpublishable([], 0, 0)).toBeUndefined()
+  })
+
+  it("5%を超えたら公開しない。モデルを呼べなかったことが原因なら、やり直せる", () => {
+    expect(unpublishable([step()], 2, 20)).toStrictEqual({ reason: "2 of 20 segments untranslated", retry: false })
+    expect(unpublishable([step("request: HTTP 503")], 2, 20)).toStrictEqual({ reason: "2 of 20 segments untranslated", retry: true })
+    expect(unpublishable([step("request: HTTP 503"), step("quota")], 2, 20)).toStrictEqual({ reason: "quota", retry: true })
+  })
+
+  it("手順を、落ちた理由の内訳つきの1行にする", () => {
+    expect(describeStep(step("quota"))).toBe('a: sent 10, failed 1, 1s, quota, {"request":2}')
+    expect(describeStep({ ...step(), failed: [] })).toBe("a: sent 10, failed 0, 1s, ok, {}")
   })
 })

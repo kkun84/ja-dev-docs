@@ -13,9 +13,16 @@ export default defineConfig({
       reportsDirectory: "coverage",
       include: ["src/**/*.ts"],
       // src/libは作り直す前のコード。Astroの中でだけ動く部分があり、数えない。
-      exclude: ["src/**/*.test.ts", "src/lib/**", "src/content.config.ts"],
+      // src/layers/testはテストの道具なので数えない。
+      exclude: ["src/**/*.test.ts", "src/lib/**", "src/content.config.ts", "src/layers/test/**"],
       thresholds: {
         "src/core/**": {
+          lines: 90,
+          branches: 90,
+          functions: 90,
+          statements: 90
+        },
+        "src/services/**": {
           lines: 90,
           branches: 90,
           functions: 90,

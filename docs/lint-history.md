@@ -24,6 +24,10 @@ Effectのタグ付きの型は`_tag`で判別するので、この名前は避�
 
 上の角括弧の書き方を、規則で塞ぎました。名前が規則に掛かるなら、角括弧で避けるのではなく、設定で許すかどうかを決めます。
 
+### テストファイルでは`max-lines-per-function`、`import/max-dependencies`、`unicorn/consistent-function-scoping`を外す
+
+テストは、`describe`の関数の中に場合を並べるので、関数の行数は場合の数で決まります。層を組み合わせて確かめるテストは、importが多くなります。その場合だけで使う偽の翻訳などは、その場合の中に書いたほうが、何を確かめているかを読み取れます。どれも本体のコードを読みやすく保つための規則なので、テストでは外しました。
+
 ## fallow（[.fallowrc.json](../.fallowrc.json)）
 
 ### `ignoreDependencies`
@@ -38,7 +42,7 @@ Effectのタグ付きの型は`_tag`で判別するので、この名前は避�
 
 ## アーキテクチャの規則（[architecture.rules.json](../architecture.rules.json)）
 
-`ARCH-LAYER-001`は`src/core`からNode.jsの組み込みモジュールを使うことを、`ARCH-EXTERNAL-001`は`src/core`から決めた以外の外部パッケージを使うことを禁じます。
+`ARCH-LAYER-001`は`src/core`から、`ARCH-LAYER-002`は`src/services`から、`ARCH-LAYER-003`はCloudflare Workerの中でも動く層(`src/layers`の`d1`、`http`、`cloudflare`、`shared`)から、Node.jsの組み込みモジュールを使うことを禁じます。`ARCH-EXTERNAL-001`は`src/core`から決めた以外の外部パッケージを使うことを禁じます。
 
 vscode-ext-templateでは、`core`が使える外部パッケージは`effect`だけです。このリポジトリでは、Markdownの構文解析が翻訳の中心なので、純粋な構文解析のライブラリ(`unified`、`remark-parse`、`remark-gfm`、`mdast-util-to-string`、`github-slugger`、`yaml`)も許しました。どれも入出力をせず、同じ入力から同じ結果を返します。
 

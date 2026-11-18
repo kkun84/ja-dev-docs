@@ -1,8 +1,8 @@
 // 既定から変えた設定の理由はdocs/lint-history.mdにある。
 {
   "$schema": "./node_modules/fallow/schema.json",
-  // src/core/*.tsは、上の層が入口を足すまでの間だけ入口にする。
-  "entry": ["src/core/*.ts"],
+  // 上の層が入口を足すまでの間だけ、src/core、src/services、src/layersのファイルを入口にする。
+  "entry": ["src/core/*.ts", "src/services/*.ts", "src/layers/*/*.ts"],
   // リポジトリの道具。ビルドやlintのスクリプトと、そのテスト。
   "supportEntry": ["scripts/*.ts", "scripts/lint/*/cli.ts", "*.config.ts", "src/**/*.test.ts", "scripts/**/*.test.ts"],
   // pipeline、worker、src/lib、src/pages、src/components、src/content.config.ts、astro.config.mjsは作り直す前のコード。作り直しが済んだ層から順に消す。
@@ -21,7 +21,7 @@
   // @effect/tsgoはscripts/typecheck.tsがバイナリとして呼び、@effect/language-serviceは
   // tsconfig.jsonのプラグインとして読み込むので、fallowからは使っているように見えない。
   // その後ろは、fallowに読ませていない作り直す前のコードが使う依存。作り直しが済んだ層から順に外す。
-  "ignoreDependencies": ["@effect/language-service", "@effect/tsgo", "@astrojs/starlight", "remark-cjk-friendly", "undici"],
+  "ignoreDependencies": ["@effect/language-service", "@effect/tsgo", "@astrojs/starlight", "remark-cjk-friendly"],
   "rulePacks": ["architecture.rules.json"],
   // テストは、準備、実行、確認が1か所で読めることを優先し、重複を許す。
   "duplicates": {
@@ -36,14 +36,47 @@
     "zones": [
       { "name": "unit-tests", "patterns": ["src/**/*.test.ts"] },
       { "name": "core", "patterns": ["src/core/**"] },
+      { "name": "services", "patterns": ["src/services/**"] },
+      { "name": "layers-d1", "patterns": ["src/layers/d1/**"] },
+      { "name": "layers-http", "patterns": ["src/layers/http/**"] },
+      { "name": "layers-shared", "patterns": ["src/layers/shared/**"] },
+      { "name": "layers-cloudflare", "patterns": ["src/layers/cloudflare/**"] },
+      { "name": "layers-node", "patterns": ["src/layers/node/**"] },
+      { "name": "layers-test", "patterns": ["src/layers/test/**"] },
       { "name": "tooling", "patterns": ["scripts/**", "*.config.ts"] }
     ],
     "rules": [
       { "from": "core", "allow": ["core"] },
-      { "from": "unit-tests", "allow": ["core", "unit-tests"] }
+      { "from": "services", "allow": ["core", "services"] },
+      { "from": "layers-d1", "allow": ["services", "core", "layers-d1"] },
+      { "from": "layers-http", "allow": ["services", "core", "layers-http"] },
+      { "from": "layers-shared", "allow": ["services", "core", "layers-shared"] },
+      { "from": "layers-cloudflare", "allow": ["services", "core", "layers-d1", "layers-cloudflare"] },
+      { "from": "layers-node", "allow": ["services", "core", "layers-d1", "layers-node"] },
+      { "from": "layers-test", "allow": ["services", "core", "layers-d1", "layers-test"] },
+      {
+        "from": "unit-tests",
+        "allow": [
+          "core",
+          "services",
+          "layers-d1",
+          "layers-http",
+          "layers-shared",
+          "layers-cloudflare",
+          "layers-node",
+          "layers-test",
+          "unit-tests"
+        ]
+      }
     ],
+    "coverage": {
+      "requireAllFiles": true
+    },
     "calls": {
-      "forbidden": [{ "from": "core", "callee": ["Date.now", "Math.random"] }]
+      "forbidden": [
+        { "from": "core", "callee": ["Date.now", "Math.random"] },
+        { "from": "services", "callee": ["Date.now", "Math.random"] }
+      ]
     }
   },
   "rules": {

@@ -10,11 +10,11 @@ on:
     paths:
       [
         src/**,
-        worker/**,
+        site/**,
         public/**,
         content/**,
         migrations/**,
-        astro.config.mjs,
+        astro.config.ts,
         wrangler.jsonc,
         package.json,
         pnpm-lock.yaml,
@@ -60,4 +60,4 @@ jobs:
           DISPATCH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
         run: |
           bash scripts/deploy.sh
-          node pipeline/published.ts
+          node src/entrypoints/node/published.ts

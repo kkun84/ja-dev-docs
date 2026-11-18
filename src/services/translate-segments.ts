@@ -57,7 +57,7 @@ const describeError = (error: CallError): string => {
 }
 
 /** 断片ごとの訳と、どのモデルの訳を採ったか、手順ごとの結果。 */
-export interface SegmentsResult {
+interface SegmentsResult {
   readonly done: ReadonlyMap<number, string>
   /** 断片の番号と、その訳を採ったモデル。訳せず原文のまま残した断片は含まない。 */
   readonly usedModel: ReadonlyMap<number, string>

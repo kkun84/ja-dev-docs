@@ -37,5 +37,5 @@
       }
     ]
   },
-  "include": ["src/core", "src/services", "src/layers", "scripts", "*.config.ts"]
+  "include": ["src", "site/**/*.ts", "scripts", "*.config.ts", ".astro/types.d.ts"]
 }

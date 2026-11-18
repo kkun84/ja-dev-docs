@@ -1,27 +1,21 @@
 // 既定から変えた設定の理由はdocs/lint-history.mdにある。
 {
   "$schema": "./node_modules/fallow/schema.json",
-  // 上の層が入口を足すまでの間だけ、src/core、src/services、src/layersのファイルを入口にする。
-  "entry": ["src/core/*.ts", "src/services/*.ts", "src/layers/*/*.ts"],
-  // リポジトリの道具。ビルドやlintのスクリプトと、そのテスト。
-  "supportEntry": ["scripts/*.ts", "scripts/lint/*/cli.ts", "*.config.ts", "src/**/*.test.ts", "scripts/**/*.test.ts"],
-  // pipeline、worker、src/lib、src/pages、src/components、src/content.config.ts、astro.config.mjsは作り直す前のコード。作り直しが済んだ層から順に消す。
-  "ignorePatterns": [
-    ".astro/**",
-    ".wrangler/**",
-    "pipeline/**",
-    "worker/**",
-    "src/lib/**",
-    "src/pages/**",
-    "src/components/**",
-    "src/content/**",
-    "src/content.config.ts",
-    "astro.config.mjs"
+  "entry": [
+    "src/entrypoints/node/translate.ts",
+    "src/entrypoints/node/job.ts",
+    "src/entrypoints/node/published.ts",
+    "astro.config.ts",
+    "site/content.config.ts",
+    "site/content/**/*.mdx",
+    "site/pages/**/*.astro"
   ],
+  // リポジトリの道具。ビルドやlintのスクリプトと、テスト。
+  "supportEntry": ["scripts/*.ts", "scripts/lint/*/cli.ts", "vitest.config.ts", "src/**/*.test.ts", "scripts/**/*.test.ts"],
+  "ignorePatterns": [".astro/**", ".wrangler/**"],
   // @effect/tsgoはscripts/typecheck.tsがバイナリとして呼び、@effect/language-serviceは
   // tsconfig.jsonのプラグインとして読み込むので、fallowからは使っているように見えない。
-  // その後ろは、fallowに読ませていない作り直す前のコードが使う依存。作り直しが済んだ層から順に外す。
-  "ignoreDependencies": ["@effect/language-service", "@effect/tsgo", "@astrojs/starlight", "remark-cjk-friendly"],
+  "ignoreDependencies": ["@effect/language-service", "@effect/tsgo"],
   "rulePacks": ["architecture.rules.json"],
   // テストは、準備、実行、確認が1か所で読めることを優先し、重複を許す。
   "duplicates": {
@@ -43,6 +37,10 @@
       { "name": "layers-cloudflare", "patterns": ["src/layers/cloudflare/**"] },
       { "name": "layers-node", "patterns": ["src/layers/node/**"] },
       { "name": "layers-test", "patterns": ["src/layers/test/**"] },
+      { "name": "entrypoints-node", "patterns": ["src/entrypoints/node/**"] },
+      { "name": "entrypoints-worker", "patterns": ["src/entrypoints/worker/**"] },
+      { "name": "entrypoints-site", "patterns": ["src/entrypoints/site/**"] },
+      { "name": "site", "patterns": ["site/**"] },
       { "name": "tooling", "patterns": ["scripts/**", "*.config.ts"] }
     ],
     "rules": [
@@ -53,7 +51,17 @@
       { "from": "layers-shared", "allow": ["services", "core", "layers-shared"] },
       { "from": "layers-cloudflare", "allow": ["services", "core", "layers-d1", "layers-cloudflare"] },
       { "from": "layers-node", "allow": ["services", "core", "layers-d1", "layers-node"] },
-      { "from": "layers-test", "allow": ["services", "core", "layers-d1", "layers-test"] },
+      { "from": "layers-test", "allow": ["services", "core", "layers-d1", "layers-cloudflare", "layers-test"] },
+      {
+        "from": "entrypoints-node",
+        "allow": ["layers-d1", "layers-http", "layers-shared", "layers-node", "services", "core", "entrypoints-node"]
+      },
+      {
+        "from": "entrypoints-worker",
+        "allow": ["layers-d1", "layers-http", "layers-shared", "layers-cloudflare", "services", "core", "entrypoints-worker"]
+      },
+      { "from": "entrypoints-site", "allow": ["entrypoints-node", "services", "core", "entrypoints-site"] },
+      { "from": "site", "allow": ["entrypoints-site", "site"] },
       {
         "from": "unit-tests",
         "allow": [
@@ -65,6 +73,7 @@
           "layers-cloudflare",
           "layers-node",
           "layers-test",
+          "entrypoints-worker",
           "unit-tests"
         ]
       }

@@ -15,7 +15,7 @@ const MAX_UNMASK_PASSES = 5
 const TOKEN_SOURCE = "⟦([^⟧\\s]{1,12})⟧"
 
 /** 目印を探す正規表現を作る。`g`付きの正規表現は状態を持つので、使うたびに作る。 */
-export const tokenPattern = (): RegExp => new RegExp(TOKEN_SOURCE, "g")
+const tokenPattern = (): RegExp => new RegExp(TOKEN_SOURCE, "g")
 
 export type TokenKind = "liquid" | "variable" | "comment" | "code" | "url" | "bareurl" | "kbd" | "break"
 

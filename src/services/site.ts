@@ -5,7 +5,7 @@ import { StoreFailed } from "./errors.ts"
 import { TranslationStore } from "./ports.ts"
 
 /** サイトに載せる訳文1つ。 */
-export interface LoadedTranslation {
+interface LoadedTranslation {
   /** ページの場所。 */
   readonly page: string
   readonly record: TranslationRecord

@@ -201,7 +201,7 @@
     {
       "id": "ARCH-LAYER-003",
       "kind": "banned-import",
-      "files": ["src/layers/d1/**", "src/layers/http/**", "src/layers/cloudflare/**", "src/layers/shared/**"],
+      "files": ["src/layers/d1/**", "src/layers/http/**", "src/layers/cloudflare/**", "src/layers/shared/**", "src/entrypoints/worker/**"],
       "exclude": ["src/layers/**/*.test.ts"],
       "specifiers": [
         "assert",

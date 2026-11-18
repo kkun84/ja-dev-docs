@@ -3,6 +3,7 @@ import {
   alertsToAsides,
   bookmarklet,
   displayPage,
+  finishRendered,
   fixHeadingIds,
   groupPages,
   hostLabel,
@@ -169,5 +170,26 @@ describe("帰属表示", () => {
     expect(bookmarklet("https://ja.keke.works")).toBe(
       String.raw`javascript:location.href='https://ja.keke.works/'+location.href.replace(/^https?:\/\//,'')`
     )
+  })
+})
+
+describe("finishRendered", () => {
+  it("リンクを書き換え、見出しと目次のIDを原文の見出しから作る", () => {
+    const rendered = {
+      html: '<h2 id="概要">概要</h2><a href="quickstart.md">次へ</a>',
+      headings: [
+        { depth: 2, slug: "概要", text: "概要" },
+        { depth: 3, slug: "その他", text: "その他" }
+      ]
+    }
+    const origin = { url: "https://code.visualstudio.com/docs/agents/overview", file: "docs/agents/overview.md" }
+
+    expect(finishRendered(rendered, origin, ["Overview"], new Set(["code.visualstudio.com/docs/agents/quickstart"]))).toStrictEqual({
+      html: '<h2 id="overview">概要</h2><a href="/code.visualstudio.com/docs/agents/quickstart">次へ</a>',
+      headings: [
+        { depth: 2, slug: "overview", text: "概要" },
+        { depth: 3, slug: "その他", text: "その他" }
+      ]
+    })
   })
 })

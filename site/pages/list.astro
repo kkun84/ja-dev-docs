@@ -1,0 +1,25 @@
+---
+// 訳したページの一覧。サイドバーには同じ節のページしか載せないので、全ページはここから辿る。
+import { getCollection } from "astro:content"
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro"
+import { pagesByHost, toPages } from "../../src/entrypoints/site/pages.ts"
+
+const hosts = pagesByHost(toPages(await getCollection("translations")))
+---
+
+<StarlightPage frontmatter={{ title: "訳したページの一覧" }}>
+  {
+    hosts.map((host) => (
+      <>
+        <h2>{host.label}</h2>
+        <ul>
+          {host.pages.map((page) => (
+            <li>
+              <a href={`/${page.id}/`}>{page.primary.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      </>
+    ))
+  }
+</StarlightPage>

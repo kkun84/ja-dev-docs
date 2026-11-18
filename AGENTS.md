@@ -9,21 +9,26 @@ VS CodeとGitHubの公式ドキュメントを日本語で読めるようにす�
 
 ## 完了の条件
 
-変更を終える前に`pnpm check`を実行し、成功することを確かめます。lint、型検査、テストとカバレッジ、サイトのビルドを順に動かします。
+変更を終える前に`pnpm check`を実行し、成功することを確かめます。lint、型検査、テストとカバレッジ、サイトのビルド、Workerのバンドルの大きさの検査を順に動かします。
 
 ## 層の分け方
 
 - `src/core`: 純粋な関数。原文のURLの解釈、Markdownの断片化、訳の検査、Liquidの展開、リンクの書き換えなど。Node.jsにもEffectのサービスにも依存しない
 - `src/services`: 手順。1ページの翻訳、翻訳のジョブ、リクエストの受付。外部とのやりとりは`ports.ts`のサービスを通す
+- `src/entrypoints`: 入口。環境変数や引数を読み、層を組み立てて、手順を動かすだけにする。`node`は翻訳のCLIとジョブ、`worker`はCloudflare Worker、`site`はサイトのビルドから使う関数
+- `site`: Astroのページと部品。表示だけを書き、計算は`src/entrypoints/site`を通して`src/core`に任せる
 - `src/layers`: サービスの実装。`http`はfetchで書いた実装、`d1`は順番待ちの列のSQL、`cloudflare`はWorkerのバインディング、`node`はNode.jsの組み込みモジュールを使う実装、`shared`は実行環境によらない実装、`test`はテスト用
 
-境界はfallowが検査します。Node.jsの組み込みモジュールは`src/layers/node`の中でだけ使えます。`http`、`d1`、`cloudflare`、`shared`は、Cloudflare Workerの中でも動きます。
+境界はfallowが検査します。Node.jsの組み込みモジュールは`src/layers/node`と`src/entrypoints/node`の中でだけ使えます。`http`、`d1`、`cloudflare`、`shared`と`src/entrypoints/worker`は、Cloudflare Workerの中で動きます。
+
+Workerは小さく保ちます。訳文やMarkdownの解析(`src/core`の`page.ts`、`segment.ts`、`check.ts`など)をWorkerから読み込んではいけません。バンドルの大きさの上限は`budgets.json`にあります。
 
 `src/core`が使ってよい外部パッケージは、`effect`と、純粋な構文解析のライブラリ(`unified`、`remark-parse`、`remark-gfm`、`mdast-util-to-string`、`github-slugger`、`yaml`)だけです。
 
 ## テスト
 
 - テストはVitestで、`src`の各ファイルの隣に置きます。モックライブラリは使いません。
+- 原文の写しは`test/fixtures`にあります。整形もlintもしません。
 - `src/services`のテストは`src/layers/test`の層を使います。順番待ちの列は、本番と同じSQLを、マイグレーションを当てたメモリ上のSQLiteに実行します。
 - 待ち時間のある手順は、`src/layers/test/time.ts`の`passTime`でテストの時計を進めて動かします。
 
@@ -31,6 +36,7 @@ VS CodeとGitHubの公式ドキュメントを日本語で読めるようにす�
 
 - lintや型検査の警告を、抑止コメントで黙らせてはいけません。`no-suppress`が検出します。警告が誤りだと考えるなら、設定を変える理由を[docs/lint-history.md](docs/lint-history.md)に書いてから設定を直します。
 - 規則に掛かる名前を、角括弧のアクセスなど別の書き方で避けてはいけません。
+- `site/`の型は、Astroが`.astro/`に生成する型に頼ります。`pnpm lint`と`pnpm typecheck`は、先に`astro sync`で型を生成します。oxlintや型検査を直接動かすときは、先に`pnpm sync`を実行します。
 - 型検査は`pnpm typecheck`で行います。`tsc`はEffectの診断を出さないので、`tsc`が通っても完了ではありません。
 - `pnpm-workspace.yaml`の供給網対策の設定を緩めてはいけません。コマンドの引数で上書きすることも禁止です。インストールが通らないときは、緩めずに報告します。
 - 型付きのエラーを手順の中で握りつぶしてはいけません。サービスの関数はエラーをそのまま返し、列の行き先やHTTPの答えに変える場所を1か所に決めます。

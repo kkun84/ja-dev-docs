@@ -12,9 +12,9 @@ import { Schema } from "effect"
  * - `done`: 公開済み
  * - `failed`: 失敗。もう一度リクエストすると列に戻る
  */
-export const RequestState = Schema.Literals(["queued", "translating", "translated", "done", "failed"])
+const RequestState = Schema.Literals(["queued", "translating", "translated", "done", "failed"])
 
-export type RequestState = typeof RequestState.Type
+type RequestState = typeof RequestState.Type
 
 /** 列の1行。同じページへのリクエストは1行にまとめ、件数を数える。 */
 export const RequestRow = Schema.Struct({
@@ -25,8 +25,6 @@ export const RequestRow = Schema.Struct({
   updated_at: Schema.String,
   error: Schema.NullOr(Schema.String)
 })
-
-export type RequestRow = typeof RequestRow.Type
 
 /** 読者に見せる、リクエストの状況。失敗の理由などの内部の情報は含めない。 */
 export interface RequestStatus {
@@ -57,7 +55,7 @@ export const afterOutcome = (outcome: Outcome): { readonly state: RequestState; 
 })
 
 /** 実行が途中で止まった「翻訳中」を、もう一度列に戻すまでの時間(分)。 */
-export const STALE_MINUTES = 120
+const STALE_MINUTES = 120
 
 /** 1日に受け付ける新しいページの数。Turnstileを通せる相手でも、無料枠と訳文の量を際限なく増やせないようにする。 */
 export const DAILY_NEW_PAGES = 200

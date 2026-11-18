@@ -10,7 +10,7 @@
 [global]
 flavor = "standard"
 respect_gitignore = true
-exclude = ["node_modules", "dist", "coverage", ".astro", ".wrangler", "content", "pipeline/fixtures"]
+exclude = ["node_modules", "dist", "coverage", ".astro", ".wrangler", "content", "test/fixtures"]
 
 [MD013]
 # 日本語の文章では行の長さは表示側の仕事。

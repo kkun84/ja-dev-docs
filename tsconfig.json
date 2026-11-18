@@ -37,5 +37,5 @@
       }
     ]
   },
-  "include": ["scripts", "*.config.ts"]
+  "include": ["src/core", "scripts", "*.config.ts"]
 }

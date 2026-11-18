@@ -12,7 +12,16 @@ export default defineConfig({
       reporter: ["text", "lcov", "html"],
       reportsDirectory: "coverage",
       include: ["src/**/*.ts"],
-      exclude: ["src/**/*.test.ts"]
+      // src/libは作り直す前のコード。Astroの中でだけ動く部分があり、数えない。
+      exclude: ["src/**/*.test.ts", "src/lib/**", "src/content.config.ts"],
+      thresholds: {
+        "src/core/**": {
+          lines: 90,
+          branches: 90,
+          functions: 90,
+          statements: 90
+        }
+      }
     }
   }
 })

@@ -7,7 +7,7 @@ import type { Nodes } from "mdast";
 import { translatePage } from "./page.ts";
 import type { Caller } from "./model.ts";
 
-const dir = new URL("./fixtures/", import.meta.url);
+const dir = new URL("../test/fixtures/", import.meta.url);
 const fixtures = readdirSync(dir).filter((f) => f.endsWith(".md"));
 const variables = (p: string) => (p === "product.prodname_copilot_short" ? "Copilot" : undefined);
 const base = { seed: "test", variables, glossary: {} };

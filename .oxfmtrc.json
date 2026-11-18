@@ -1,0 +1,9 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 140,
+  "semi": false,
+  "trailingComma": "none",
+  "arrowParens": "always",
+  // contentは翻訳のジョブが書く訳文。pipeline、worker、src、astro.config.mjsは作り直す前のコードで、作り直しが済んだ層から順に消す。
+  "ignorePatterns": ["pnpm-lock.yaml", "content/**", "pipeline/**", "worker/**", "src/**", "astro.config.mjs"]
+}

@@ -1,7 +1,7 @@
 // 訳文の中のリンクを書き換える。
 //
-// 描画したHTMLの a、img、video、source の属性だけを書き換える。Markdownの文字列に正規表現をかけると、
-// コードブロックの中の handlers[name](event) のような文字までリンクとして書き換えてしまうため。
+// 描画したHTMLのa、img、video、sourceの属性だけを書き換える。Markdownの文字列に正規表現をかけると、
+// コードブロックの中のhandlers[name](event) のような文字までリンクとして書き換えてしまうため。
 // リンク先に訳があれば、このサイトの訳のページへ。無ければ原文のサイトへ。画像は原文のサイトから読む。
 
 import { posix } from "node:path";
@@ -63,9 +63,9 @@ export function resolveHref(href: string, record: PageRecord, translated: Set<st
   return href;
 }
 
-// VS Codeの画像と動画は、原文のリポジトリではGit LFSに入っていて、raw.githubusercontent.com からは取れない。
-// 原文のサイトが配信している場所に対応させる。docs/agents/images/x/y.png は /assets/docs/agents/x/y.png、
-// release-notes/images/1_147/y.png は /assets/updates/1_147/y.png になる。
+// VS Codeの画像と動画は、原文のリポジトリではGit LFSに入っていて、raw.githubusercontent.comからは取れない。
+// 原文のサイトが配信している場所に対応させる。docs/agents/images/x/y.pngは /assets/docs/agents/x/y.png、
+// release-notes/images/1_147/y.pngは /assets/updates/1_147/y.pngになる。
 function vscodeAsset(repoPath: string): string {
   const m = /^(.*?)\/images\/(.+)$/.exec(repoPath);
   if (!m) return `https://code.visualstudio.com/${repoPath}`;

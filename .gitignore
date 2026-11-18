@@ -5,3 +5,7 @@ __pycache__/
 .wrangler/
 dist/
 .astro/
+coverage/
+.direnv/
+.fallow/
+.rumdl_cache/

@@ -21,7 +21,7 @@ const STALE_MINUTES = 120;
 // 1日に受け付ける新しいページの数。Turnstileを通せる相手でも、無料枠と訳文の量を際限なく増やせないようにする。
 export const DAILY_NEW_PAGES = 200;
 
-// リクエストを列に入れる。新しいページで、その日の受付が上限に達していれば false を返す。
+// リクエストを列に入れる。新しいページで、その日の受付が上限に達していればfalseを返す。
 export async function addRequest(db: D1Like, page: string, now = new Date().toISOString()): Promise<boolean> {
   const exists = await db.prepare("SELECT 1 AS x FROM requests WHERE page = ?1").bind(page).first<{ x: number }>();
   if (!exists) {
@@ -86,7 +86,7 @@ export async function countQueued(db: D1Like): Promise<number> {
   return (await db.prepare("SELECT COUNT(*) AS n FROM requests WHERE state = 'queued'").bind().first<{ n: number }>())?.n ?? 0;
 }
 
-// 翻訳モデルを1回呼ぶ前に、その日の回数を1つ増やす。上限を超えたら false を返す(呼ばない)。
+// 翻訳モデルを1回呼ぶ前に、その日の回数を1つ増やす。上限を超えたらfalseを返す(呼ばない)。
 export async function reserveCall(db: D1Like, model: string, limit: number, now = new Date()): Promise<boolean> {
   const day = pacificDate(now);
   await db

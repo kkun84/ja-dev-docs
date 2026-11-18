@@ -1,8 +1,24 @@
+# pnpmの設定(pnpm 12はpnpm-workspace.yamlから読む)。
+#
+# 供給網対策。理由はscripts/lint/pnpm-policy/README.mdにある。
+
+# 1.公開から7日(10080分)経っていない版は入れない。乗っ取られた版が取り下げられるまでの
+#    時間を置く。minimumReleaseAgeExcludeの例外は作らない。
+minimumReleaseAge: 10080
+
+# 2. package.jsonのenginesに合わないNode.jsやpnpmでは、インストールを失敗させる。
+engineStrict: true
+
+# 3.以前より信頼の低い方法で公開された版を拒む。
 trustPolicy: no-downgrade
 
+# 4.依存の依存が、GitやURLから入るのを拒む。
 blockExoticSubdeps: true
 
+# 5.インストールスクリプトは、ここで許したパッケージだけが動かせる。
 allowBuilds:
+  lefthook: true
   # 実行ファイルはプラットフォーム別のパッケージから入るので、installスクリプトは動かさない。
   esbuild: false
   workerd: false
+  sharp: false

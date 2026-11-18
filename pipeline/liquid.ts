@@ -1,6 +1,6 @@
 // GitHub Docsの原文にあるLiquidのうち、訳す前に決められるものを展開する。
 //
-// 読者が見るのは github.com の版(fpt)なので、{% ifversion %} はその版で評価する。
+// 読者が見るのはgithub.comの版(fpt)なので、{% ifversion %} はその版で評価する。
 // {% data reusables.… %} は本文に埋め込み、ページ全体を同じ文脈で訳せるようにする。
 // [AUTOTITLE](/path) は、リンク先の題名に置き換える。題名も一緒に訳される。
 // {% octicon %} はアイコンなので除く。{% data variables.… %} は残し、訳すときに目印にする。

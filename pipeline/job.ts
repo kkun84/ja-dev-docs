@@ -1,4 +1,4 @@
-// 1ページを訳して content/ に書き出す処理。cli.ts と run.ts から使う。
+// 1ページを訳してcontent/ に書き出す処理。cli.tsとrun.tsから使う。
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -108,7 +108,7 @@ export class PageFailed extends Error {
   }
 }
 
-// VS Codeの kb(コマンド) を、既定のキー割り当てに変える表。原文のリポジトリの build/keybindings から作る。
+// VS Codeのkb(コマンド) を、既定のキー割り当てに変える表。原文のリポジトリのbuild/keybindingsから作る。
 async function loadKeybindings(source: Source): Promise<(command: string) => Keybinding | undefined> {
   const load = async (os: string) => {
     const text = await httpFetcher(rawUrl(source, `build/keybindings/doc.keybindings.${os}.json`));

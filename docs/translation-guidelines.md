@@ -50,11 +50,11 @@ GitHub DocsとVisual Studio Codeのドキュメントを日本語へ移すとき
 
 How-toやクイックスタートの手順は、**「〜します」を基本とします（決定）。** 注意や必須の操作だけ「〜してください」とします。ドキュメントらしい落ち着いた調子になり、です・ます調とも自然につながります。
 
-| 原文の趣旨 | 訳し方（決定） | 例 |
-| --- | --- | --- |
-| 手順の操作 | 〜します | ファイルを開きます。原文が**Settings**なら、**Settings**を選択します。 |
-| 必須の注意、警告、お願い | 〜してください | 変更を保存してから進めてください。トークンを共有しないでください。 |
-| できることの説明 | 〜できます | ブランチを切り替えて比較できます。 |
+| 原文の趣旨               | 訳し方（決定） | 例                                                                     |
+| ------------------------ | -------------- | ---------------------------------------------------------------------- |
+| 手順の操作               | 〜します       | ファイルを開きます。原文が**Settings**なら、**Settings**を選択します。 |
+| 必須の注意、警告、お願い | 〜してください | 変更を保存してから進めてください。トークンを共有しないでください。     |
+| できることの説明         | 〜できます     | ブランチを切り替えて比較できます。                                     |
 
 Microsoftの日本語スタイルガイドでは、操作を促す文に「〜してください」を使う、と定めています。一方で、同ガイドの例には「ファイルを開きます」もあります。本プロジェクトでは、手順の基本を「〜します」にし、読者への注意や必須の操作だけ「〜してください」とします。
 
@@ -135,9 +135,9 @@ Microsoftの日本語スタイルガイドでは、操作を促す文に「〜�
 
 英語のem dash（—）やen dash（–）を、和文にそのまま持ち込みません。PLaMoをはじめ、いくつかのモデルが、説明のつなぎにダッシュを多用することが知られています。和文では、読点、括弧、または文の分割で足りることがほとんどです。
 
-| 避けたい形 | 代わりの例 |
-| --- | --- |
-| これは便利な機能です—設定から使えます。 | これは便利な機能です。設定から使えます。 |
+| 避けたい形                                     | 代わりの例                               |
+| ---------------------------------------------- | ---------------------------------------- |
+| これは便利な機能です—設定から使えます。        | これは便利な機能です。設定から使えます。 |
 | エージェント—クラウド上で動くもの—を使います。 | クラウド上で動くエージェントを使います。 |
 
 範囲を示すハイフンや、識別子の中のハイフン（GPT-6.1、v1-146、ci-cd）は、原文どおり残します。和文のダッシュ「――」も、原則として使いません。
@@ -148,13 +148,13 @@ Microsoftの日本語スタイルガイドでは、操作を促す文に「〜�
 
 ### 見分け方の目安
 
-**英語のまま残すもの（決定の範囲）**
+#### 英語のまま残すもの（決定の範囲）
 
 - 製品名、プラン名、機能の正式名称。例: GitHub、GitHub Copilot、GitHub Actions、GitHub Codespaces、Visual Studio Code、VS Code、IntelliSense、Copilot cloud agent
 - 画面に出る表示名。ウィンドウ、ビュー、タブ、ボタン、メニュー、コマンド、設定項目のラベルです。例: Agents window、Chat view、Command Palette、Settings、Pull requests、New issue
 - 原文がUIを指して太字やコードにしてある語は、原則としてUIと見なします
 
-**訳すもの**
+#### 訳すもの
 
 - 一般概念、普通名詞、操作の説明。例: repository→リポジトリ、extension→拡張機能、settings（一般の「設定」）、agent（一般の「エージェント」）、prompt→プロンプト
 - 同じ英語でも、UIを指していないときは訳します。「Open Settings」はUI、「change the extension settings」は「拡張機能の設定を変更します」
@@ -169,15 +169,15 @@ Microsoftの日本語スタイルガイドでは、操作を促す文に「〜�
 
 UIの文言は、英語のまま置き、助詞を直につなぎます。**書式は原文に合わせます（決定）。** 原文が太字なら太字を保ち、太字でなければ太字を足しません。角括弧や太字を、訳の側で独自に足しません。**日本語と英語のあいだに空白を入れません（決定）。** 読者の製品UIが日本語表示でも、英語のUI名に日本語を補いません（決定）。
 
-| 原文の例 | 訳の例 | 説明 |
-| --- | --- | --- |
-| Select **Settings**. | **Settings**を選択します。 | 原文が太字なので、太字のまま残します |
-| Open the Command Palette. | Command Paletteを開きます。 | 原文が太字でないので、太字を足しません。画面の名前なので訳しません |
-| Use the Agents window to start a session. | セッションを始めるには、Agents windowを使います。 | ウィンドウ名を「エージェントウィンドウ」とは訳しません |
-| Start a Copilot cloud agent session. | Copilot cloud agentのセッションを開始します。 | 機能名は英語のまま、周辺の語だけ訳します |
-| Create a pull request. | pull requestを作成します。 | UIも概念も英語のままです（決定） |
-| Install an extension. | 拡張機能をインストールします。 | 一般概念なので訳します |
-| Open the **Extensions** view. | **Extensions**ビューを開きます。 | 原文が太字のビュー名は、太字のまま残します。一般の「ビュー」は訳してよいとします |
+| 原文の例                                  | 訳の例                                            | 説明                                                                             |
+| ----------------------------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Select **Settings**.                      | **Settings**を選択します。                        | 原文が太字なので、太字のまま残します                                             |
+| Open the Command Palette.                 | Command Paletteを開きます。                       | 原文が太字でないので、太字を足しません。画面の名前なので訳しません               |
+| Use the Agents window to start a session. | セッションを始めるには、Agents windowを使います。 | ウィンドウ名を「エージェントウィンドウ」とは訳しません                           |
+| Start a Copilot cloud agent session.      | Copilot cloud agentのセッションを開始します。     | 機能名は英語のまま、周辺の語だけ訳します                                         |
+| Create a pull request.                    | pull requestを作成します。                        | UIも概念も英語のままです（決定）                                                 |
+| Install an extension.                     | 拡張機能をインストールします。                    | 一般概念なので訳します                                                           |
+| Open the **Extensions** view.             | **Extensions**ビューを開きます。                  | 原文が太字のビュー名は、太字のまま残します。一般の「ビュー」は訳してよいとします |
 
 原文が太字にしていない画面名（Command Palette、Agents windowなど）に、太字を足しません。
 
@@ -185,18 +185,18 @@ UIの文言は、英語のまま置き、助詞を直につなぎます。**書�
 
 ### 混同しやすい例
 
-| 英語 | UI・製品名（英語のまま） | 一般概念 |
-| --- | --- | --- |
-| agent | Agents window、Copilot cloud agent、Agent mode（機能名は英語のまま） | エージェント |
-| settings | **Settings**、Settings editor | 設定 |
-| extension | **Extensions** | 拡張機能 |
-| terminal | **Terminal** | ターミナル |
-| chat | Chat view、Copilot Chat | チャット |
-| issue | Issues、New issue（原文が太字なら太字のまま） | issueのまま残します（決定） |
-| pull request | Pull requests、New pull request（原文が太字なら太字のまま） | pull requestのまま残します（決定） |
-| organization | Organization（GitHubのアカウント種別） | 組織（一般の意味のとき） |
-| team | Team（GitHubの機能・UI） | チーム（一般の意味のとき） |
-| custom instructions | custom instructions（機能名） | 指示（自分で書いた一般の指示） |
+| 英語                | UI・製品名（英語のまま）                                             | 一般概念                           |
+| ------------------- | -------------------------------------------------------------------- | ---------------------------------- |
+| agent               | Agents window、Copilot cloud agent、Agent mode（機能名は英語のまま） | エージェント                       |
+| settings            | **Settings**、Settings editor                                        | 設定                               |
+| extension           | **Extensions**                                                       | 拡張機能                           |
+| terminal            | **Terminal**                                                         | ターミナル                         |
+| chat                | Chat view、Copilot Chat                                              | チャット                           |
+| issue               | Issues、New issue（原文が太字なら太字のまま）                        | issueのまま残します（決定）        |
+| pull request        | Pull requests、New pull request（原文が太字なら太字のまま）          | pull requestのまま残します（決定） |
+| organization        | Organization（GitHubのアカウント種別）                               | 組織（一般の意味のとき）           |
+| team                | Team（GitHubの機能・UI）                                             | チーム（一般の意味のとき）         |
+| custom instructions | custom instructions（機能名）                                        | 指示（自分で書いた一般の指示）     |
 
 ## 略語と、ページ内で定義される用語（案）
 
@@ -228,85 +228,85 @@ PRはpull requestの略として広く使われます。UIの文言がPull reque
 
 ### GitとGitHub
 
-| 英語 | 訳語 | 扱い | メモ |
-| --- | --- | --- | --- |
-| repository | リポジトリ | 訳す（案） | 定着しています。「レポジトリ」とはしません |
-| commit | コミット | 訳す（案） | 動詞は「コミットします」 |
-| branch | ブランチ | 訳す（案） | default branchは「デフォルトブランチ」 |
-| pull request | pull request | 英語のまま（決定） | UIの表示名としても、概念としても、英語のまま残します。「プルリクエスト」にはしません。勝手にPRへ略しません |
-| issue | issue | 英語のまま（決定） | UIとしても、概念としても、英語のまま残します。「イシュー」「課題」にはしません。Issuesタブは英語のままです |
-| fork | フォーク | 文脈次第（案） | 一般概念は「フォーク」、ボタン名のForkは英語のままです |
-| merge | マージ | 文脈次第（案） | 一般概念は「マージ」、ボタン名のMergeは英語のままです |
-| clone | クローン | 文脈次第（案） | 動詞は「クローンします」 |
-| push | プッシュ | 訳す（案） | 「プッシュします」。コマンド名の`git push`は原文どおりです |
-| pull | プル | 訳す（案） | pull requestと区別します。コマンドは原文どおりです |
-| fetch | フェッチ | 訳す（案） | 同上 |
-| remote | リモート | 訳す（案） | リモートリポジトリ、リモートブランチ |
-| upstream | upstream / 上流 | 文脈次第（決定） | フォークやリモートの呼称、Gitの技術用語としては英語のまま残します。一般の「上流」の意味で使われているときは「上流」と訳します |
-| organization | Organization / 組織 | 文脈次第（決定） | GitHubのアカウント種別・機能名はOrganizationのまま残します。一般の「組織」の意味のときは「組織」と訳します |
-| enterprise | Enterprise / 企業 | 文脈次第（決定） | GitHub Enterpriseなどの製品名と、GitHubのEnterpriseアカウント種別は英語のまま残します。一般の「企業」の意味のときは「企業」などと訳します |
-| team | Team / チーム | 文脈次第（決定） | GitHubのTeam機能・UIは英語のまま残します。一般の「チーム」の意味のときは「チーム」と訳します |
-| collaborator | コラボレーター | 訳す（案） | 長音を付けます |
-| GitHub Actions | GitHub Actions | 英語のまま（決定） | 製品名です |
-| workflow | ワークフロー | 訳す（案） | ファイルパスやファイル名は原文どおりです |
-| runner | ランナー | 訳す（案） | 長音を付けます。self-hosted runnerは「セルフホストランナー」を案とします |
-| action | Action | 文脈次第（案） | 個々のActionは英語のまま寄り、一般の「操作」は訳します。製品名のGitHub Actionsと混同しません |
-| release | リリース | 文脈次第（案） | 一般概念は訳します。ReleasesページはUIなので英語のままです |
-| tag | タグ | 訳す（案） | |
-| Discussions | Discussions | 英語のまま（決定） | 機能名・UIです。一般の「議論」とは書き分けます |
-| Projects | Projects | 英語のまま（決定） | 機能名・UIです。旧Projectsとの区別は原文に従います |
-| Codespaces / codespace | GitHub Codespaces / codespace | 英語のまま（決定） | 製品名と、GitHub Codespacesの機能としての個々のcodespaceは、英語のまま残します |
-| webhook | webhook | 英語のまま（案） | 「ウェブフック」とはしません。先頭の大文字は原文に合わせます |
-| personal access token | personal access token | 英語のまま（案） | 略語PATもそのままです。一般の「トークン」とは、文脈で区別します |
-| review | レビュー | 文脈次第（案） | 一般概念は訳します。**Review**や**Approve**などのボタンは英語のままです |
-| merge conflict | マージコンフリクト | 訳す（案） | 「競合」でも通じますが、開発者向けにはこちらの案です。未決です |
-| squash / rebase | squash / rebase | 英語のまま（案） | 操作名として定着しています。「squashマージ」のように、必要な箇所だけ混ぜます |
-| checkout | チェックアウト | 訳す（案） | ブランチの切り替えは「ブランチをチェックアウトします」または「ブランチを切り替えます」。後者のほうが分かりやすい文もあります。未決です |
-| GitHub App | GitHub App | 英語のまま（決定） | 製品上の呼称です。複数形のGitHub Appsもそのままです |
+| 英語                   | 訳語                          | 扱い               | メモ                                                                                                                                      |
+| ---------------------- | ----------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| repository             | リポジトリ                    | 訳す（案）         | 定着しています。「レポジトリ」とはしません                                                                                                |
+| commit                 | コミット                      | 訳す（案）         | 動詞は「コミットします」                                                                                                                  |
+| branch                 | ブランチ                      | 訳す（案）         | default branchは「デフォルトブランチ」                                                                                                    |
+| pull request           | pull request                  | 英語のまま（決定） | UIの表示名としても、概念としても、英語のまま残します。「プルリクエスト」にはしません。勝手にPRへ略しません                                |
+| issue                  | issue                         | 英語のまま（決定） | UIとしても、概念としても、英語のまま残します。「イシュー」「課題」にはしません。Issuesタブは英語のままです                                |
+| fork                   | フォーク                      | 文脈次第（案）     | 一般概念は「フォーク」、ボタン名のForkは英語のままです                                                                                    |
+| merge                  | マージ                        | 文脈次第（案）     | 一般概念は「マージ」、ボタン名のMergeは英語のままです                                                                                     |
+| clone                  | クローン                      | 文脈次第（案）     | 動詞は「クローンします」                                                                                                                  |
+| push                   | プッシュ                      | 訳す（案）         | 「プッシュします」。コマンド名の`git push`は原文どおりです                                                                                |
+| pull                   | プル                          | 訳す（案）         | pull requestと区別します。コマンドは原文どおりです                                                                                        |
+| fetch                  | フェッチ                      | 訳す（案）         | 同上                                                                                                                                      |
+| remote                 | リモート                      | 訳す（案）         | リモートリポジトリ、リモートブランチ                                                                                                      |
+| upstream               | upstream / 上流               | 文脈次第（決定）   | フォークやリモートの呼称、Gitの技術用語としては英語のまま残します。一般の「上流」の意味で使われているときは「上流」と訳します             |
+| organization           | Organization / 組織           | 文脈次第（決定）   | GitHubのアカウント種別・機能名はOrganizationのまま残します。一般の「組織」の意味のときは「組織」と訳します                                |
+| enterprise             | Enterprise / 企業             | 文脈次第（決定）   | GitHub Enterpriseなどの製品名と、GitHubのEnterpriseアカウント種別は英語のまま残します。一般の「企業」の意味のときは「企業」などと訳します |
+| team                   | Team / チーム                 | 文脈次第（決定）   | GitHubのTeam機能・UIは英語のまま残します。一般の「チーム」の意味のときは「チーム」と訳します                                              |
+| collaborator           | コラボレーター                | 訳す（案）         | 長音を付けます                                                                                                                            |
+| GitHub Actions         | GitHub Actions                | 英語のまま（決定） | 製品名です                                                                                                                                |
+| workflow               | ワークフロー                  | 訳す（案）         | ファイルパスやファイル名は原文どおりです                                                                                                  |
+| runner                 | ランナー                      | 訳す（案）         | 長音を付けます。self-hosted runnerは「セルフホストランナー」を案とします                                                                  |
+| action                 | Action                        | 文脈次第（案）     | 個々のActionは英語のまま寄り、一般の「操作」は訳します。製品名のGitHub Actionsと混同しません                                              |
+| release                | リリース                      | 文脈次第（案）     | 一般概念は訳します。ReleasesページはUIなので英語のままです                                                                                |
+| tag                    | タグ                          | 訳す（案）         |                                                                                                                                           |
+| Discussions            | Discussions                   | 英語のまま（決定） | 機能名・UIです。一般の「議論」とは書き分けます                                                                                            |
+| Projects               | Projects                      | 英語のまま（決定） | 機能名・UIです。旧Projectsとの区別は原文に従います                                                                                        |
+| Codespaces / codespace | GitHub Codespaces / codespace | 英語のまま（決定） | 製品名と、GitHub Codespacesの機能としての個々のcodespaceは、英語のまま残します                                                            |
+| webhook                | webhook                       | 英語のまま（案）   | 「ウェブフック」とはしません。先頭の大文字は原文に合わせます                                                                              |
+| personal access token  | personal access token         | 英語のまま（案）   | 略語PATもそのままです。一般の「トークン」とは、文脈で区別します                                                                           |
+| review                 | レビュー                      | 文脈次第（案）     | 一般概念は訳します。**Review**や**Approve**などのボタンは英語のままです                                                                   |
+| merge conflict         | マージコンフリクト            | 訳す（案）         | 「競合」でも通じますが、開発者向けにはこちらの案です。未決です                                                                            |
+| squash / rebase        | squash / rebase               | 英語のまま（案）   | 操作名として定着しています。「squashマージ」のように、必要な箇所だけ混ぜます                                                              |
+| checkout               | チェックアウト                | 訳す（案）         | ブランチの切り替えは「ブランチをチェックアウトします」または「ブランチを切り替えます」。後者のほうが分かりやすい文もあります。未決です    |
+| GitHub App             | GitHub App                    | 英語のまま（決定） | 製品上の呼称です。複数形のGitHub Appsもそのままです                                                                                       |
 
 ### Visual Studio Code
 
-| 英語 | 訳語 | 扱い | メモ |
-| --- | --- | --- | --- |
-| Visual Studio Code / VS Code | Visual Studio Code / VS Code | 英語のまま（決定） | 製品名です。原文の使い分け（フルネームか短い形か）に従います |
-| workspace | ワークスペース | 訳す（案） | 複数ルートのワークスペースも同様です |
-| extension | 拡張機能 | 文脈次第（案） | 一般概念は「拡張機能」。**Extensions**ビューは英語のままです（決定） |
-| settings | 設定 | 文脈次第（案） | 一般の設定は訳します。**Settings**は英語のままです（決定） |
-| Command Palette | Command Palette | 英語のまま（決定） | 訳しません |
-| IntelliSense | IntelliSense | 英語のまま（決定） | 機能の固有名です |
-| terminal | ターミナル | 文脈次第（案） | 一般概念は訳します。**Terminal**パネルは英語のままです |
-| editor | エディター | 訳す（案） | 長音を付けます |
-| Explorer | Explorer | 英語のまま（決定） | ビュー名です。一般の「探索」などにはしません |
-| Activity Bar / Status Bar / Side Bar / Panel | それぞれ英語のまま | 英語のまま（決定） | 画面領域の名前です。原文の表記（Primary Side Barなど）に合わせます |
-| debug / debugger | デバッグ / デバッガー | 文脈次第（案） | 一般概念は訳し、長音を付けます。**Run and Debug**などのビュー名は英語のままです |
-| snippet | スニペット | 訳す（案） | |
-| keybinding | キーバインド | 訳す（案） | 「キーボードショートカット」と書くほうが自然な文もあります。未決です |
-| folder | フォルダー | 訳す（案） | 長音を付けます。「フォルダ」とはしません |
-| user | ユーザー | 訳す（案） | 長音を付けます。「ユーザ」とはしません |
-| tab | タブ | 文脈次第（案） | 一般概念は訳します。個々のタブ名は英語のままです |
+| 英語                                         | 訳語                         | 扱い               | メモ                                                                            |
+| -------------------------------------------- | ---------------------------- | ------------------ | ------------------------------------------------------------------------------- |
+| Visual Studio Code / VS Code                 | Visual Studio Code / VS Code | 英語のまま（決定） | 製品名です。原文の使い分け（フルネームか短い形か）に従います                    |
+| workspace                                    | ワークスペース               | 訳す（案）         | 複数ルートのワークスペースも同様です                                            |
+| extension                                    | 拡張機能                     | 文脈次第（案）     | 一般概念は「拡張機能」。**Extensions**ビューは英語のままです（決定）            |
+| settings                                     | 設定                         | 文脈次第（案）     | 一般の設定は訳します。**Settings**は英語のままです（決定）                      |
+| Command Palette                              | Command Palette              | 英語のまま（決定） | 訳しません                                                                      |
+| IntelliSense                                 | IntelliSense                 | 英語のまま（決定） | 機能の固有名です                                                                |
+| terminal                                     | ターミナル                   | 文脈次第（案）     | 一般概念は訳します。**Terminal**パネルは英語のままです                          |
+| editor                                       | エディター                   | 訳す（案）         | 長音を付けます                                                                  |
+| Explorer                                     | Explorer                     | 英語のまま（決定） | ビュー名です。一般の「探索」などにはしません                                    |
+| Activity Bar / Status Bar / Side Bar / Panel | それぞれ英語のまま           | 英語のまま（決定） | 画面領域の名前です。原文の表記（Primary Side Barなど）に合わせます              |
+| debug / debugger                             | デバッグ / デバッガー        | 文脈次第（案）     | 一般概念は訳し、長音を付けます。**Run and Debug**などのビュー名は英語のままです |
+| snippet                                      | スニペット                   | 訳す（案）         |                                                                                 |
+| keybinding                                   | キーバインド                 | 訳す（案）         | 「キーボードショートカット」と書くほうが自然な文もあります。未決です            |
+| folder                                       | フォルダー                   | 訳す（案）         | 長音を付けます。「フォルダ」とはしません                                        |
+| user                                         | ユーザー                     | 訳す（案）         | 長音を付けます。「ユーザ」とはしません                                          |
+| tab                                          | タブ                         | 文脈次第（案）     | 一般概念は訳します。個々のタブ名は英語のままです                                |
 
 ### Copilotとエージェント
 
-| 英語 | 訳語 | 扱い | メモ |
-| --- | --- | --- | --- |
-| GitHub Copilot | GitHub Copilot | 英語のまま（決定） | 製品名です。単にCopilotとあるときも、原文に従い英語のままです |
-| Copilot Chat | Copilot Chat | 英語のまま（決定） | 機能名です |
-| Copilot cloud agent | Copilot cloud agent | 英語のまま（決定） | 訳しません。「クラウドエージェント」だけに置き換えません。一般の説明で「クラウド上のエージェント」と言うのは構いません |
-| Agents window | Agents window | 英語のまま（決定） | 訳しません |
-| Chat view | Chat view | 英語のまま（決定） | 同上です |
-| agent | エージェント | 文脈次第（案） | 一般概念は訳します。上記の製品名とUIは英語のままです |
-| agent mode / Agent mode | Agent mode / モード | 文脈次第（決定） | 機能名のAgent modeは英語のまま残します。一般の「モード」や、エージェントの動き方を説明する箇所は訳します |
-| custom agent | custom agent / カスタムエージェント | 文脈次第（決定） | 機能名は英語のまま残します。一般の「独自のエージェント」といった説明は訳します |
-| custom instructions | custom instructions / 指示 | 文脈次第（決定） | 機能名は英語のまま残します。自分で書いた一般の「指示」は「指示」と訳します |
-| prompt | プロンプト | 訳す（案） | 入力そのものも、その文言も、原則として「プロンプト」です |
-| token | トークン | 訳す（案） | モデルの使用量の単位です。personal access tokenとは文脈で区別します |
-| context | コンテキスト | 訳す（案） | 「文脈」だと、モデルに渡す情報の意味からずれることがあります |
-| session | セッション | 訳す（案） | |
-| MCP | MCP | 英語のまま（案） | 初出ではModel Context Protocol（MCP）とします。展開部は英語のままを案とします |
-| tool | ツール | 訳す（案） | MCPのtoolも含め、「ツール」を案とします |
-| model | モデル | 訳す（案） | 言語モデル、推論モデルなど、原文の修飾に合わせます |
-| sandbox | サンドボックス | 訳す（案） | |
-| inline suggestion | インライン提案 | 訳す（案） | 機能の呼び方が製品側で固まっているなら、それに合わせます。未決です |
+| 英語                    | 訳語                                | 扱い               | メモ                                                                                                                   |
+| ----------------------- | ----------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| GitHub Copilot          | GitHub Copilot                      | 英語のまま（決定） | 製品名です。単にCopilotとあるときも、原文に従い英語のままです                                                          |
+| Copilot Chat            | Copilot Chat                        | 英語のまま（決定） | 機能名です                                                                                                             |
+| Copilot cloud agent     | Copilot cloud agent                 | 英語のまま（決定） | 訳しません。「クラウドエージェント」だけに置き換えません。一般の説明で「クラウド上のエージェント」と言うのは構いません |
+| Agents window           | Agents window                       | 英語のまま（決定） | 訳しません                                                                                                             |
+| Chat view               | Chat view                           | 英語のまま（決定） | 同上です                                                                                                               |
+| agent                   | エージェント                        | 文脈次第（案）     | 一般概念は訳します。上記の製品名とUIは英語のままです                                                                   |
+| agent mode / Agent mode | Agent mode / モード                 | 文脈次第（決定）   | 機能名のAgent modeは英語のまま残します。一般の「モード」や、エージェントの動き方を説明する箇所は訳します               |
+| custom agent            | custom agent / カスタムエージェント | 文脈次第（決定）   | 機能名は英語のまま残します。一般の「独自のエージェント」といった説明は訳します                                         |
+| custom instructions     | custom instructions / 指示          | 文脈次第（決定）   | 機能名は英語のまま残します。自分で書いた一般の「指示」は「指示」と訳します                                             |
+| prompt                  | プロンプト                          | 訳す（案）         | 入力そのものも、その文言も、原則として「プロンプト」です                                                               |
+| token                   | トークン                            | 訳す（案）         | モデルの使用量の単位です。personal access tokenとは文脈で区別します                                                    |
+| context                 | コンテキスト                        | 訳す（案）         | 「文脈」だと、モデルに渡す情報の意味からずれることがあります                                                           |
+| session                 | セッション                          | 訳す（案）         |                                                                                                                        |
+| MCP                     | MCP                                 | 英語のまま（案）   | 初出ではModel Context Protocol（MCP）とします。展開部は英語のままを案とします                                          |
+| tool                    | ツール                              | 訳す（案）         | MCPのtoolも含め、「ツール」を案とします                                                                                |
+| model                   | モデル                              | 訳す（案）         | 言語モデル、推論モデルなど、原文の修飾に合わせます                                                                     |
+| sandbox                 | サンドボックス                      | 訳す（案）         |                                                                                                                        |
+| inline suggestion       | インライン提案                      | 訳す（案）         | 機能の呼び方が製品側で固まっているなら、それに合わせます。未決です                                                     |
 
 用語集に無い語は、上記の見分け方で処理し、繰り返し出るものはここに足します。禁止したい訳語（例: レポジトリ、サーバ、ユーザ、あなたは、〜することができます）も、決まったものから順にメモへ書いていきます。
 
@@ -344,5 +344,5 @@ PRはpull requestの略として広く使われます。UIの文言がPull reque
 
 - Microsoft、[Japanese Localization Style Guide](https://download.microsoft.com/download/a/8/2/a822a118-18d4-4429-b857-1b65ab388315/jpn-jpn-StyleGuide.pdf)（長音、です・ます、人称、操作の言い方など）
 - 平成3年6月28日内閣告示第2号「外来語の表記」（上記ガイドが一次の典拠としているもの）
-- Microsoft Learn、[長音表記の変更](https://learn.microsoft.com/ja-jp/previous-versions/msdn10/Dd871143(v=MSDN.10))（Windows 7以降の、コンピューター、フォルダーなど）
+- Microsoft Learn、[長音表記の変更](<https://learn.microsoft.com/ja-jp/previous-versions/msdn10/Dd871143(v=MSDN.10)>)（Windows 7以降の、コンピューター、フォルダーなど）
 - GitHub Docsの英語版[GitHub glossary](https://docs.github.com/en/get-started/quickstart/github-glossary)（意味の確認）。日本語版の用語集は機械翻訳のため、訳語の決定根拠にはしません

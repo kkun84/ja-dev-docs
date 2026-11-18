@@ -30,7 +30,7 @@ const rank = (v: Variant) => {
 
 const HOST_LABELS: Record<string, string> = { "code.visualstudio.com": "VS Code", "docs.github.com": "GitHub Docs" };
 
-// ページが属する節。VS Codeは docs/agents のように2階層、GitHub Docsは en/copilot のように2階層までで区切る。
+// ページが属する節。VS Codeはdocs/agentsのように2階層、GitHub Docsはen/copilotのように2階層までで区切る。
 export function sectionOf(id: string): string {
   return id.split("/").slice(0, 3).join("/");
 }

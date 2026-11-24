@@ -17,7 +17,6 @@ export default defineConfig({
       title: "開発者ドキュメント日本語訳(非公式)",
       defaultLocale: "root",
       locales: { root: { label: "日本語", lang: "ja" } },
-      social: [{ icon: "github", label: "GitHub", href: "https://github.com/kkun84/ja-dev-docs" }],
       pagefind: true
     })
   ]

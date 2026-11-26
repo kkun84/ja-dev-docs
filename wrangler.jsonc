@@ -5,10 +5,10 @@
   "name": "ja-dev-docs",
   "compatibility_date": "2026-11-01",
   "main": "src/entrypoints/worker/index.ts",
-  // jdevdocs.keke.works で公開する。keke.works はCloudflareのDNSにあるので、証明書もCloudflareが発行する。
-  // ja.keke.works は以前のホスト名。ゾーンのリダイレクトルールでjdevdocs.keke.worksへ転送するので、DNSのために残す。
+  // ja-dev-docs.keke.works で公開する。keke.works はCloudflareのDNSにあるので、証明書もCloudflareが発行する。
+  // ja.keke.works は以前のホスト名。ゾーンのリダイレクトルールでja-dev-docs.keke.worksへ転送するので、DNSのために残す。
   "routes": [
-    { "pattern": "jdevdocs.keke.works", "custom_domain": true },
+    { "pattern": "ja-dev-docs.keke.works", "custom_domain": true },
     { "pattern": "ja.keke.works", "custom_domain": true }
   ],
   "workers_dev": false,

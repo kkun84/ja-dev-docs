@@ -47,14 +47,14 @@ describe("publishedPagesLayer", () => {
       }
     }
     return PublishedPages.use((pages) => pages.has("code.visualstudio.com/docs/a")).pipe(
-      Effect.provide(publishedPagesLayer(assets, "https://jdevdocs.keke.works/api/status?page=x")),
+      Effect.provide(publishedPagesLayer(assets, "https://ja-dev-docs.keke.works/api/status?page=x")),
       Effect.map((published) => ({ published, urls }))
     )
   }
 
   it.effect("静的アセットにページがあれば、公開済みとする", () =>
     Effect.gen(function* () {
-      expect(yield* has(200)).toStrictEqual({ published: true, urls: ["https://jdevdocs.keke.works/code.visualstudio.com/docs/a/"] })
+      expect(yield* has(200)).toStrictEqual({ published: true, urls: ["https://ja-dev-docs.keke.works/code.visualstudio.com/docs/a/"] })
     })
   )
 

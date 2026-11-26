@@ -72,15 +72,15 @@ AstroのドキュメントテーマStarlightを使います。
 
 ## URL
 
-このサイトは、持っているドメインのサブドメイン`jdevdocs.keke.works`で公開します。以前は`ja.keke.works`で公開していましたが、Palo AltoのURLフィルタで、Cloudflare Accessでログインを求めていた頃の分類(Insufficient Content)が残り、この分類は変更を申請できないため、ホスト名を変えました。`ja.keke.works`へのリクエストは、ゾーンのリダイレクトルールで`jdevdocs.keke.works`へ転送します。`keke.works`はCloudflareのDNSにあるので、WorkerのCustom Domainで証明書も自動で発行されます。このサイトのURLは、原文のURLを、このサイトのドメインの後ろにそのまま付けた形にします。
+このサイトは、持っているドメインのサブドメイン`ja-dev-docs.keke.works`で公開します。以前は`ja.keke.works`で公開していましたが、Palo AltoのURLフィルタで、Cloudflare Accessでログインを求めていた頃の分類(Insufficient Content)が残り、この分類は変更を申請できないため、ホスト名を変えました。`ja.keke.works`へのリクエストは、ゾーンのリダイレクトルールで`ja-dev-docs.keke.works`へ転送します。`keke.works`はCloudflareのDNSにあるので、WorkerのCustom Domainで証明書も自動で発行されます。このサイトのURLは、原文のURLを、このサイトのドメインの後ろにそのまま付けた形にします。
 
 ```text
 原文:     https://code.visualstudio.com/docs/editor/codebasics
-日本語訳: https://jdevdocs.keke.works/https://code.visualstudio.com/docs/editor/codebasics
+日本語訳: https://ja-dev-docs.keke.works/https://code.visualstudio.com/docs/editor/codebasics
 ```
 
 - 読者は、原文のURLをコピーし、このサイトのドメインの後ろに貼るだけで日本語訳を開けます。
-- `https://`を省いた形(`https://jdevdocs.keke.works/code.visualstudio.com/...`)も受け付けます。こちらを正規のURLとし、`https://`付きの形からはリダイレクトします。
+- `https://`を省いた形(`https://ja-dev-docs.keke.works/code.visualstudio.com/...`)も受け付けます。こちらを正規のURLとし、`https://`付きの形からはリダイレクトします。
 - URLエンコードされた形(`https%3A%2F%2Fcode.visualstudio.com%2F...`)も受け付けます。Chromeのサイト内検索のショートカットから開くと、この形になるためです。
 - GitHub Docsの`/en/`などの言語の部分は取り除きます。バージョンの部分(`/enterprise-cloud@latest/`など)は残し、そのバージョンの本文として訳します。
 
@@ -88,10 +88,10 @@ AstroのドキュメントテーマStarlightを使います。
 
 サイトに、次の2つの設定方法を載せます。
 
-- Chromeのサイト内検索のショートカット。URLを`https://jdevdocs.keke.works/%s`、ショートカットを`ja`にして登録します。読者は、アドレスバーに`ja`と入力してTabキーを押し、原文のURLを貼ってEnterキーを押せば、日本語訳を開けます。
-- ブックマークレット。`javascript:location.href='https://jdevdocs.keke.works/'+location.href.replace(/^https?:\/\//,'')`をブックマークとして登録します。原文のページを開いた状態でこのブックマークを押せば、日本語訳を開けます。iPhoneのSafariでも使えます。
+- Chromeのサイト内検索のショートカット。URLを`https://ja-dev-docs.keke.works/%s`、ショートカットを`ja`にして登録します。読者は、アドレスバーに`ja`と入力してTabキーを押し、原文のURLを貼ってEnterキーを押せば、日本語訳を開けます。
+- ブックマークレット。`javascript:location.href='https://ja-dev-docs.keke.works/'+location.href.replace(/^https?:\/\//,'')`をブックマークとして登録します。原文のページを開いた状態でこのブックマークを押せば、日本語訳を開けます。iPhoneのSafariでも使えます。
 
-原文のホスト名の後ろにこのサイトのドメインを足す形(`code.visualstudio.com.jdevdocs.keke.works`)は採りません。アドレスバーでURLの途中を書き換える必要があり、貼り付けや入力の手間が増えるためです。
+原文のホスト名の後ろにこのサイトのドメインを足す形(`code.visualstudio.com.ja-dev-docs.keke.works`)は採りません。アドレスバーでURLの途中を書き換える必要があり、貼り付けや入力の手間が増えるためです。
 
 ## ページの表示
 
@@ -253,7 +253,7 @@ Workerがその場でページを返します。
 ## 次の作業
 
 1. Cloudflareの準備をします。APIトークン、Turnstileのウィジェット、ワークフローを起動するGitHubのトークンを作り、GitHubのシークレットに登録します。手順はREADMEにあります。
-2. `jdevdocs.keke.works`に初めてデプロイし、リクエストから公開までを通しで確かめます。
+2. `ja-dev-docs.keke.works`に初めてデプロイし、リクエストから公開までを通しで確かめます。
 3. PLaMo 3 Translate 8BをActionsのCPUで試訳し、速度を測ります。
 4. 「この訳が読みやすい」の投票を作ります。
 

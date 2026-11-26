@@ -5,7 +5,7 @@ import { memoryD1Binding } from "../../layers/test/sqlite.ts"
 import { createWorker } from "./index.ts"
 
 const PAGE = "code.visualstudio.com/docs/a"
-const ORIGIN = "https://jdevdocs.keke.works"
+const ORIGIN = "https://ja-dev-docs.keke.works"
 
 interface World {
   /** 公開済みのページ。 */

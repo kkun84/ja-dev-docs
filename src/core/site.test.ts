@@ -167,8 +167,8 @@ describe("帰属表示", () => {
   })
 
   it("ブックマークレットは、開いているページのURLをこのサイトの後ろに付ける", () => {
-    expect(bookmarklet("https://jdevdocs.keke.works")).toBe(
-      String.raw`javascript:location.href='https://jdevdocs.keke.works/'+location.href.replace(/^https?:\/\//,'')`
+    expect(bookmarklet("https://ja-dev-docs.keke.works")).toBe(
+      String.raw`javascript:location.href='https://ja-dev-docs.keke.works/'+location.href.replace(/^https?:\/\//,'')`
     )
   })
 })

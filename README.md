@@ -51,11 +51,11 @@ GitHubのリポジトリの設定に、次を登録します。
 | シークレット | `GEMINI_API_KEY`        | Google AI StudioのAPIキー(登録済み)                                                                         |
 | シークレット | `CLOUDFLARE_API_TOKEN`  | CloudflareのAPIトークン。Workers ScriptsとD1とWorkers Routesの編集、ゾーン`keke.works`のDNSの編集           |
 | シークレット | `CLOUDFLARE_ACCOUNT_ID` | CloudflareのアカウントID                                                                                    |
-| 変数         | `TURNSTILE_SITE_KEY`    | `ja.keke.works`用のTurnstileのサイトキー                                                                    |
+| 変数         | `TURNSTILE_SITE_KEY`    | `ja-dev-docs.keke.works`用のTurnstileのサイトキー                                                           |
 | シークレット | `TURNSTILE_SECRET`      | 同じウィジェットの秘密鍵                                                                                    |
 | シークレット | `DISPATCH_TOKEN`        | このリポジトリだけにActionsのRead and writeを持つfine-grained token。Workerがワークフローを起動するのに使う |
 
-登録したら、Actionsの`deploy`を手で起動します。D1のデータベースを作り、`ja.keke.works`にデプロイします。その後は、訳が無いページのリクエストで翻訳が動きます。
+登録したら、Actionsの`deploy`を手で起動します。D1のデータベースを作り、`ja-dev-docs.keke.works`にデプロイします。その後は、訳が無いページのリクエストで翻訳が動きます。
 
 費用について:
 

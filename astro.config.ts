@@ -5,7 +5,7 @@ import remarkCjkFriendly from "remark-cjk-friendly"
 
 // サイトは静的に出力する。訳が無いページとAPIは、Astroとは別の小さなWorker(src/entrypoints/worker)が扱う。
 export default defineConfig({
-  site: process.env["SITE_URL"] ?? "https://ja.keke.works",
+  site: process.env["SITE_URL"] ?? "https://ja-dev-docs.keke.works",
   // Astroのページと部品はsite/に置く。src/は層に分けたTypeScriptだけにする。
   srcDir: "./site",
   markdown: {
